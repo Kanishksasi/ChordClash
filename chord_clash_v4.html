@@ -178,6 +178,30 @@ h1.logo{font-family:'Orbitron',monospace;font-size:clamp(1.8rem,5vw,3.5rem);font
 .lesson-card.open .lesson-detail{display:block}
 .lesson-tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:9px;font-weight:700;letter-spacing:1px;margin-right:6px;margin-bottom:6px}
 
+/* Create Song screen */
+.create-form{width:100%;max-width:720px;display:flex;flex-direction:column;gap:14px}
+.create-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.create-inp{background:var(--surf);border:1px solid #2a2a4a;border-radius:6px;color:var(--text);font-family:'Exo 2',sans-serif;font-size:13px;padding:9px 13px;outline:none;transition:border-color 0.15s;width:100%}
+.create-inp:focus{border-color:var(--accent)}
+.create-sel{background:var(--surf);border:1px solid #2a2a4a;border-radius:6px;color:var(--text);font-family:'Exo 2',sans-serif;font-size:12px;padding:8px 10px;outline:none;cursor:pointer;transition:border-color 0.15s}
+.create-sel:focus{border-color:var(--accent)}
+.chord-builder-row{display:flex;align-items:center;gap:10px;background:var(--surf);border:1px solid #2a2a4a;border-radius:8px;padding:12px;flex-wrap:wrap}
+.cb-preview{font-size:11px;color:var(--accent);letter-spacing:2px;min-width:80px}
+.chord-seq{display:flex;flex-direction:column;gap:5px;max-height:260px;overflow-y:auto;padding-right:4px}
+.chord-seq::-webkit-scrollbar{width:4px}.chord-seq::-webkit-scrollbar-track{background:#1c1c2e}.chord-seq::-webkit-scrollbar-thumb{background:#3a3a5a;border-radius:2px}
+.cs-item{display:flex;align-items:center;gap:8px;background:var(--surf);border:1px solid #2a2a4a;border-radius:6px;padding:8px 11px;font-size:12px;transition:border-color 0.12s}
+.cs-item:hover{border-color:#3a3a5a}
+.cs-num{font-family:'Orbitron',monospace;font-size:9px;color:var(--muted);min-width:18px}
+.cs-name{flex:1;color:var(--accent);font-family:'Orbitron',monospace;font-size:11px}
+.cs-notes{font-size:10px;color:var(--muted)}
+.cs-del{background:none;border:1px solid #2a2a4a;color:var(--muted);width:20px;height:20px;border-radius:3px;cursor:pointer;font-size:11px;line-height:1;transition:all 0.12s}
+.cs-del:hover{border-color:var(--red);color:var(--red)}
+.cs-empty{font-size:11px;color:var(--muted);text-align:center;padding:20px;border:1px dashed #2a2a4a;border-radius:6px}
+.saved-song-row{display:flex;align-items:center;gap:8px;background:var(--surf);border:1px solid #2a2a4a;border-radius:6px;padding:9px 12px;margin-bottom:5px}
+.ss-title{flex:1;font-family:'Orbitron',monospace;font-size:11px;color:var(--text)}
+.ss-artist{font-size:10px;color:var(--muted);margin-right:4px}
+.custom-badge{display:inline-block;background:#001a33;border:1px solid var(--accent);color:var(--accent);font-size:8px;font-weight:700;letter-spacing:1px;padding:1px 5px;border-radius:3px;margin-left:4px}
+
 /* Exit overlay */
 .exit-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.82);z-index:100;align-items:center;justify-content:center;flex-direction:column;gap:16px}
 .exit-overlay.active{display:flex}
@@ -201,6 +225,36 @@ h1.logo{font-family:'Orbitron',monospace;font-size:clamp(1.8rem,5vw,3.5rem);font
 .music-mute:hover{border-color:var(--accent);color:var(--accent)}
 .music-vol{-webkit-appearance:none;appearance:none;width:70px;height:4px;border-radius:2px;background:#2a2a4a;outline:none;cursor:pointer}
 .music-vol::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--accent);cursor:pointer}
+
+/* ── Chord Notation ──────────────────────────────────────────────────── */
+.notation-row{display:flex;align-items:center;justify-content:center;gap:16px;padding:0 0 10px}
+#chordSym{font-family:'Georgia',serif;font-size:36px;font-weight:700;color:var(--accent3);min-width:58px;text-align:center;line-height:1;letter-spacing:-1px;transition:color 0.2s}
+.staff-svg{overflow:visible;display:block;flex-shrink:0}
+
+/* ── Beat Visualizer / Deaf-Friendly ─────────────────────────────────── */
+.beat-vis{display:flex;align-items:flex-end;justify-content:center;gap:3px;height:34px;width:100%;max-width:760px;padding:0 4px}
+.bvb{flex:1;max-width:10px;min-height:3px;border-radius:3px 3px 0 0;background:var(--accent3);opacity:0.55}
+@keyframes beatRing{
+  0%{box-shadow:0 0 0 0 rgba(123,47,255,0.8),0 0 0 0 rgba(0,245,255,0.35)}
+  65%{box-shadow:0 0 0 18px rgba(123,47,255,0),0 0 0 30px rgba(0,245,255,0)}
+  100%{box-shadow:0 0 0 0 rgba(123,47,255,0)}
+}
+.beat-ring{animation:beatRing 0.6s ease-out}
+#beatEdge{pointer-events:none;position:fixed;inset:0;z-index:998;opacity:0;border:4px solid var(--accent3);border-radius:2px}
+@keyframes edgeFlash{0%{opacity:0.85}100%{opacity:0}}
+#beatEdge.flash{animation:edgeFlash 0.55s ease-out forwards}
+
+/* ── Accessibility / Community Impact ────────────────────────────────── */
+.a11y-wrap{margin-top:16px;text-align:center}
+.a11y-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(0,245,255,0.07);border:1px solid rgba(0,245,255,0.22);border-radius:20px;padding:5px 14px;font-size:10px;color:var(--accent);letter-spacing:1px;cursor:pointer;transition:all 0.15s;font-family:'Exo 2',sans-serif;user-select:none}
+.a11y-badge:hover{background:rgba(0,245,255,0.14);border-color:var(--accent)}
+.a11y-panel{background:var(--surf);border:1px solid rgba(0,245,255,0.2);border-radius:10px;padding:14px 18px;max-width:340px;margin:8px auto 0;display:none;text-align:left}
+.a11y-panel.open{display:block}
+.a11y-panel h4{font-family:'Orbitron',monospace;font-size:11px;color:var(--accent);margin-bottom:10px;letter-spacing:2px;text-align:center}
+.a11y-feat{display:flex;align-items:flex-start;gap:8px;margin-bottom:7px;font-size:11px;color:var(--muted);line-height:1.6}
+.a11y-icon{font-size:15px;flex-shrink:0;margin-top:1px}
+.a11y-feat strong{color:var(--text)}
+.a11y-quote{margin-top:10px;font-size:10px;color:var(--accent3);font-style:italic;text-align:center;border-top:1px solid #2a2a4a;padding-top:8px}
 
 /* Battle screen */
 .battle-card{background:var(--surf);border:1px solid var(--accent2);border-radius:8px;padding:14px;cursor:pointer;transition:all 0.18s}
@@ -237,11 +291,24 @@ h1.logo{font-family:'Orbitron',monospace;font-size:clamp(1.8rem,5vw,3.5rem);font
     <button class="btn" onclick="showScreen('levelSelect')">Play</button>
     <button class="btn" style="border-color:#ff6b35;color:#ff6b35" onclick="showScreen('battleMode')">Battle</button>
     <button class="btn" style="border-color:#00d4ff;color:#00d4ff" onclick="showScreen('lessons')">Learn</button>
+    <button class="btn" style="border-color:#ff9f43;color:#ff9f43" onclick="showScreen('createSong')">Create</button>
     <button class="btn gold" onclick="showScreen('leaderboard')">Leaderboard</button>
     <button class="btn pur" onclick="showScreen('keybinds')">Keybinds</button>
     <button class="btn" style="border-color:var(--muted);color:var(--muted)" onclick="showScreen('tutorial')">Tutorial</button>
   </div>
   <p style="margin-top:28px;font-size:11px;color:var(--muted)">EOL: <span id="menuEol" style="font-family:'Orbitron',monospace;color:var(--gold)">0</span></p>
+  <div class="a11y-wrap">
+    <div class="a11y-badge" onclick="toggleA11yPanel()">&#9835; Deaf &amp; HH Friendly &#10003;</div>
+    <div class="a11y-panel" id="a11yPanel">
+      <h4>&#9834; Accessibility Features</h4>
+      <div class="a11y-feat"><span class="a11y-icon">&#128261;</span><span><strong>Visual Beat Pulse</strong> — Screen edges flash in sync with every chord so deaf and hard-of-hearing players can feel the rhythm visually.</span></div>
+      <div class="a11y-feat"><span class="a11y-icon">&#127926;</span><span><strong>Music Notation Signs</strong> — Every chord shows its symbol (Cm7, F♯, G°) <em>and</em> a mini treble-clef staff so you learn real sheet music while playing.</span></div>
+      <div class="a11y-feat"><span class="a11y-icon">&#127381;</span><span><strong>Beat Visualizer</strong> — Animated equalizer bars pulse to the chord rhythm, giving a visual metronome for all players.</span></div>
+      <div class="a11y-feat"><span class="a11y-icon">&#127929;</span><span><strong>Color-Coded Piano</strong> — Target notes glow gold; correct hits turn cyan. You can play entirely by color — no hearing required.</span></div>
+      <div class="a11y-feat"><span class="a11y-icon">&#127981;</span><span><strong>Create Your Own Songs</strong> — Build chord sequences so family members with hearing loss can still participate and perform music.</span></div>
+      <p class="a11y-quote">"Music is for everyone." &mdash; Chord Clash is designed to make music theory accessible regardless of hearing ability.</p>
+    </div>
+  </div>
 </div>
 
 <!-- LEVEL SELECT -->
@@ -271,7 +338,15 @@ h1.logo{font-family:'Orbitron',monospace;font-size:clamp(1.8rem,5vw,3.5rem);font
   </div>
   <div class="hud">
     <div class="sb"><div class="slabel">You</div><div class="sval p" id="pScore">0</div></div>
-    <div style="text-align:center"><div style="font-family:'Orbitron',monospace;font-size:11px;color:var(--muted)">VS</div><div id="hudTitle" style="font-size:10px;color:var(--muted);margin-top:1px"></div></div>
+    <div style="text-align:center">
+      <div style="font-family:'Orbitron',monospace;font-size:11px;color:var(--muted)">VS</div>
+      <div id="hudTitle" style="font-size:10px;color:var(--muted);margin-top:1px"></div>
+      <div style="margin-top:6px;display:flex;align-items:baseline;justify-content:center;gap:5px">
+        <span style="font-size:8px;color:var(--muted);letter-spacing:2px;text-transform:uppercase">EOL</span>
+        <span id="hudEolVal" style="font-family:'Orbitron',monospace;font-size:15px;color:var(--gold);font-weight:700">0</span>
+        <span id="hudEolBonus" style="font-size:9px;color:var(--grn);letter-spacing:1px"></span>
+      </div>
+    </div>
     <div class="sb"><div class="slabel">AI</div><div class="sval a" id="aScore">0</div></div>
   </div>
   <div class="music-bar" id="musicBar">
@@ -294,9 +369,14 @@ h1.logo{font-family:'Orbitron',monospace;font-size:clamp(1.8rem,5vw,3.5rem);font
     </div>
     <div class="combo-disp">Combo: <span id="comboVal">0</span></div>
     <div class="chord-disp" id="chordDisp">
+      <div class="notation-row">
+        <div id="chordSym" class="chord-sym">&#9835;</div>
+        <svg id="staffSvg" class="staff-svg" width="106" height="58" viewBox="0 0 106 58" aria-hidden="true"></svg>
+      </div>
       <div class="chord-name" id="chordName">Ready...</div>
       <div class="chord-notes" id="chordNotes">&#8212; &#8212; &#8212;</div>
     </div>
+    <div class="beat-vis" id="beatVis"></div>
     <div class="fb-text" id="fbText">&nbsp;</div>
     <div class="timing-wrap">
       <div class="t-bar"><div class="tz-bg"></div><div class="tz-gl"></div><div class="tz-gr"></div><div class="tz-p"></div><div class="tcur" id="tCur" style="left:50%"></div></div>
@@ -445,6 +525,72 @@ h1.logo{font-family:'Orbitron',monospace;font-size:clamp(1.8rem,5vw,3.5rem);font
   <div class="battle-grid" id="battleGrid"></div>
 </div>
 
+<!-- CREATE SONG -->
+<div class="screen" id="createSong" style="justify-content:flex-start;padding:16px">
+  <button class="btn" onclick="showScreen('mainMenu')" style="margin-bottom:12px;align-self:flex-start">Back</button>
+  <p class="sec-title" style="width:100%;max-width:720px">Create Your Song</p>
+  <div class="create-form">
+
+    <!-- Title / Artist -->
+    <div class="create-row">
+      <input class="create-inp" id="createTitle" placeholder="Song title..." maxlength="40" oninput="updateCreatePreview()">
+      <input class="create-inp" id="createArtist" placeholder="Artist name..." maxlength="32" value="My Band">
+    </div>
+
+    <!-- Difficulty -->
+    <div style="display:flex;align-items:center;gap:12px;background:var(--surf);border:1px solid #2a2a4a;border-radius:8px;padding:12px">
+      <span style="font-size:11px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;white-space:nowrap">Difficulty</span>
+      <input type="range" id="createDiff" min="1" max="10" value="3" style="flex:1" oninput="document.getElementById('createDiffLbl').textContent=this.value">
+      <span id="createDiffLbl" style="font-family:'Orbitron',monospace;font-size:14px;color:var(--gold);min-width:20px">3</span>
+    </div>
+
+    <!-- Chord builder -->
+    <div>
+      <p class="sec-title" style="text-align:left;margin-bottom:8px">Build Chord Sequence</p>
+      <div class="chord-builder-row">
+        <select id="cbRoot" class="create-sel" onchange="updateCbPreview()">
+          <option>C</option><option>C#</option><option>D</option><option>D#</option><option>E</option>
+          <option>F</option><option>F#</option><option>G</option><option>G#</option><option>A</option><option>A#</option><option>B</option>
+        </select>
+        <select id="cbType" class="create-sel" onchange="updateCbPreview()">
+          <option>Major</option><option>Minor</option><option>Power</option><option>Dom 7</option>
+          <option>Major 7</option><option>Minor 7</option><option>Sus2</option><option>Sus4</option>
+          <option>Dim</option><option>Aug</option><option>Dim7</option>
+        </select>
+        <span class="cb-preview" id="cbPreview">C + E + G</span>
+        <button class="btn grn" style="padding:6px 16px;font-size:12px" onclick="addChordToSeq()">+ Add</button>
+      </div>
+    </div>
+
+    <!-- Sequence list -->
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <p class="sec-title" style="text-align:left;margin:0">Sequence <span id="seqCount" style="color:var(--muted)">(0)</span></p>
+        <button class="btn red" style="padding:4px 12px;font-size:10px" onclick="clearChordSeq()">Clear All</button>
+      </div>
+      <div class="chord-seq" id="chordSeq">
+        <div class="cs-empty" id="seqEmpty">No chords yet — add some above!</div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn" style="border-color:var(--accent3);color:var(--accent3)" onclick="previewCreatedSong()">&#9654; Preview</button>
+      <button class="btn grn" onclick="saveCreatedSong()">&#128190; Save &amp; Add to Playlist</button>
+    </div>
+    <p id="createMsg" style="font-size:11px;min-height:16px;text-align:center"></p>
+
+    <!-- Saved custom songs -->
+    <div id="savedSongsSection" style="margin-top:6px">
+      <p class="sec-title" style="text-align:left;margin-bottom:10px">Your Songs</p>
+      <div id="savedSongsList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Screen-edge beat flash for deaf/HH players -->
+<div id="beatEdge"></div>
+
 <script>
 const SONGS=[
   {title:"Neon Boulevard",artist:"Chromavex",diff:2,chords:[
@@ -531,6 +677,46 @@ const SONGS=[
     {name:"Cdim7",notes:["C","Eb","Gb","A"]},{name:"B7",notes:["B","D#","F#","A"]},{name:"Bbm7",notes:["Bb","Db","F","Ab"]},{name:"Eb7",notes:["Eb","G","Bb","Db"]},
     {name:"Abmaj7",notes:["Ab","C","Eb","G"]},{name:"Dm7b5",notes:["D","F","Ab","C"]},{name:"G7",notes:["G","B","D","F"]},{name:"Cmaj7",notes:["C","E","G","B"]},
     {name:"Cdim7",notes:["C","Eb","Gb","A"]},{name:"B7",notes:["B","D#","F#","A"]},{name:"Bbm7",notes:["Bb","Db","F","Ab"]},{name:"Eb7",notes:["Eb","G","Bb","Db"]}
+  ]},
+  {title:"Pixel Heart",artist:"Chromavex",diff:3,chords:[
+    {name:"C Major",notes:["C","E","G"]},{name:"G Major",notes:["G","B","D"]},{name:"A Minor",notes:["A","C","E"]},{name:"E Minor",notes:["E","G","B"]},
+    {name:"F Major",notes:["F","A","C"]},{name:"C Major",notes:["C","E","G"]},{name:"G Major",notes:["G","B","D"]},{name:"F Major",notes:["F","A","C"]},
+    {name:"C Major",notes:["C","E","G"]},{name:"G Major",notes:["G","B","D"]},{name:"A Minor",notes:["A","C","E"]},{name:"F Major",notes:["F","A","C"]}
+  ]},
+  {title:"Cosmic Drift",artist:"Astral Keys",diff:6,chords:[
+    {name:"Cmaj7",notes:["C","E","G","B"]},{name:"Am7",notes:["A","C","E","G"]},{name:"Dm7",notes:["D","F","A","C"]},{name:"G7",notes:["G","B","D","F"]},
+    {name:"Em7",notes:["E","G","B","D"]},{name:"A7",notes:["A","C#","E","G"]},{name:"Dm7",notes:["D","F","A","C"]},{name:"G7",notes:["G","B","D","F"]},
+    {name:"Cmaj7",notes:["C","E","G","B"]},{name:"Am7",notes:["A","C","E","G"]},{name:"Dm7",notes:["D","F","A","C"]},{name:"G7",notes:["G","B","D","F"]}
+  ]},
+  {title:"Neon Samurai",artist:"Ryuken",diff:7,chords:[
+    {name:"E Minor",notes:["E","G","B"]},{name:"G Major",notes:["G","B","D"]},{name:"A Major",notes:["A","C#","E"]},{name:"C Major",notes:["C","E","G"]},
+    {name:"D Major",notes:["D","F#","A"]},{name:"E Minor",notes:["E","G","B"]},{name:"B Minor",notes:["B","D","F#"]},{name:"C Major",notes:["C","E","G"]},
+    {name:"E Minor",notes:["E","G","B"]},{name:"G Major",notes:["G","B","D"]},{name:"A Major",notes:["A","C#","E"]},{name:"B Major",notes:["B","D#","F#"]}
+  ]},
+  {title:"Sunbreaker",artist:"Dawn Protocol",diff:6,chords:[
+    {name:"D Major",notes:["D","F#","A"]},{name:"A Major",notes:["A","C#","E"]},{name:"B Minor",notes:["B","D","F#"]},{name:"G Major",notes:["G","B","D"]},
+    {name:"D Major",notes:["D","F#","A"]},{name:"E Major",notes:["E","G#","B"]},{name:"F# Minor",notes:["F#","A","C#"]},{name:"A Major",notes:["A","C#","E"]},
+    {name:"D Major",notes:["D","F#","A"]},{name:"A Major",notes:["A","C#","E"]},{name:"B Minor",notes:["B","D","F#"]},{name:"G Major",notes:["G","B","D"]}
+  ]},
+  {title:"Digital Thunder",artist:"Zero Shift",diff:8,chords:[
+    {name:"A5",notes:["A","E"]},{name:"G5",notes:["G","D"]},{name:"E5",notes:["E","B"]},{name:"D5",notes:["D","A"]},
+    {name:"A5",notes:["A","E"]},{name:"G5",notes:["G","D"]},{name:"F5",notes:["F","C"]},{name:"E5",notes:["E","B"]},
+    {name:"A5",notes:["A","E"]},{name:"G5",notes:["G","D"]},{name:"E5",notes:["E","B"]},{name:"D5",notes:["D","A"]}
+  ]},
+  {title:"Stardust",artist:"Nova Sync",diff:5,chords:[
+    {name:"A Minor",notes:["A","C","E"]},{name:"F Major",notes:["F","A","C"]},{name:"C Major",notes:["C","E","G"]},{name:"G Major",notes:["G","B","D"]},
+    {name:"A Minor",notes:["A","C","E"]},{name:"F Major",notes:["F","A","C"]},{name:"E Major",notes:["E","G#","B"]},{name:"A Minor",notes:["A","C","E"]},
+    {name:"A Minor",notes:["A","C","E"]},{name:"F Major",notes:["F","A","C"]},{name:"C Major",notes:["C","E","G"]},{name:"G Major",notes:["G","B","D"]}
+  ]},
+  {title:"Velvet Code",artist:"Mirror State",diff:5,chords:[
+    {name:"D Minor",notes:["D","F","A"]},{name:"G Minor",notes:["G","Bb","D"]},{name:"Bb Major",notes:["Bb","D","F"]},{name:"A Major",notes:["A","C#","E"]},
+    {name:"D Minor",notes:["D","F","A"]},{name:"G Minor",notes:["G","Bb","D"]},{name:"C Major",notes:["C","E","G"]},{name:"A7",notes:["A","C#","E","G"]},
+    {name:"D Minor",notes:["D","F","A"]},{name:"G Minor",notes:["G","Bb","D"]},{name:"Bb Major",notes:["Bb","D","F"]},{name:"A Major",notes:["A","C#","E"]}
+  ]},
+  {title:"Infinity Loop",artist:"Dark Pixel",diff:9,chords:[
+    {name:"Cmaj7",notes:["C","E","G","B"]},{name:"Em7",notes:["E","G","B","D"]},{name:"Am7",notes:["A","C","E","G"]},{name:"Fmaj7",notes:["F","A","C","E"]},
+    {name:"Dm7",notes:["D","F","A","C"]},{name:"G7",notes:["G","B","D","F"]},{name:"Em7",notes:["E","G","B","D"]},{name:"Am7",notes:["A","C","E","G"]},
+    {name:"Dm7",notes:["D","F","A","C"]},{name:"G7",notes:["G","B","D","F"]},{name:"Cmaj7",notes:["C","E","G","B"]},{name:"Fmaj7",notes:["F","A","C","E"]}
   ]}
 ];
 
@@ -572,7 +758,7 @@ function renderBattleGrid(){
   document.getElementById('oppPet').textContent='Companion: '+opp.pet;
   document.getElementById('battleGrid').innerHTML=SONGS.map((s,i)=>`
     <div class="battle-card" onclick="startBattle(${i})">
-      <h3 style="font-family:'Orbitron',monospace;font-size:11px;color:var(--text);margin-bottom:3px">${s.title}</h3>
+      <h3 style="font-family:'Orbitron',monospace;font-size:11px;color:var(--text);margin-bottom:3px">${s.title}${s.custom?' <span class="custom-badge">CUSTOM</span>':''}</h3>
       <div style="font-size:11px;color:var(--muted);margin-bottom:8px">${s.artist}</div>
       <div style="display:flex;justify-content:space-between;align-items:center">
         <span class="${dc[Math.floor((s.diff-1)/2)]} dbadge">${dn[Math.floor((s.diff-1)/2)]}</span>
@@ -614,52 +800,89 @@ function playMissSound(){
   }catch(e){}
 }
 
-// MP3 background music system
-const MP3_TRACKS=[
-  {file:"2021-08-17_-_8_Bit_Nostalgia_-_www.FesliyanStudios.com.mp3",      name:"8 Bit Nostalgia"},
-  {file:"2020-03-22_-_8_Bit_Surf_-_FesliyanStudios.com_-_David_Renda.mp3", name:"8 Bit Surf"},
-  {file:"2019-08-25_-_8bit-Smooth_Presentation_-_David_Fesliyan.mp3",      name:"8bit Smooth"},
-  {file:"2019-01-10_-_Land_of_8_Bits_-_Stephen_Bennett_-_FesliyanStudios.com.mp3", name:"Land of 8 Bits"},
-  {file:"2019-01-02_-_8_Bit_Menu_-_David_Renda_-_FesliyanStudios.com.mp3", name:"8 Bit Menu"}
-];
-let bgAudioEl=null;
+// Song-matched chord synthesizer background music
+// Each song's actual chord progression plays as a looping ambient pad
+let bgSynthActive=false;
+let bgSynthChords=[];
+let bgSynthIdx=0;
+let bgSynthGain=null;
+let bgSynthMuted=false;
 
-function initBgAudio(){
-  if(bgAudioEl)return;
-  bgAudioEl=document.createElement('audio');
-  bgAudioEl.loop=true;
-  bgAudioEl.volume=0.4;
-  document.body.appendChild(bgAudioEl);
+function _synthVol(){
+  const v=document.getElementById('musicVol');
+  return bgSynthMuted?0:(v?parseFloat(v.value)*0.13:0.07);
 }
 
-function startBackgroundMusic(songIdx){
-  initBgAudio();
-  const track=MP3_TRACKS[songIdx%MP3_TRACKS.length];
-  bgAudioEl.src=track.file;
-  bgAudioEl.currentTime=0;
-  bgAudioEl.play().catch(()=>{});
-  const tn=document.getElementById('musicTrackName');
-  if(tn)tn.textContent=track.name;
-  const bar=document.getElementById('musicBar');
-  if(bar)bar.style.display='flex';
-  const vol=document.getElementById('musicVol');
-  if(vol)bgAudioEl.volume=parseFloat(vol.value);
+function startBackgroundMusic(chords){
+  stopBackgroundMusic();
+  if(!chords||!chords.length)return;
+  try{
+    const ctx=getAudioContext();
+    bgSynthGain=ctx.createGain();
+    bgSynthGain.gain.value=_synthVol();
+    bgSynthGain.connect(ctx.destination);
+    bgSynthChords=chords;
+    bgSynthIdx=0;
+    bgSynthActive=true;
+    playNextBgChord();
+    const bar=document.getElementById('musicBar');
+    if(bar)bar.style.display='flex';
+  }catch(e){}
 }
 
 function stopBackgroundMusic(){
-  if(bgAudioEl){bgAudioEl.pause();bgAudioEl.currentTime=0;}
+  bgSynthActive=false;
+  if(bgSynthGain){
+    try{bgSynthGain.gain.setTargetAtTime(0,bgSynthGain.context.currentTime,0.08);}catch(e){}
+    bgSynthGain=null;
+  }
   const bar=document.getElementById('musicBar');
   if(bar)bar.style.display='none';
 }
 
+function playNextBgChord(){
+  if(!bgSynthActive||!bgSynthGain)return;
+  try{
+    const ctx=getAudioContext();
+    const chord=bgSynthChords[bgSynthIdx%bgSynthChords.length];
+    const dur=2.4;
+    // Show the chord currently playing in the background
+    const tn=document.getElementById('musicTrackName');
+    if(tn)tn.textContent='\u266a '+chord.name;
+    chord.notes.forEach(note=>{
+      const freq=(NOTE_FREQS[note]||261.63)/2; // one octave down — warm pad range
+      // Sine fundamental — smooth, full-bodied tone
+      const o1=ctx.createOscillator(),g1=ctx.createGain();
+      o1.type='sine';o1.frequency.value=freq;
+      o1.connect(g1);g1.connect(bgSynthGain);
+      g1.gain.setValueAtTime(0,ctx.currentTime);
+      g1.gain.linearRampToValueAtTime(0.30,ctx.currentTime+0.10);
+      g1.gain.setValueAtTime(0.30,ctx.currentTime+dur-0.55);
+      g1.gain.linearRampToValueAtTime(0,ctx.currentTime+dur);
+      o1.start(ctx.currentTime);o1.stop(ctx.currentTime+dur+0.05);
+      // Triangle at octave above — adds harmonic warmth, fades early
+      const o2=ctx.createOscillator(),g2=ctx.createGain();
+      o2.type='triangle';o2.frequency.value=freq*2;
+      o2.connect(g2);g2.connect(bgSynthGain);
+      g2.gain.setValueAtTime(0,ctx.currentTime);
+      g2.gain.linearRampToValueAtTime(0.07,ctx.currentTime+0.07);
+      g2.gain.linearRampToValueAtTime(0,ctx.currentTime+dur*0.55);
+      o2.start(ctx.currentTime);o2.stop(ctx.currentTime+dur*0.6);
+    });
+    bgSynthIdx++;
+    triggerBeatPulse();
+    setTimeout(()=>{if(bgSynthActive)playNextBgChord();},dur*1000);
+  }catch(e){}
+}
+
 function toggleMute(){
-  if(!bgAudioEl)return;
-  bgAudioEl.muted=!bgAudioEl.muted;
-  document.getElementById('musicMuteBtn').innerHTML=bgAudioEl.muted?'&#128264;':'&#128266;';
+  bgSynthMuted=!bgSynthMuted;
+  if(bgSynthGain)bgSynthGain.gain.setValueAtTime(_synthVol(),bgSynthGain.context.currentTime);
+  document.getElementById('musicMuteBtn').innerHTML=bgSynthMuted?'&#128264;':'&#128266;';
 }
 
 function setBgVol(v){
-  if(bgAudioEl){bgAudioEl.volume=parseFloat(v);if(bgAudioEl.muted&&v>0){bgAudioEl.muted=false;document.getElementById('musicMuteBtn').innerHTML='&#128266;';}}
+  if(bgSynthGain&&!bgSynthMuted)bgSynthGain.gain.setValueAtTime(parseFloat(v)*0.13,bgSynthGain.context.currentTime);
 }
 
 function playBackgroundLoop(){} // no-op, kept for compatibility
@@ -867,6 +1090,7 @@ function showScreen(id){
   if(id==='levelSelect'){renderLevels();isBattle=false;}
   if(id==='keybinds')renderKeybinds();
   if(id==='battleMode')renderBattleGrid();
+  if(id==='createSong'){renderSavedSongs();updateCbPreview();}
 }
 
 function renderLevels(){
@@ -879,7 +1103,10 @@ function renderLevels(){
         <span class="stars">${'&#9733;'.repeat(Math.min(Math.ceil(s.diff/2),5))}</span>
         <span class="${dc[Math.floor((s.diff-1)/2)]} dbadge">${dn[Math.floor((s.diff-1)/2)]}</span>
       </div>
-      <div style="margin-top:6px;font-size:10px;color:var(--muted)">${s.chords.length} chords</div>
+      <div style="margin-top:6px;display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--muted)">
+        <span>${s.chords.length} chords</span>
+        ${s.custom?'<span class="custom-badge">CUSTOM</span>':''}
+      </div>
     </div>`).join('');
 }
 
@@ -902,8 +1129,13 @@ function startGame(){
   document.getElementById('ahpTxt').textContent='100';
   buildPiano([]);
   showScreen('gameplay');
+  initBeatVis();
+  // Live EOL display — current balance + potential win bonus
+  document.getElementById('hudEolVal').textContent=getEol();
+  const bonusAmt=DIFFS[G.diff].eol+(isBattle?50:0);
+  document.getElementById('hudEolBonus').textContent='+'+bonusAmt+' if win';
   stopBackgroundMusic();
-  startBackgroundMusic(G.song);
+  startBackgroundMusic(song.chords);
   if(laneAnimFrame)cancelAnimationFrame(laneAnimFrame);
   updateLane();
   setTimeout(nextChord,600);
@@ -921,6 +1153,7 @@ function nextChord(){
   document.getElementById('chordName').textContent=chord.name;
   document.getElementById('chordNotes').textContent=chord.notes.join(' + ');
   document.getElementById('keyHintLine').textContent='Keys: '+chord.notes.map(noteToKey).join(' + ');
+  renderChordNotation(chord);
   document.getElementById('fbText').textContent='\u00a0';
   document.getElementById('chordDisp').className='chord-disp';
   document.getElementById('progFill').style.width=Math.round((G.chordIdx/song.chords.length)*100)+'%';
@@ -950,7 +1183,13 @@ function handleNote(note){
   if(!chord)return;
   // Only register notes that belong to the current chord — wrong keys play sound but don't fill the buffer
   if(!chord.notes.some(cn=>noteEq(cn,note)))return;
-  if(!G.buf.some(n=>noteEq(n,note)))G.buf.push(note);
+  if(!G.buf.some(n=>noteEq(n,note))){
+    G.buf.push(note);
+    // Light up the corresponding notehead on the staff
+    const chord=SONGS[G.song].chords[G.chordIdx];
+    const ni=chord.notes.findIndex(cn=>noteEq(cn,note));
+    if(ni>=0)hitNoteOnStaff(ni);
+  }
   if(G.buf.length>=chord.notes.length){
     clearTimeout(G.cTimeout);clearInterval(G.tInterval);
     const ms=Date.now()-G.startTime;
@@ -1007,7 +1246,11 @@ function endGame(){
   const baseEol=won?DIFFS[G.diff].eol:0;
   const battleBonus=won&&isBattle?50:0;
   const eolGain=baseEol+battleBonus;
-  if(eolGain>0){const ne=getEol()+eolGain;saveEol(ne);updateLb(ne);}
+  if(eolGain>0){const ne=getEol()+eolGain;saveEol(ne);updateLb(ne);
+    // Update live HUD counter so player sees the new total before results screen
+    document.getElementById('hudEolVal').textContent=ne;
+    document.getElementById('hudEolBonus').textContent='+'+eolGain+' earned!';
+  }
   document.getElementById('progFill').style.width='100%';
   // Update results back-button routing
   const retryBtn=document.querySelector('#results button[onclick="startGame()"]');
@@ -1148,7 +1391,299 @@ document.addEventListener('keydown',e=>{
 // Particles
 (()=>{const p=document.getElementById('particles');for(let i=0;i<16;i++){const d=document.createElement('div');d.className='particle';d.style.cssText=`left:${Math.random()*100}%;animation-duration:${8+Math.random()*12}s;animation-delay:${Math.random()*-15}s;background:${['#00f5ff','#7b2fff','#ff006e'][i%3]}`;p.appendChild(d);}})();
 
+// ─── Custom Song Creator ──────────────────────────────────────
+const CHROMATIC_NOTES=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+const CHORD_DEFS={
+  'Major':  {ivl:[0,4,7],    label:'Major'},
+  'Minor':  {ivl:[0,3,7],    label:'Minor'},
+  'Power':  {ivl:[0,7],      label:'5'},
+  'Dom 7':  {ivl:[0,4,7,10], label:'7'},
+  'Major 7':{ivl:[0,4,7,11], label:'maj7'},
+  'Minor 7':{ivl:[0,3,7,10], label:'m7'},
+  'Sus2':   {ivl:[0,2,7],    label:'sus2'},
+  'Sus4':   {ivl:[0,5,7],    label:'sus4'},
+  'Dim':    {ivl:[0,3,6],    label:'dim'},
+  'Aug':    {ivl:[0,4,8],    label:'aug'},
+  'Dim7':   {ivl:[0,3,6,9],  label:'dim7'},
+};
+
+function buildChord(root,type){
+  const def=CHORD_DEFS[type];if(!def)return null;
+  const ri=CHROMATIC_NOTES.indexOf(root);if(ri<0)return null;
+  const notes=def.ivl.map(i=>CHROMATIC_NOTES[(ri+i)%12]);
+  const name=type==='Major'?root+' Major':type==='Minor'?root+' Minor':root+def.label;
+  return {name,notes};
+}
+
+let createSeq=[];
+
+function updateCbPreview(){
+  const root=document.getElementById('cbRoot').value;
+  const type=document.getElementById('cbType').value;
+  const c=buildChord(root,type);
+  document.getElementById('cbPreview').textContent=c?c.notes.join(' + '):'—';
+}
+
+function updateCreatePreview(){}
+
+function addChordToSeq(){
+  if(createSeq.length>=24){showCreateMsg('Max 24 chords per song.','var(--red)');return;}
+  const root=document.getElementById('cbRoot').value;
+  const type=document.getElementById('cbType').value;
+  const chord=buildChord(root,type);if(!chord)return;
+  createSeq.push(chord);
+  renderChordSeq();
+}
+
+function removeChordFromSeq(i){createSeq.splice(i,1);renderChordSeq();}
+
+function clearChordSeq(){createSeq=[];renderChordSeq();}
+
+function renderChordSeq(){
+  const el=document.getElementById('chordSeq');
+  document.getElementById('seqCount').textContent='('+createSeq.length+')';
+  if(!createSeq.length){el.innerHTML='<div class="cs-empty" id="seqEmpty">No chords yet \u2014 add some above!</div>';return;}
+  el.innerHTML=createSeq.map((c,i)=>`
+    <div class="cs-item">
+      <span class="cs-num">${i+1}</span>
+      <span class="cs-name">${c.name}</span>
+      <span class="cs-notes">${c.notes.join(' + ')}</span>
+      <button class="cs-del" onclick="removeChordFromSeq(${i})">&#10005;</button>
+    </div>`).join('');
+}
+
+let previewActive=false;
+function previewCreatedSong(){
+  if(!createSeq.length){showCreateMsg('Add at least one chord first.','var(--red)');return;}
+  if(previewActive)return;
+  previewActive=true;
+  showCreateMsg('\u25b6 Previewing\u2026','var(--accent)');
+  // Play through sequence once using synth
+  startBackgroundMusic(createSeq);
+  setTimeout(()=>{
+    stopBackgroundMusic();
+    previewActive=false;
+    showCreateMsg('','');
+  },createSeq.length*2500);
+}
+
+function saveCreatedSong(){
+  const title=document.getElementById('createTitle').value.trim();
+  const artist=document.getElementById('createArtist').value.trim()||'My Band';
+  const diff=parseInt(document.getElementById('createDiff').value);
+  if(!title){showCreateMsg('Please enter a song title.','var(--red)');document.getElementById('createTitle').focus();return;}
+  if(createSeq.length<2){showCreateMsg('Add at least 2 chords.','var(--red)');return;}
+  const song={title,artist,diff,chords:[...createSeq],custom:true};
+  // Save to localStorage
+  const saved=getCustomSongs();
+  saved.push(song);
+  saveCustomSongs(saved);
+  // Append to SONGS so it shows up in level select immediately
+  SONGS.push(song);
+  // Reset form
+  document.getElementById('createTitle').value='';
+  createSeq=[];renderChordSeq();
+  showCreateMsg('\u2713 \u201c'+title+'\u201d saved! Find it in Play & Battle.','var(--grn)');
+  renderSavedSongs();
+}
+
+function showCreateMsg(msg,color){
+  const el=document.getElementById('createMsg');
+  el.textContent=msg;el.style.color=color||'var(--muted)';
+  if(msg)setTimeout(()=>{if(el.textContent===msg)el.textContent='';},4000);
+}
+
+function getCustomSongs(){try{return JSON.parse(localStorage.getItem('cc4_custom')||'[]')}catch{return[];}}
+function saveCustomSongs(arr){try{localStorage.setItem('cc4_custom',JSON.stringify(arr))}catch{}}
+
+function deleteCustomSong(storageIdx){
+  const saved=getCustomSongs();
+  const song=saved[storageIdx];
+  saved.splice(storageIdx,1);
+  saveCustomSongs(saved);
+  // Remove from SONGS
+  const si=SONGS.findIndex(s=>s.custom&&s.title===song.title&&s.artist===song.artist);
+  if(si>=0)SONGS.splice(si,1);
+  renderSavedSongs();
+  renderLevels();
+}
+
+function renderSavedSongs(){
+  const saved=getCustomSongs();
+  const list=document.getElementById('savedSongsList');
+  const section=document.getElementById('savedSongsSection');
+  if(!list)return;
+  if(!saved.length){list.innerHTML='<p style="font-size:11px;color:var(--muted);text-align:center">No saved songs yet.</p>';return;}
+  list.innerHTML=saved.map((s,i)=>`
+    <div class="saved-song-row">
+      <div style="flex:1">
+        <div class="ss-title">${s.title} <span class="custom-badge">CUSTOM</span></div>
+        <div class="ss-artist">${s.artist} &nbsp;&bull;&nbsp; ${s.chords.length} chords &nbsp;&bull;&nbsp; Diff ${s.diff}</div>
+      </div>
+      <button class="btn" style="padding:4px 12px;font-size:10px;margin-right:6px" onclick="playCustomSong(${i})">Play</button>
+      <button class="btn red" style="padding:4px 12px;font-size:10px" onclick="deleteCustomSong(${i})">Delete</button>
+    </div>`).join('');
+}
+
+function playCustomSong(storageIdx){
+  const saved=getCustomSongs();
+  const song=saved[storageIdx];
+  if(!song)return;
+  const si=SONGS.findIndex(s=>s.custom&&s.title===song.title);
+  if(si>=0){G.song=si;showScreen('diffSelect');document.getElementById('diffTitle').textContent=song.title;}
+}
+
+function loadCustomSongs(){
+  const saved=getCustomSongs();
+  saved.forEach(s=>{
+    if(!SONGS.find(x=>x.custom&&x.title===s.title&&x.artist===s.artist))
+      SONGS.push({...s,custom:true});
+  });
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// CHORD NOTATION + DEAF-FRIENDLY VISUAL SYSTEM
+// ════════════════════════════════════════════════════════════════════════
+
+// Convert chord name to standard music notation symbol
+function getChordSymbol(name){
+  const SH='\u266f',FL='\u266d',DEG='\u00b0',TRI='\u25b3',HDIM='\u00f8';
+  const fx=r=>r.replace(/#/g,SH).replace(/b/,FL); // replace accidentals in root
+  // "C Major", "F# Minor", "Bb Major" etc. (space-separated)
+  let m=name.match(/^([A-G][#b]?)\s+(Major|Minor)(\s+7)?$/i);
+  if(m){
+    const r=fx(m[1]),isMin=/minor/i.test(m[2]),has7=!!m[3];
+    if(has7)return r+(isMin?'m7':TRI+'7');
+    return r+(isMin?'m':'');
+  }
+  // Compact: "Cmaj7","Am7","Eb7","Bbm7","Cdim7","Dm7b5","G5" etc.
+  m=name.match(/^([A-G][#b]?)(.*)/);
+  if(!m)return name;
+  const r=fx(m[1]),t=m[2];
+  if(/^maj7$/i.test(t))return r+TRI+'7';
+  if(/^m7b5$/i.test(t))return r+HDIM+'7';
+  if(/^m7$/i.test(t))return r+'m7';
+  if(/^dim7$/i.test(t))return r+DEG+'7';
+  if(/^dim$/i.test(t))return r+DEG;
+  if(/^aug$/i.test(t))return r+'+';
+  if(/^[0-9]+$/.test(t))return r+t;
+  if(/^sus/i.test(t))return r+t.toLowerCase();
+  if(/^m$/i.test(t))return r+'m';
+  return r+(t||'');
+}
+
+// Treble-clef staff position for each note letter (0 = E4, bottom line)
+// Steps of 1 = half a line gap (4px each)
+const STAFF_POS={'C':-2,'D':-1,'E':0,'F':1,'G':2,'A':3,'B':4};
+
+function renderChordNotation(chord){
+  // ── Chord symbol ──
+  const symEl=document.getElementById('chordSym');
+  if(symEl)symEl.textContent=getChordSymbol(chord.name);
+
+  // ── Mini treble-clef staff SVG ──
+  const svg=document.getElementById('staffSvg');
+  if(!svg)return;
+  const W=106, lineGap=8, baseY=42; // baseY = y-coordinate of E4 (bottom line)
+  const noteY=pos=>baseY-pos*4; // each step = lineGap/2 = 4px
+  let h='';
+
+  // 5 staff lines (lines for E4 G4 B4 D5 F5)
+  for(let i=0;i<5;i++){
+    const y=baseY-i*lineGap;
+    h+=`<line x1="4" y1="${y}" x2="${W-4}" y2="${y}" stroke="#3a3070" stroke-width="1.2"/>`;
+  }
+  // Treble clef glyph
+  h+=`<text x="5" y="${baseY+12}" font-size="44" fill="rgba(123,47,255,0.42)" font-family="Georgia,serif" style="font-style:italic">&#119070;</text>`;
+
+  // Noteheads spread across x=56..W-8
+  const nc=chord.notes.length;
+  const xStart=58,xEnd=W-10;
+  const xStep=nc>1?(xEnd-xStart)/(nc-1):0;
+
+  chord.notes.forEach((note,ni)=>{
+    const letter=note[0];
+    const hasSharp=note.includes('#');
+    const hasFlat=note.length>1&&note[1]==='b';
+    const pos=STAFF_POS[letter]??0;
+    const y=noteY(pos);
+    const x=xStart+ni*xStep;
+
+    // Ledger line below staff for C4 (pos=-2)
+    if(pos<=-2){
+      const ly=noteY(-2);
+      h+=`<line x1="${x-9}" y1="${ly}" x2="${x+9}" y2="${ly}" stroke="#6050a0" stroke-width="1.5"/>`;
+    }
+    // Accidental symbol
+    if(hasSharp)h+=`<text x="${x-13}" y="${y+3.5}" font-size="11" fill="var(--accent)" font-family="Georgia,serif">\u266f</text>`;
+    else if(hasFlat)h+=`<text x="${x-12}" y="${y+3}" font-size="12" fill="var(--accent)" font-family="Georgia,serif">\u266d</text>`;
+    // Notehead (filled ellipse)
+    h+=`<ellipse cx="${x}" cy="${y}" rx="5.5" ry="4" fill="var(--accent)" opacity="0.9" id="snh${ni}"/>`;
+    // Stem
+    if(pos>=3)h+=`<line x1="${x-5.5}" y1="${y}" x2="${x-5.5}" y2="${y+20}" stroke="var(--accent)" stroke-width="1.5" opacity="0.8"/>`;
+    else h+=`<line x1="${x+5.5}" y1="${y}" x2="${x+5.5}" y2="${y-20}" stroke="var(--accent)" stroke-width="1.5" opacity="0.8"/>`;
+  });
+  svg.innerHTML=h;
+}
+
+// Flash a notehead green when its note is hit
+function hitNoteOnStaff(noteIdx){
+  const el=document.getElementById('snh'+noteIdx);
+  if(el){el.setAttribute('fill','var(--grn)');setTimeout(()=>{if(el)el.setAttribute('fill','var(--accent)');},550);}
+}
+
+// ── Beat Pulse system (visual rhythm for deaf / hard-of-hearing players) ──
+const BVB_COUNT=20;
+let beatVisRaf=null;
+
+function initBeatVis(){
+  const vis=document.getElementById('beatVis');
+  if(!vis)return;
+  vis.innerHTML='';
+  for(let i=0;i<BVB_COUNT;i++){
+    const b=document.createElement('div');
+    b.className='bvb';b.style.height='3px';
+    vis.appendChild(b);
+  }
+}
+
+function triggerBeatPulse(){
+  // Screen-edge flash
+  const edge=document.getElementById('beatEdge');
+  if(edge){edge.classList.remove('flash');void edge.offsetWidth;edge.classList.add('flash');}
+  // Chord display ring
+  const cd=document.getElementById('chordDisp');
+  if(cd){cd.classList.remove('beat-ring');void cd.offsetWidth;cd.classList.add('beat-ring');}
+  // Equalizer bars
+  animateBeatVis();
+}
+
+function animateBeatVis(){
+  if(beatVisRaf)cancelAnimationFrame(beatVisRaf);
+  const vis=document.getElementById('beatVis');
+  if(!vis)return;
+  const bars=[...vis.querySelectorAll('.bvb')];
+  const t0=Date.now(),dur=650;
+  function frame(){
+    const t=(Date.now()-t0)/dur;
+    if(t>=1){bars.forEach(b=>b.style.height='3px');beatVisRaf=null;return;}
+    const env=Math.sin(t*Math.PI); // envelope: rises then falls
+    bars.forEach((b,i)=>{
+      const wave=Math.abs(Math.sin(i*0.65+t*14));
+      b.style.height=Math.max(3,env*wave*28+3)+'px';
+    });
+    beatVisRaf=requestAnimationFrame(frame);
+  }
+  beatVisRaf=requestAnimationFrame(frame);
+}
+
+function toggleA11yPanel(){
+  const p=document.getElementById('a11yPanel');
+  if(p)p.classList.toggle('open');
+}
+
 // Init
 initTutPiano();
 renderTutStep();
+loadCustomSongs();
 </script>
