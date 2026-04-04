@@ -464,6 +464,221 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
   box-shadow:0 4px 16px rgba(0,0,0,0.5);
 }
 .st-node:hover .tooltip{display:block;}
+
+/* ══════════════════════════════════════
+   CC LOGO
+══════════════════════════════════════ */
+.cc-logo-svg{width:clamp(56px,7vw,80px);height:auto;margin-bottom:10px;filter:drop-shadow(0 0 18px rgba(124,58,237,0.5));animation:ccPulse 4s ease-in-out infinite;}
+@keyframes ccPulse{0%,100%{filter:drop-shadow(0 0 14px rgba(124,58,237,0.35))}50%{filter:drop-shadow(0 0 32px rgba(219,39,119,0.65));}}
+
+/* ══════════════════════════════════════
+   EXTRA HOME BUTTONS
+══════════════════════════════════════ */
+.home-btn-practice{background:linear-gradient(135deg,rgba(40,204,112,0.14),rgba(40,204,112,0.04));border-color:var(--green2);color:var(--green);}
+.home-btn-practice:hover{background:rgba(40,204,112,0.26);box-shadow:0 0 20px rgba(40,204,112,0.2);transform:translateY(-2px);}
+.home-btn-learn{background:rgba(32,200,176,0.08);border-color:var(--teal);color:var(--teal);}
+.home-btn-learn:hover{background:rgba(32,200,176,0.18);box-shadow:0 0 20px rgba(32,200,176,0.2);transform:translateY(-2px);}
+.home-btn-create{background:rgba(255,122,32,0.08);border-color:var(--orange2);color:var(--orange);}
+.home-btn-create:hover{background:rgba(255,122,32,0.18);box-shadow:0 0 20px rgba(255,122,32,0.2);transform:translateY(-2px);}
+.home-btn-lb{background:rgba(232,184,75,0.06);border-color:rgba(196,144,48,0.6);color:var(--gold2);}
+.home-btn-lb:hover{background:rgba(232,184,75,0.18);box-shadow:0 0 16px rgba(232,184,75,0.18);transform:translateY(-2px);}
+.home-btn-history{background:rgba(61,138,255,0.06);border-color:rgba(32,96,204,0.6);color:var(--blue2);}
+.home-btn-history:hover{background:rgba(61,138,255,0.18);box-shadow:0 0 16px rgba(61,138,255,0.18);transform:translateY(-2px);}
+.home-btns-row{display:flex;gap:10px;width:320px;}
+.home-btns-row .home-btn{flex:1;padding:11px 8px;font-size:18px;}
+
+/* ══════════════════════════════════════
+   MUSIC BAR
+══════════════════════════════════════ */
+.music-bar{display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:6px 12px;margin-top:10px;width:320px;}
+.music-bar-note{font-size:13px;color:var(--teal);animation:musicPulse 1.4s ease-in-out infinite;}
+@keyframes musicPulse{0%,100%{opacity:0.5;transform:scale(1)}50%{opacity:1;transform:scale(1.18);}}
+.music-bar-track{flex:1;font-size:10px;color:var(--text2);letter-spacing:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.music-bar-btn{background:transparent;border:none;color:var(--text2);cursor:pointer;font-size:13px;padding:2px 4px;transition:color 0.15s;}
+.music-bar-btn:hover{color:var(--text);}
+.music-bar-vol{width:52px;accent-color:var(--teal);}
+
+/* ══════════════════════════════════════
+   GENERIC SECONDARY SCREEN PARTS
+══════════════════════════════════════ */
+.scr-header{background:var(--panel);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:14px;flex-shrink:0;}
+.scr-title{font-family:'Teko',sans-serif;font-size:28px;letter-spacing:3px;color:var(--gold);}
+.scr-body{flex:1;padding:24px;overflow:auto;display:flex;flex-direction:column;gap:16px;align-items:center;}
+
+/* ══════════════════════════════════════
+   PRACTICE — SONG SELECT
+══════════════════════════════════════ */
+#practice-songs,#practice-start,#practice-game{background:var(--bg);}
+.song-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;width:100%;max-width:860px;}
+.song-card{background:var(--panel);border:1px solid var(--border2);border-radius:12px;padding:16px;cursor:pointer;transition:all 0.22s;display:flex;flex-direction:column;gap:6px;}
+.song-card:hover{border-color:var(--green2);background:rgba(40,204,112,0.06);transform:translateY(-2px);box-shadow:0 6px 20px rgba(40,204,112,0.1);}
+.song-card-title{font-family:'Teko',sans-serif;font-size:20px;letter-spacing:1px;color:var(--text);}
+.song-card-artist{font-size:11px;color:var(--text2);}
+.song-card-meta{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:2px;}
+.diff-badge{font-size:10px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:1px;padding:2px 7px;border-radius:4px;}
+.diff-0{background:rgba(40,204,112,0.15);color:var(--green);border:1px solid var(--green2);}
+.diff-1{background:rgba(232,184,75,0.15);color:var(--gold);border:1px solid var(--gold2);}
+.diff-2{background:rgba(255,122,32,0.15);color:var(--orange);border:1px solid var(--orange2);}
+.diff-3{background:rgba(255,61,80,0.15);color:var(--red);border:1px solid var(--red2);}
+
+/* ══════════════════════════════════════
+   PRACTICE — START SCREEN
+══════════════════════════════════════ */
+.pstart-card{background:var(--panel);border:1px solid var(--border2);border-radius:16px;padding:36px 40px;max-width:540px;width:100%;display:flex;flex-direction:column;align-items:center;gap:22px;}
+.pstart-song{font-family:'Teko',sans-serif;font-size:36px;letter-spacing:2px;color:var(--gold3);text-align:center;line-height:1.1;}
+.pstart-artist{font-size:13px;color:var(--text2);text-align:center;margin-top:-14px;}
+.pstart-section-lbl{font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:2px;color:var(--text2);text-transform:uppercase;align-self:flex-start;}
+.instr-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;width:100%;}
+.instr-btn{padding:10px 4px;border-radius:8px;border:1px solid var(--border2);background:var(--bg2);text-align:center;cursor:pointer;transition:all 0.2s;}
+.instr-btn:hover{border-color:var(--teal);background:rgba(32,200,176,0.08);}
+.instr-btn.sel{border-color:var(--teal);background:rgba(32,200,176,0.12);box-shadow:0 0 12px rgba(32,200,176,0.3);}
+.instr-icon{font-size:24px;line-height:1;}
+.instr-name{font-size:9px;color:var(--text2);margin-top:4px;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase;}
+.pstart-play-btn{padding:14px 48px;border-radius:10px;border:1px solid var(--green2);background:rgba(40,204,112,0.14);color:var(--green);font-family:'Teko',sans-serif;font-size:26px;letter-spacing:4px;cursor:pointer;transition:all 0.22s;}
+.pstart-play-btn:hover{background:rgba(40,204,112,0.28);box-shadow:0 0 24px rgba(40,204,112,0.3);transform:translateY(-2px);}
+
+/* ══════════════════════════════════════
+   PRACTICE — RHYTHM GAME
+══════════════════════════════════════ */
+.pg-topbar{background:var(--panel);border-bottom:1px solid var(--border);padding:8px 16px;display:flex;align-items:center;gap:14px;flex-shrink:0;}
+.pg-title{font-family:'Teko',sans-serif;font-size:18px;letter-spacing:3px;color:var(--teal);}
+.pg-score-block{display:flex;flex-direction:column;align-items:center;gap:0;}
+.pg-score-lbl{font-size:9px;letter-spacing:2px;color:var(--text2);text-transform:uppercase;}
+.pg-score-val{font-family:'Teko',sans-serif;font-size:22px;letter-spacing:2px;color:var(--gold);line-height:1;}
+.pg-prog-bar{flex:1;height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;}
+.pg-prog-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--green));border-radius:3px;transition:width 0.4s;}
+.pg-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:16px;}
+.pg-chord-panel{background:var(--panel);border:2px solid var(--border2);border-radius:16px;padding:20px 36px;text-align:center;min-width:260px;transition:border-color 0.15s,box-shadow 0.15s;}
+.pg-chord-panel.hit{border-color:var(--green);box-shadow:0 0 24px rgba(40,204,112,0.35);}
+.pg-chord-panel.miss{border-color:var(--red);box-shadow:0 0 16px rgba(255,61,80,0.35);}
+.pg-chord-name{font-family:'Teko',sans-serif;font-size:44px;letter-spacing:3px;color:var(--text);line-height:1;}
+.pg-chord-notes{font-size:18px;color:var(--teal);letter-spacing:4px;font-family:'Barlow Condensed',sans-serif;font-weight:600;}
+.pg-next{font-size:11px;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin-top:4px;}
+.pg-timing-track{width:280px;height:10px;background:var(--bg2);border-radius:5px;position:relative;overflow:hidden;}
+.pg-timing-zone{position:absolute;inset-y:0;left:35%;right:35%;background:rgba(40,204,112,0.18);border-left:1px solid var(--green2);border-right:1px solid var(--green2);}
+.pg-timing-cursor{position:absolute;top:0;bottom:0;width:4px;background:#fff;border-radius:2px;}
+.pg-feedback{font-family:'Teko',sans-serif;font-size:28px;letter-spacing:3px;min-height:36px;text-align:center;}
+.pg-feedback.perf{color:var(--green);}
+.pg-feedback.good{color:var(--gold);}
+.pg-feedback.miss{color:var(--red);}
+
+/* Piano keyboard for practice game */
+.piano-wrap{position:relative;width:100%;max-width:680px;height:108px;user-select:none;flex-shrink:0;}
+.white-keys{display:flex;width:100%;height:100%;}
+.wkey{flex:1;background:#ddd8ff;border:1px solid #3a3060;border-radius:0 0 6px 6px;cursor:pointer;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding-bottom:5px;transition:background 0.06s;min-width:0;}
+.wkey:hover{background:#ccc4ff;}
+.wkey.lit{background:var(--teal);border-color:var(--teal);}
+.wkey.tgt{background:#fff8c0;border-color:var(--gold);border-width:2px;}
+.wkey.tgt.lit{background:var(--teal);}
+.wk-n{font-family:'Barlow Condensed',sans-serif;font-size:10px;color:#3a3060;font-weight:700;line-height:1;}
+.wk-k{font-size:8px;color:#8078b0;margin-top:1px;}
+.wkey.lit .wk-n,.wkey.lit .wk-k{color:#000;}
+.wkey.tgt .wk-n,.wkey.tgt .wk-k{color:#4a3800;}
+.black-layer{position:absolute;top:0;left:0;width:100%;height:60%;pointer-events:none;}
+.bkey{position:absolute;background:#180d30;border:1px solid #4a40a0;border-radius:0 0 4px 4px;height:100%;cursor:pointer;pointer-events:all;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding-bottom:3px;transition:background 0.06s;z-index:2;}
+.bkey:hover{background:#2a1850;}
+.bkey.lit{background:var(--teal);border-color:var(--teal);}
+.bkey.tgt{background:#2a1800;border-color:var(--gold);border-width:2px;}
+.bk-n{font-family:'Barlow Condensed',sans-serif;font-size:8px;color:#a090d0;font-weight:700;line-height:1;}
+.bk-k{font-size:7px;color:#6050a0;margin-top:1px;}
+.bkey.lit .bk-n,.bkey.lit .bk-k{color:#fff;}
+
+/* ══════════════════════════════════════
+   LEADERBOARD
+══════════════════════════════════════ */
+#leaderboard{background:var(--bg);}
+.lb-table{width:100%;max-width:600px;border-collapse:collapse;}
+.lb-table th{font-size:10px;color:var(--text2);letter-spacing:2px;text-transform:uppercase;padding:8px 12px;text-align:left;border-bottom:1px solid var(--border);}
+.lb-table td{padding:10px 12px;border-bottom:1px solid var(--border2);font-size:13px;}
+.lb-rank-num{font-family:'Teko',sans-serif;font-size:18px;color:var(--text2);}
+.lb-rank-num.top{color:var(--gold);}
+.lb-player-name{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:15px;}
+.lb-you-row td{background:rgba(61,138,255,0.06);}
+.lb-xp-val{font-family:'Teko',sans-serif;font-size:16px;color:var(--gold);text-align:right;}
+.lb-lv-val{font-family:'Teko',sans-serif;font-size:16px;color:var(--purple3);text-align:center;}
+
+/* ══════════════════════════════════════
+   MATCH HISTORY
+══════════════════════════════════════ */
+#match-history,#match-detail{background:var(--bg);}
+.mh-list{width:100%;max-width:680px;display:flex;flex-direction:column;gap:8px;}
+.mh-item{background:var(--panel);border:1px solid var(--border2);border-radius:10px;padding:12px 16px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:14px;}
+.mh-item:hover{border-color:var(--blue);transform:translateX(4px);}
+.mh-item.win{border-left:3px solid var(--green);}
+.mh-item.loss{border-left:3px solid var(--red);}
+.mh-outcome{font-family:'Teko',sans-serif;font-size:26px;min-width:36px;text-align:center;}
+.mh-outcome.win{color:var(--green);}
+.mh-outcome.loss{color:var(--red);}
+.mh-info{flex:1;}
+.mh-title-row{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:600;color:var(--text);}
+.mh-meta-row{font-size:11px;color:var(--text2);margin-top:2px;}
+.mh-empty{font-size:13px;color:var(--text2);text-align:center;padding:48px;border:1px dashed var(--border2);border-radius:12px;width:100%;max-width:680px;}
+.md-header-box{background:var(--panel);border:1px solid var(--border2);border-radius:12px;padding:16px 20px;width:100%;max-width:680px;}
+.md-chord-list{width:100%;max-width:680px;display:flex;flex-direction:column;gap:5px;max-height:280px;overflow-y:auto;padding-right:4px;}
+.md-chord-row{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--border2);border-radius:6px;padding:7px 12px;font-size:11px;}
+.md-chord-row.deployed{border-left:3px solid var(--green);}
+.md-c-num{font-family:'Teko',sans-serif;font-size:15px;color:var(--text2);min-width:24px;}
+.md-c-chord{flex:1;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:600;color:var(--teal);}
+.md-c-keys{font-size:11px;color:var(--text2);}
+.md-c-time{font-size:11px;color:var(--text2);min-width:48px;text-align:right;}
+.md-export-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
+.export-btn{padding:10px 22px;border-radius:8px;border:1px solid var(--border2);background:transparent;color:var(--text3);font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:600;letter-spacing:1px;cursor:pointer;transition:all 0.2s;}
+.export-btn.sheet{border-color:var(--teal);color:var(--teal);}
+.export-btn.sheet:hover{background:rgba(32,200,176,0.14);}
+.export-btn.analysis{border-color:var(--purple);color:var(--purple3);}
+.export-btn.analysis:hover{background:rgba(153,85,255,0.14);}
+
+/* ══════════════════════════════════════
+   LESSONS
+══════════════════════════════════════ */
+#lessons{background:var(--bg);}
+.lesson-list{display:flex;flex-direction:column;gap:10px;width:100%;max-width:680px;}
+.lesson-card{background:var(--panel);border:1px solid var(--border2);border-radius:10px;padding:18px 20px;cursor:pointer;transition:all 0.2s;}
+.lesson-card:hover{border-color:var(--blue);transform:translateX(4px);}
+.lesson-card-header{display:flex;align-items:center;gap:12px;}
+.lesson-card-title{font-family:'Teko',sans-serif;font-size:22px;letter-spacing:1px;color:var(--text);}
+.lesson-tag{font-size:10px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:1px;padding:2px 8px;border-radius:4px;background:rgba(61,138,255,0.1);color:var(--blue3);border:1px solid var(--blue2);}
+.lesson-card-desc{font-size:13px;color:var(--text2);margin-top:6px;line-height:1.6;}
+.lesson-content{background:var(--panel2);border:1px solid var(--border2);border-radius:10px;padding:20px 24px;margin-top:8px;display:none;font-size:14px;color:var(--text3);line-height:1.8;}
+.lesson-content.open{display:block;}
+.lesson-content h3{font-family:'Teko',sans-serif;font-size:20px;letter-spacing:1px;color:var(--gold);margin-bottom:8px;}
+.lesson-content p{margin-bottom:12px;}
+.lesson-content strong{color:var(--text);}
+.lesson-example{background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:10px 14px;margin:8px 0;font-family:'Barlow Condensed',sans-serif;font-size:14px;color:var(--teal);}
+
+/* ══════════════════════════════════════
+   CREATE SONG
+══════════════════════════════════════ */
+#create-song{background:var(--bg);}
+.cs-form{width:100%;max-width:680px;display:flex;flex-direction:column;gap:14px;}
+.cs-row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;}
+.cs-field{display:flex;flex-direction:column;}
+.cs-label{font-size:10px;letter-spacing:2px;color:var(--text2);text-transform:uppercase;margin-bottom:5px;font-family:'Barlow Condensed',sans-serif;}
+.cs-input{background:var(--bg2);border:1px solid var(--border2);border-radius:7px;color:var(--text);font-family:'Barlow Condensed',sans-serif;font-size:15px;padding:8px 12px;outline:none;transition:border-color 0.15s;width:100%;}
+.cs-input:focus{border-color:var(--orange2);}
+.cs-select{background:var(--bg2);border:1px solid var(--border2);border-radius:7px;color:var(--text);font-family:'Barlow Condensed',sans-serif;font-size:14px;padding:8px 10px;outline:none;cursor:pointer;}
+.cs-add-btn{padding:9px 18px;border-radius:7px;border:1px solid var(--green2);background:rgba(40,204,112,0.1);color:var(--green);font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.cs-add-btn:hover{background:rgba(40,204,112,0.22);}
+.cs-preview-lbl{font-size:11px;color:var(--teal);font-family:'Barlow Condensed',sans-serif;}
+.cs-save-btn{padding:10px 28px;border-radius:8px;border:1px solid var(--gold2);background:rgba(232,184,75,0.1);color:var(--gold);font-family:'Teko',sans-serif;font-size:20px;letter-spacing:2px;cursor:pointer;transition:all 0.2s;align-self:flex-start;}
+.cs-save-btn:hover{background:rgba(232,184,75,0.22);}
+.cs-clear-btn{padding:8px 16px;border-radius:7px;border:1px solid var(--border2);background:transparent;color:var(--text2);font-family:'Barlow Condensed',sans-serif;font-size:13px;cursor:pointer;transition:all 0.2s;}
+.cs-clear-btn:hover{border-color:var(--red2);color:var(--red);}
+.chord-seq-list{display:flex;flex-direction:column;gap:4px;max-height:240px;overflow-y:auto;padding-right:2px;}
+.cs-item{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--border2);border-radius:6px;padding:7px 12px;}
+.cs-num{font-family:'Teko',sans-serif;font-size:16px;color:var(--text2);min-width:22px;}
+.cs-name{flex:1;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:600;color:var(--text);}
+.cs-notes{font-size:11px;color:var(--teal);}
+.cs-del{background:transparent;border:none;color:var(--text2);cursor:pointer;font-size:14px;padding:2px 6px;border-radius:4px;transition:all 0.15s;}
+.cs-del:hover{background:rgba(255,61,80,0.15);color:var(--red);}
+.cs-msg{font-size:12px;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;min-height:18px;}
+.saved-songs-list{display:flex;flex-direction:column;gap:6px;width:100%;max-width:680px;}
+.ss-item{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--border2);border-radius:8px;padding:10px 14px;}
+.ss-title{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:600;color:var(--text);flex:1;}
+.ss-meta{font-size:11px;color:var(--text2);}
+.ss-del-btn{background:transparent;border:1px solid var(--red2);color:var(--red);border-radius:5px;cursor:pointer;font-size:11px;padding:3px 9px;transition:all 0.15s;}
+.ss-del-btn:hover{background:rgba(255,61,80,0.15);}
+.custom-badge{font-size:9px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:1px;padding:1px 6px;border-radius:3px;background:rgba(153,85,255,0.15);color:var(--purple3);border:1px solid var(--purple2);}
 </style>
 </head>
 <body>
@@ -473,6 +688,23 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
   <div class="home-bg"></div>
   <div class="home-staff"></div>
   <div class="home-inner">
+    <!-- CC Logo -->
+    <svg class="cc-logo-svg" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="ccLG" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#7c3aed"/>
+          <stop offset="50%" stop-color="#db2777"/>
+          <stop offset="100%" stop-color="#ea580c"/>
+        </linearGradient>
+      </defs>
+      <!-- Large C -->
+      <path d="M 88 18 L 36 18 Q 16 18 16 38 L 16 122 Q 16 142 36 142 L 88 142" fill="none" stroke="url(#ccLG)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Small C top -->
+      <path d="M 88 18 L 136 18 Q 150 18 150 32 L 150 60 Q 150 74 136 74 L 84 74" fill="none" stroke="url(#ccLG)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Small C bottom -->
+      <path d="M 84 86 L 136 86 Q 150 86 150 100 L 150 128 Q 150 142 136 142 L 88 142" fill="none" stroke="url(#ccLG)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+
     <div class="game-logo">CHORD<br>CLASH</div>
     <div class="game-tagline">Tower Defense · Music Theory · Strategy</div>
 
@@ -485,10 +717,30 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
       </div>
     </div>
 
-    <div class="home-btns">
-      <button class="home-btn home-btn-play" onclick="gotoGame()">▶ PLAY</button>
-      <button class="home-btn home-btn-tutorial" onclick="gotoTutorial()">📖 TUTORIAL</button>
-      <button class="home-btn home-btn-skills" onclick="gotoSkillTree()">🌟 SKILL TREE</button>
+    <div class="home-btns" style="width:320px;display:flex;flex-direction:column;gap:10px;align-items:center;">
+      <button class="home-btn home-btn-play" style="width:100%" onclick="gotoGame()">▶ PLAY</button>
+      <button class="home-btn home-btn-practice" style="width:100%" onclick="gotoPractice()">🎹 PRACTICE</button>
+      <div class="home-btns-row">
+        <button class="home-btn home-btn-learn" onclick="gotoLessons()">📚 LEARN</button>
+        <button class="home-btn home-btn-create" onclick="gotoCreate()">🎼 CREATE</button>
+      </div>
+      <div class="home-btns-row">
+        <button class="home-btn home-btn-tutorial" onclick="gotoTutorial()">📖 TUTORIAL</button>
+        <button class="home-btn home-btn-skills" onclick="gotoSkillTree()">🌟 SKILL TREE</button>
+      </div>
+      <div class="home-btns-row">
+        <button class="home-btn home-btn-lb" onclick="gotoLeaderboard()">🏆 BOARD</button>
+        <button class="home-btn home-btn-history" onclick="gotoHistory()">📋 HISTORY</button>
+      </div>
+    </div>
+
+    <!-- Music bar -->
+    <div class="music-bar">
+      <span class="music-bar-note">♪</span>
+      <span class="music-bar-track" id="music-track-lbl">Loading…</span>
+      <button class="music-bar-btn" id="music-mute-btn" onclick="toggleMenuMute()" title="Mute/Unmute">🔊</button>
+      <input class="music-bar-vol" type="range" min="0" max="1" step="0.05" value="0.35" id="music-vol-slider" oninput="setMenuVol(this.value)" title="Volume"/>
+      <button class="music-bar-btn" onclick="nextMenuTrack()" title="Next track">⏭</button>
     </div>
   </div>
   <div class="home-footer">Left Shift + letter = ♭ &nbsp;|&nbsp; Right Shift + letter = ♯ &nbsp;|&nbsp; Press Enter to deploy</div>
@@ -604,6 +856,190 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
     </div>
   </div>
 </div>
+
+<!-- ══════ PRACTICE — SONG SELECT ══════ -->
+<div id="practice-songs" class="screen">
+  <div class="scr-header">
+    <button class="back-btn" onclick="gotoHome()">← Back</button>
+    <div class="scr-title">🎹 PRACTICE</div>
+    <div style="font-size:12px;color:var(--text2);font-family:'Barlow Condensed',sans-serif;">Select a song to practice</div>
+  </div>
+  <div class="scr-body">
+    <div class="song-grid" id="practice-song-grid"></div>
+  </div>
+</div>
+
+<!-- ══════ PRACTICE — START SCREEN ══════ -->
+<div id="practice-start" class="screen">
+  <div class="scr-header">
+    <button class="back-btn" onclick="showScreen('practice-songs')">← Back</button>
+    <div class="scr-title" id="pstart-title">PRACTICE</div>
+  </div>
+  <div class="scr-body" style="justify-content:center;">
+    <div class="pstart-card">
+      <div class="pstart-song" id="pstart-song-name">Song Title</div>
+      <div class="pstart-artist" id="pstart-artist-name">Artist</div>
+
+      <div class="pstart-section-lbl">Choose Instrument</div>
+      <div class="instr-grid" id="instr-grid">
+        <!-- filled by JS -->
+      </div>
+
+      <button class="pstart-play-btn" onclick="startPracticeGame()">▶ START</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ PRACTICE — RHYTHM GAME ══════ -->
+<div id="practice-game" class="screen">
+  <div class="pg-topbar">
+    <div class="pg-title">🎹 PRACTICE</div>
+    <div class="pg-score-block">
+      <div class="pg-score-lbl">Score</div>
+      <div class="pg-score-val" id="pg-score">0</div>
+    </div>
+    <div class="pg-score-block">
+      <div class="pg-score-lbl">Combo</div>
+      <div class="pg-score-val" id="pg-combo" style="color:var(--orange)">0</div>
+    </div>
+    <div class="pg-prog-bar"><div class="pg-prog-fill" id="pg-prog" style="width:0%"></div></div>
+    <div style="font-size:11px;color:var(--text2);" id="pg-chord-counter">0/0</div>
+    <button class="back-btn" onclick="quitPractice()">✕ Quit</button>
+  </div>
+  <div class="pg-body">
+    <div class="pg-chord-panel" id="pg-chord-panel">
+      <div class="pg-chord-name" id="pg-chord-name">—</div>
+      <div class="pg-chord-notes" id="pg-chord-notes">· · ·</div>
+      <div class="pg-next" id="pg-next-lbl"></div>
+    </div>
+    <div class="pg-timing-track">
+      <div class="pg-timing-zone"></div>
+      <div class="pg-timing-cursor" id="pg-cursor" style="left:0%"></div>
+    </div>
+    <div class="pg-feedback" id="pg-feedback"></div>
+    <div class="piano-wrap" id="pg-piano-wrap">
+      <div class="white-keys" id="pg-white-keys"></div>
+      <div class="black-layer" id="pg-black-layer"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ LEADERBOARD ══════ -->
+<div id="leaderboard" class="screen">
+  <div class="scr-header">
+    <button class="back-btn" onclick="gotoHome()">← Back</button>
+    <div class="scr-title">🏆 LEADERBOARD</div>
+    <div style="font-size:12px;color:var(--text2);font-family:'Barlow Condensed',sans-serif;margin-left:auto;">Ranked by XP</div>
+  </div>
+  <div class="scr-body">
+    <table class="lb-table">
+      <thead><tr><th>#</th><th>Player</th><th style="text-align:center">Level</th><th style="text-align:right">XP</th></tr></thead>
+      <tbody id="lb-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════ MATCH HISTORY ══════ -->
+<div id="match-history" class="screen">
+  <div class="scr-header">
+    <button class="back-btn" onclick="gotoHome()">← Back</button>
+    <div class="scr-title">📋 MATCH HISTORY</div>
+  </div>
+  <div class="scr-body">
+    <div class="mh-list" id="mh-list"></div>
+  </div>
+</div>
+
+<!-- ══════ MATCH DETAIL ══════ -->
+<div id="match-detail" class="screen">
+  <div class="scr-header">
+    <button class="back-btn" onclick="showScreen('match-history');renderMatchHistory()">← Back</button>
+    <div class="scr-title" id="md-title">MATCH DETAIL</div>
+  </div>
+  <div class="scr-body">
+    <div class="md-header-box" id="md-header"></div>
+    <div class="md-chord-list" id="md-chord-list"></div>
+    <div class="md-export-btns">
+      <button class="export-btn sheet" onclick="exportSheetMusic()">📄 Export Sheet Music</button>
+      <button class="export-btn analysis" onclick="exportChordAnalysis()">🎵 Chord Analysis</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ LESSONS ══════ -->
+<div id="lessons" class="screen">
+  <div class="scr-header">
+    <button class="back-btn" onclick="gotoHome()">← Back</button>
+    <div class="scr-title">📚 LESSONS</div>
+  </div>
+  <div class="scr-body">
+    <div class="lesson-list" id="lesson-list"></div>
+  </div>
+</div>
+
+<!-- ══════ CREATE SONG ══════ -->
+<div id="create-song" class="screen">
+  <div class="scr-header">
+    <button class="back-btn" onclick="gotoHome()">← Back</button>
+    <div class="scr-title">🎼 CREATE SONG</div>
+  </div>
+  <div class="scr-body">
+    <div class="cs-form">
+      <div class="cs-row">
+        <div class="cs-field" style="flex:1;min-width:160px;">
+          <div class="cs-label">Song Title</div>
+          <input class="cs-input" id="cs-title" placeholder="My Awesome Song"/>
+        </div>
+        <div class="cs-field" style="flex:1;min-width:120px;">
+          <div class="cs-label">Artist</div>
+          <input class="cs-input" id="cs-artist" placeholder="My Band"/>
+        </div>
+      </div>
+
+      <div class="cs-row">
+        <div class="cs-field">
+          <div class="cs-label">Root Note</div>
+          <select class="cs-select" id="cs-root" onchange="updateCsPreview()">
+            <option>C</option><option>C#</option><option>D</option><option>D#</option>
+            <option>E</option><option>F</option><option>F#</option><option>G</option>
+            <option>G#</option><option>A</option><option>A#</option><option>B</option>
+          </select>
+        </div>
+        <div class="cs-field">
+          <div class="cs-label">Chord Type</div>
+          <select class="cs-select" id="cs-type" onchange="updateCsPreview()">
+            <option>Major</option><option>Minor</option><option>Dom 7</option>
+            <option>Major 7</option><option>Minor 7</option><option>Sus2</option>
+            <option>Sus4</option><option>Dim</option><option>Aug</option><option>Dim7</option>
+          </select>
+        </div>
+        <div class="cs-field" style="justify-content:flex-end;">
+          <div class="cs-preview-lbl" id="cs-preview">—</div>
+          <button class="cs-add-btn" onclick="addCsChord()">+ Add Chord</button>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+        <span style="font-family:'Teko',sans-serif;font-size:18px;color:var(--text2);">Chord Sequence <span id="cs-count" style="color:var(--teal);">(0)</span></span>
+        <button class="cs-clear-btn" onclick="clearCsSeq()">Clear All</button>
+      </div>
+      <div class="chord-seq-list" id="cs-seq-list">
+        <div style="font-size:12px;color:var(--text2);text-align:center;padding:20px;">No chords yet — add some above!</div>
+      </div>
+
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+        <button class="cs-save-btn" onclick="saveCustomSong()">💾 Save Song</button>
+        <div class="cs-msg" id="cs-msg"></div>
+      </div>
+
+      <div style="font-family:'Teko',sans-serif;font-size:18px;color:var(--text2);margin-top:8px;">Saved Songs</div>
+      <div class="saved-songs-list" id="cs-saved-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Audio element for background music -->
+<audio id="menuAudio" loop preload="none"></audio>
 
 <!-- MODAL -->
 <div class="modal-bg" id="modal-bg">
@@ -741,7 +1177,13 @@ const SKILL_TREE = [
 //  SCREEN NAVIGATION
 // ══════════════════════════════════════════════════════════
 function sel(q){return document.querySelector(q);}
-function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));sel('#'+id).classList.add('active');}
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  sel('#'+id).classList.add('active');
+  const menuScreens=['home','tutorial','skilltree','practice-songs','practice-start','leaderboard','match-history','match-detail','lessons','create-song'];
+  if(menuScreens.includes(id)) startMenuMusic();
+  else pauseMenuMusic();
+}
 
 function gotoHome(){showScreen('home');updateAllXPUI();}
 function gotoTutorial(){showScreen('tutorial');tutStep=0;renderTutorial();}
@@ -1017,6 +1459,7 @@ function startGame() {
     comboHistory:[],
     playerBuff:null,
     playerBuffEnd:0,
+    keyLog:[],
   };
 
   updateHpUI();
@@ -1360,14 +1803,40 @@ document.addEventListener('keydown', e => {
     if (e.location===2) shiftState.right=true;
     return;
   }
-  // Only capture in game screen
-  if (!document.getElementById('game').classList.contains('active')) return;
+
+  const letter = e.key.toUpperCase();
+  const inGame = document.getElementById('game').classList.contains('active');
+  const inPractice = document.getElementById('practice-game').classList.contains('active');
+
+  // Play note sound from ANY screen when note key pressed
+  if (NOTE_LETTERS.has(letter) && !e.target.matches('input,textarea,select')) {
+    let acc = '';
+    if (shiftState.left)  acc = '♭';
+    if (shiftState.right) acc = '♯';
+    const token = letter + acc;
+    const semi = tokenToSemitone(token);
+    if (semi !== null) playNoteSound(semi);
+  }
+
+  // Practice game input
+  if (inPractice) {
+    e.preventDefault();
+    if (NOTE_LETTERS.has(letter)) {
+      let acc = '';
+      if (shiftState.left)  acc = '♭';
+      if (shiftState.right) acc = '♯';
+      pgHandleKey(letter, acc);
+    }
+    return;
+  }
+
+  // Tower defense game input
+  if (!inGame) return;
 
   if (e.key==='Enter') { e.preventDefault(); submitChord(); return; }
   if (e.key==='Backspace') { e.preventDefault(); removeLastNote(); return; }
   if (e.key==='Escape') { clearNotes(); return; }
 
-  const letter = e.key.toUpperCase();
   if (NOTE_LETTERS.has(letter)) {
     e.preventDefault();
     let acc = '';
@@ -1375,7 +1844,7 @@ document.addEventListener('keydown', e => {
     if (shiftState.right) acc = '♯';
     addNote(letter, acc);
   }
-  if (e.key===' ') { e.preventDefault(); } // ignore space — notes auto-separate
+  if (e.key===' ') { e.preventDefault(); }
 });
 
 document.addEventListener('keyup', e => {
@@ -1473,6 +1942,8 @@ function submitChord() {
   GS.mana-=cost;
   updateManaUI_game();
   spawnTroop(res.type,'player');
+  // Log chord
+  if(GS.keyLog) GS.keyLog.push({chord:NOTE_DISPLAY_NAMES[res.root]+' '+res.type, notes:currentNotes.map(n=>n.token), t:now_sec()});
 
   // Combo tracking
   const entry={root:res.root, type:res.type, t:now_sec()};
@@ -1547,8 +2018,14 @@ function endGame(won) {
   GS.over=true;
   cancelAnimationFrame(gameRaf);
   gameRaf=null;
+  const xpGained = gScore + (won?100:0);
   if(won) addXP(100);
   addXP(gScore);
+  // Save match to history
+  saveMatchToHistory({
+    won, wave:GS.wave, score:gScore, xpGained,
+    keyLog: GS.keyLog||[], date: Date.now()
+  });
   showModal(
     won?'⚔ VICTORY':'💀 DEFEATED',
     won?'#e8b84b':'#ff3d50',
@@ -1591,6 +2068,825 @@ function floatText(msg,x,y,color){
   el.style.cssText=`color:${color};left:${x}px;top:${y}px;text-shadow:0 0 14px ${color};`;
   document.body.appendChild(el);
   setTimeout(()=>el.remove(),1200);
+}
+
+// ══════════════════════════════════════════════════════════
+//  WEB AUDIO — NOTE SYNTHESIS
+// ══════════════════════════════════════════════════════════
+let _audioCtx = null;
+function getAudioCtx() {
+  if (!_audioCtx) _audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  return _audioCtx;
+}
+
+const INSTRUMENTS = [
+  {id:'piano',   icon:'🎹', name:'Piano'},
+  {id:'synth',   icon:'🎛', name:'Synth'},
+  {id:'strings', icon:'🎻', name:'Strings'},
+  {id:'guitar',  icon:'🎸', name:'Guitar'},
+  {id:'bell',    icon:'🔔', name:'Bell'},
+];
+let selectedInstrument = 'piano';
+
+// Semi 0=C4, 1=C#4 … 11=B4; freq = 261.63 * 2^(semi/12)
+function semiToFreq(semi) { return 261.63 * Math.pow(2, semi/12); }
+
+function playNoteSound(semi, vol=0.28, dur=0.55) {
+  try {
+    const ctx = getAudioCtx();
+    if(ctx.state==='suspended') ctx.resume();
+    const freq = semiToFreq(semi);
+    const now = ctx.currentTime;
+    const g = ctx.createGain();
+    g.connect(ctx.destination);
+    const instr = selectedInstrument;
+
+    if (instr==='piano') {
+      const o = ctx.createOscillator();
+      o.type = 'triangle';
+      o.frequency.value = freq;
+      o.connect(g);
+      g.gain.setValueAtTime(vol, now);
+      g.gain.exponentialRampToValueAtTime(0.001, now + dur);
+      o.start(now); o.stop(now + dur);
+    } else if (instr==='synth') {
+      const o = ctx.createOscillator();
+      o.type = 'sawtooth';
+      o.frequency.value = freq;
+      const f = ctx.createBiquadFilter();
+      f.type = 'lowpass'; f.frequency.value = 1200;
+      o.connect(f); f.connect(g);
+      g.gain.setValueAtTime(vol*0.7, now);
+      g.gain.exponentialRampToValueAtTime(0.001, now + dur*0.8);
+      o.start(now); o.stop(now + dur);
+    } else if (instr==='strings') {
+      ['triangle','sine'].forEach((t,i) => {
+        const o = ctx.createOscillator();
+        o.type = t;
+        o.frequency.value = freq * (i===1 ? 2.005 : 1);
+        o.connect(g);
+      });
+      g.gain.setValueAtTime(0, now);
+      g.gain.linearRampToValueAtTime(vol*0.5, now+0.05);
+      g.gain.exponentialRampToValueAtTime(0.001, now + dur*1.4);
+      const os = ctx.createOscillator(); os.type='triangle'; os.frequency.value=freq; os.connect(g); os.start(now); os.stop(now+dur*1.4);
+    } else if (instr==='guitar') {
+      const buf = ctx.createBuffer(1, ctx.sampleRate*dur, ctx.sampleRate);
+      const d = buf.getChannelData(0);
+      const period = Math.round(ctx.sampleRate/freq);
+      for(let i=0;i<period;i++) d[i] = Math.random()*2-1;
+      for(let i=period;i<d.length;i++) d[i]=(d[i-period]+d[i-period+1])*0.498;
+      const src = ctx.createBufferSource(); src.buffer=buf; src.connect(g);
+      g.gain.setValueAtTime(vol, now); g.gain.exponentialRampToValueAtTime(0.001, now+dur);
+      src.start(now);
+    } else { // bell
+      const o = ctx.createOscillator();
+      o.type = 'sine'; o.frequency.value = freq*2;
+      const o2 = ctx.createOscillator();
+      o2.type = 'sine'; o2.frequency.value = freq*5.05;
+      const g2 = ctx.createGain(); g2.gain.setValueAtTime(vol*0.3,now); g2.gain.exponentialRampToValueAtTime(0.001,now+dur*0.5);
+      o2.connect(g2); g2.connect(ctx.destination);
+      o.connect(g);
+      g.gain.setValueAtTime(vol, now); g.gain.exponentialRampToValueAtTime(0.001, now+dur*1.2);
+      o.start(now); o.stop(now+dur*1.2);
+      o2.start(now); o2.stop(now+dur*0.5);
+    }
+  } catch(err) {}
+}
+
+// ══════════════════════════════════════════════════════════
+//  BACKGROUND MUSIC
+// ══════════════════════════════════════════════════════════
+const MUSIC_TRACKS = [
+  {file:'2019-01-02_-_8_Bit_Menu_-_David_Renda_-_FesliyanStudios.com.mp3', label:'8 Bit Menu'},
+  {file:'2021-08-17_-_8_Bit_Nostalgia_-_www.FesliyanStudios.com.mp3',       label:'8 Bit Nostalgia'},
+  {file:'2019-08-25_-_8bit-Smooth_Presentation_-_David_Fesliyan.mp3',       label:'8 Bit Smooth'},
+  {file:'2019-01-10_-_Land_of_8_Bits_-_Stephen_Bennett_-_FesliyanStudios.com.mp3', label:'Land of 8 Bits'},
+  {file:'2020-03-22_-_8_Bit_Surf_-_FesliyanStudios.com_-_David_Renda.mp3',  label:'8 Bit Surf'},
+];
+let _musicIdx = Math.floor(Math.random()*MUSIC_TRACKS.length);
+let _musicMuted = false;
+
+function startMenuMusic() {
+  const el = sel('#menuAudio');
+  if (!el) return;
+  const track = MUSIC_TRACKS[_musicIdx];
+  const vol = parseFloat(sel('#music-vol-slider')?.value || 0.35);
+  if (!el.src || !el.src.endsWith(track.file)) {
+    el.src = track.file;
+    el.load();
+  }
+  el.volume = _musicMuted ? 0 : vol;
+  el.play().catch(()=>{});
+  const lbl = sel('#music-track-lbl');
+  if(lbl) lbl.textContent = track.label;
+}
+
+function pauseMenuMusic() {
+  const el = sel('#menuAudio');
+  if (el) el.pause();
+}
+
+function toggleMenuMute() {
+  _musicMuted = !_musicMuted;
+  const el = sel('#menuAudio');
+  if (el) el.volume = _musicMuted ? 0 : parseFloat(sel('#music-vol-slider')?.value || 0.35);
+  const btn = sel('#music-mute-btn');
+  if (btn) btn.textContent = _musicMuted ? '🔇' : '🔊';
+}
+
+function setMenuVol(v) {
+  if (!_musicMuted) { const el=sel('#menuAudio'); if(el) el.volume=parseFloat(v); }
+}
+
+function nextMenuTrack() {
+  _musicIdx = (_musicIdx+1) % MUSIC_TRACKS.length;
+  const el = sel('#menuAudio');
+  if (el) { el.src=''; }
+  startMenuMusic();
+}
+
+// Auto-advance to next track when one ends
+document.getElementById('menuAudio').addEventListener('ended', ()=>nextMenuTrack());
+
+// ══════════════════════════════════════════════════════════
+//  NAVIGATION (new screens)
+// ══════════════════════════════════════════════════════════
+function gotoPractice()    { showScreen('practice-songs'); renderPracticeSongs(); }
+function gotoLessons()     { showScreen('lessons'); renderLessons(); }
+function gotoCreate()      { showScreen('create-song'); renderSavedSongs(); updateCsPreview(); }
+function gotoLeaderboard() { showScreen('leaderboard'); renderLeaderboard(); }
+function gotoHistory()     { showScreen('match-history'); renderMatchHistory(); }
+
+// ══════════════════════════════════════════════════════════
+//  PRACTICE SONGS DATA
+// ══════════════════════════════════════════════════════════
+const CHROMATIC = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+const CHORD_DEFS = {
+  'Major':   {ivl:[0,4,7]},
+  'Minor':   {ivl:[0,3,7]},
+  'Dom 7':   {ivl:[0,4,7,10]},
+  'Major 7': {ivl:[0,4,7,11]},
+  'Minor 7': {ivl:[0,3,7,10]},
+  'Sus2':    {ivl:[0,2,7]},
+  'Sus4':    {ivl:[0,5,7]},
+  'Dim':     {ivl:[0,3,6]},
+  'Aug':     {ivl:[0,4,8]},
+  'Dim7':    {ivl:[0,3,6,9]},
+};
+
+function buildChordDef(root, type) {
+  const def = CHORD_DEFS[type]; if(!def) return null;
+  const ri = CHROMATIC.indexOf(root); if(ri<0) return null;
+  const notes = def.ivl.map(i=>CHROMATIC[(ri+i)%12]);
+  const label = type==='Major'?root:type==='Minor'?root+'m':root+' '+type;
+  return {name:label, notes};
+}
+
+function mkSong(title, artist, diff, pairs) {
+  return {title, artist, diff, chords: pairs.map(([r,t])=>buildChordDef(r,t)).filter(Boolean)};
+}
+
+const PRACTICE_SONGS = [
+  mkSong('Four Chords','Classic Pop',0,[['C','Major'],['G','Major'],['A','Minor'],['F','Major'],['C','Major'],['G','Major'],['A','Minor'],['F','Major']]),
+  mkSong('Let It Be','Beatles Style',0,[['C','Major'],['G','Major'],['A','Minor'],['F','Major']]),
+  mkSong('Minor Blues','Blues Basics',1,[['A','Minor'],['D','Minor'],['E','Minor'],['A','Minor']]),
+  mkSong('Jazz Standards','ii-V-I',1,[['D','Minor'],['G','Dom 7'],['C','Major'],['D','Minor'],['G','Dom 7'],['C','Major']]),
+  mkSong('Autumn Leaves','Jazz Classic',2,[['C','Major'],['F','Dom 7'],['A#','Major'],['D#','Major'],['A','Minor'],['D','Minor'],['G','Dom 7'],['C','Major']]),
+  mkSong('Canon in D','Pachelbel',1,[['D','Major'],['A','Major'],['B','Minor'],['F#','Minor'],['G','Major'],['D','Major'],['G','Major'],['A','Major']]),
+  mkSong('Andalusian Cadence','Flamenco',2,[['A','Minor'],['G','Major'],['F','Major'],['E','Major'],['A','Minor'],['G','Major'],['F','Major'],['E','Major']]),
+  mkSong('Power Chord Rock','Rock Basics',0,[['E','Major'],['A','Major'],['D','Major'],['A','Major'],['E','Major']]),
+  mkSong('Suspended Vibes','Sus Chords',2,[['D','Sus2'],['G','Sus4'],['C','Major'],['D','Sus2'],['G','Sus4'],['A','Major']]),
+  mkSong('Diminished Tension','Advanced',3,[['B','Dim'],['F','Dim'],['C#','Dim7'],['G#','Dim'],['B','Dim'],['E','Minor']]),
+  mkSong('Major 7 Dreams','Jazz Fusion',2,[['C','Major 7'],['F','Major 7'],['G','Major 7'],['C','Major 7']]),
+  mkSong('Soul Changes','R&B',2,[['A','Minor 7'],['D','Minor 7'],['G','Dom 7'],['C','Major'],['F','Major 7'],['E','Dom 7']]),
+  mkSong('Campfire Strummer','Folk',0,[['G','Major'],['C','Major'],['D','Major'],['G','Major'],['E','Minor'],['C','Major'],['D','Major'],['G','Major']]),
+  mkSong('Night Drive','Synthwave',1,[['A','Minor'],['F','Major'],['C','Major'],['G','Major'],['A','Minor'],['F','Major'],['C','Major'],['E','Major']]),
+  mkSong('The Chromatic Walk','Theory Drill',3,[['C','Major'],['C#','Dim'],['D','Minor'],['D#','Dim'],['E','Minor'],['F','Major'],['F#','Dim'],['G','Major']]),
+];
+
+let _selectedPracticeSong = null;
+
+function renderPracticeSongs() {
+  const grid = sel('#practice-song-grid');
+  const allSongs = [...PRACTICE_SONGS, ...getCustomPracticeSongs()];
+  const diffNames = ['Beginner','Easy','Hard','Expert'];
+  grid.innerHTML = allSongs.map((s,i)=>`
+    <div class="song-card" onclick="selectPracticeSong(${i})">
+      <div class="song-card-title">${s.title}</div>
+      <div class="song-card-artist">${s.artist}</div>
+      <div class="song-card-meta">
+        <span class="diff-badge diff-${s.diff}">${diffNames[s.diff]||'Beginner'}</span>
+        <span style="font-size:11px;color:var(--text2);">${s.chords.length} chords</span>
+        ${s.custom?'<span class="custom-badge">CUSTOM</span>':''}
+      </div>
+    </div>`).join('');
+}
+
+function getCustomPracticeSongs() {
+  try {
+    return JSON.parse(localStorage.getItem('cc5_custom')||'[]').map(s=>({...s,custom:true}));
+  } catch { return []; }
+}
+
+function selectPracticeSong(idx) {
+  const allSongs = [...PRACTICE_SONGS, ...getCustomPracticeSongs()];
+  _selectedPracticeSong = allSongs[idx];
+  sel('#pstart-song-name').textContent = _selectedPracticeSong.title;
+  sel('#pstart-artist-name').textContent = _selectedPracticeSong.artist;
+  sel('#pstart-title').textContent = _selectedPracticeSong.title.toUpperCase();
+  // Render instrument grid
+  sel('#instr-grid').innerHTML = INSTRUMENTS.map(ins=>`
+    <div class="instr-btn ${ins.id===selectedInstrument?'sel':''}" onclick="selectInstrument('${ins.id}')">
+      <div class="instr-icon">${ins.icon}</div>
+      <div class="instr-name">${ins.name}</div>
+    </div>`).join('');
+  showScreen('practice-start');
+}
+
+function selectInstrument(id) {
+  selectedInstrument = id;
+  document.querySelectorAll('.instr-btn').forEach(b=>{
+    b.classList.toggle('sel', b.querySelector('.instr-name').textContent.toLowerCase()===id.toLowerCase()||b.onclick?.toString().includes("'"+id+"'"));
+  });
+  sel('#instr-grid').innerHTML = INSTRUMENTS.map(ins=>`
+    <div class="instr-btn ${ins.id===id?'sel':''}" onclick="selectInstrument('${ins.id}')">
+      <div class="instr-icon">${ins.icon}</div>
+      <div class="instr-name">${ins.name}</div>
+    </div>`).join('');
+  // Play a sample note
+  playNoteSound(0, 0.3, 0.6);
+}
+
+// ══════════════════════════════════════════════════════════
+//  PRACTICE RHYTHM GAME
+// ══════════════════════════════════════════════════════════
+let PG = null; // practice game state
+let pgRaf = null;
+
+function startPracticeGame() {
+  if (!_selectedPracticeSong || !_selectedPracticeSong.chords.length) return;
+  pauseMenuMusic();
+  showScreen('practice-game');
+  buildPracticeKeyboard();
+
+  PG = {
+    song: _selectedPracticeSong,
+    chords: [..._selectedPracticeSong.chords],
+    idx: 0,
+    score: 0,
+    combo: 0,
+    pressedNotes: [],
+    timerT: 0,
+    timerDir: 1,
+    beatDur: 2.5,   // seconds per chord window
+    over: false,
+  };
+
+  sel('#pg-score').textContent = '0';
+  sel('#pg-combo').textContent = '0';
+  sel('#pg-feedback').textContent = '';
+  sel('#pg-feedback').className = 'pg-feedback';
+  updatePGProgress();
+  showPGChord();
+
+  if(pgRaf) cancelAnimationFrame(pgRaf);
+  let lastPgT = performance.now();
+  function pgFrame(now) {
+    if(PG.over) return;
+    const dt = Math.min((now-lastPgT)/1000, 0.05);
+    lastPgT = now;
+    PG.timerT += dt * PG.timerDir;
+    if(PG.timerT > 1) PG.timerT=0; // reset cursor
+    // Update cursor position
+    const curEl = sel('#pg-cursor');
+    if(curEl) curEl.style.left = (PG.timerT*100)+'%';
+    pgRaf = requestAnimationFrame(pgFrame);
+  }
+  pgRaf = requestAnimationFrame(pgFrame);
+}
+
+function buildPracticeKeyboard() {
+  // White keys: C D E F G A B (one octave)
+  const WHITE = ['C','D','E','F','G','A','B'];
+  const BLACK = [
+    {note:'C#', pos:0}, {note:'D#', pos:1},
+    null,
+    {note:'F#', pos:3}, {note:'G#', pos:4}, {note:'A#', pos:5},
+  ];
+
+  const wkWrap = sel('#pg-white-keys');
+  const blWrap = sel('#pg-black-layer');
+  wkWrap.innerHTML = WHITE.map(n=>`
+    <div class="wkey" id="pgwk-${n}" onclick="pgPianoClick('${n}')">
+      <span class="wk-n">${n}</span>
+    </div>`).join('');
+  blWrap.innerHTML = '';
+  const totalW = wkWrap.parentElement?.offsetWidth || 680;
+  const keyW = (totalW / 7);
+  BLACK.forEach((bk, idx)=>{
+    if(!bk) return;
+    const x = (idx+0.65)*keyW;
+    const el = document.createElement('div');
+    el.className='bkey';
+    el.id='pgbk-'+bk.note.replace('#','s');
+    el.style.cssText=`left:${x}px;width:${keyW*0.55}px`;
+    el.innerHTML=`<span class="bk-n">${bk.note}</span>`;
+    el.onclick=()=>pgPianoClick(bk.note);
+    blWrap.appendChild(el);
+  });
+}
+
+function pgPianoClick(note) {
+  // Convert to semitone and play
+  const n = note.replace('#','');
+  const acc = note.includes('#') ? '♯' : '';
+  const semi = tokenToSemitone(n+''+acc.replace('♯','♯'));
+  if(semi!==null) playNoteSound(semi);
+  pgHandleKey(n, acc);
+}
+
+function pgHandleKey(letter, acc) {
+  if(!PG || PG.over) return;
+  const token = letter + acc;
+  const semi = tokenToSemitone(token);
+  if(semi===null) return;
+
+  // Light up key
+  const wkEl = sel('#pgwk-'+letter);
+  if(wkEl) { wkEl.classList.add('lit'); setTimeout(()=>wkEl.classList.remove('lit'),180); }
+
+  PG.pressedNotes.push({token, semi});
+
+  // Check if current chord satisfied
+  const target = PG.chords[PG.idx];
+  if(!target) return;
+  const targetSemis = target.notes.map(n=>{
+    const letter=n[0]; const acc=n.length>1?(n[1]==='#'?'♯':''):'' ;
+    return tokenToSemitone(letter+acc);
+  }).filter(s=>s!==null);
+
+  const pressed = [...new Set(PG.pressedNotes.map(p=>p.semi))];
+  const allHit = targetSemis.every(ts => pressed.some(ps=>(ps%12)===ts%12));
+
+  if(allHit) {
+    // Score based on timing (cursor near center = perfect)
+    const center = 0.5;
+    const dist = Math.abs(PG.timerT - center);
+    let feedback, pts;
+    if(dist < 0.12) { feedback='PERFECT!'; pts=100; showPGFeedback('perf','PERFECT!'); }
+    else if(dist < 0.25) { feedback='GOOD'; pts=50; showPGFeedback('good','GOOD'); }
+    else { pts=20; showPGFeedback('good','OK'); }
+
+    PG.combo++;
+    PG.score += pts * Math.max(1, Math.floor(PG.combo/3));
+    sel('#pg-score').textContent = PG.score;
+    sel('#pg-combo').textContent = PG.combo;
+    floatText('+'+pts, window.innerWidth/2, window.innerHeight/2, '#28cc70');
+
+    PG.pressedNotes = [];
+    PG.timerT = 0;
+    PG.idx++;
+    updatePGProgress();
+
+    if(PG.idx >= PG.chords.length) {
+      endPracticeGame(true);
+    } else {
+      showPGChord();
+    }
+  }
+}
+
+function showPGChord() {
+  const chord = PG.chords[PG.idx];
+  if(!chord) return;
+  sel('#pg-chord-name').textContent = chord.name;
+  sel('#pg-chord-notes').textContent = chord.notes.join('  ');
+  const panel = sel('#pg-chord-panel');
+  panel.classList.remove('hit','miss');
+
+  // Highlight target keys
+  const WHITE = ['C','D','E','F','G','A','B'];
+  WHITE.forEach(n=>{ const el=sel('#pgwk-'+n); if(el) el.classList.remove('tgt'); });
+  ['Cs','Ds','Fs','Gs','As'].forEach(n=>{ const el=sel('#pgbk-'+n); if(el) el.classList.remove('tgt'); });
+  chord.notes.forEach(n=>{
+    const letter=n[0]; const isSharp=n.includes('#');
+    if(isSharp) { const el=sel('#pgbk-'+letter+'s'); if(el) el.classList.add('tgt'); }
+    else { const el=sel('#pgwk-'+letter); if(el) el.classList.add('tgt'); }
+  });
+
+  // Next chord label
+  const next = PG.chords[PG.idx+1];
+  sel('#pg-next-lbl').textContent = next ? 'Next: '+next.name : 'Last chord!';
+}
+
+function showPGFeedback(cls, msg) {
+  const el = sel('#pg-feedback');
+  el.textContent = msg;
+  el.className = 'pg-feedback '+cls;
+  setTimeout(()=>{ if(el.textContent===msg) el.textContent=''; el.className='pg-feedback'; }, 900);
+  const panel = sel('#pg-chord-panel');
+  panel.classList.add(cls==='perf'||cls==='good'?'hit':'miss');
+  setTimeout(()=>panel.classList.remove('hit','miss'), 400);
+}
+
+function updatePGProgress() {
+  const total = PG.chords.length;
+  const done = PG.idx;
+  sel('#pg-prog').style.width = (done/total*100)+'%';
+  sel('#pg-chord-counter').textContent = done+'/'+total;
+}
+
+function endPracticeGame(won) {
+  if(pgRaf){cancelAnimationFrame(pgRaf);pgRaf=null;}
+  PG.over=true;
+  const xpGained = Math.floor(PG.score/10);
+  addXP(xpGained);
+  showModal(
+    won?'🎹 COMPLETE':'🎹 PRACTICE',
+    won?'#28cc70':'#3d8aff',
+    `Song: <b>${PG.song.title}</b><br>Score: <b>${PG.score}</b><br>XP earned: <b>+${xpGained}</b>`,
+    [
+      {t:'PLAY AGAIN',fn:()=>{closeModal();startPracticeGame();}},
+      {t:'SONGS',fn:()=>{closeModal();gotoPractice();}},
+      {t:'MENU',fn:()=>{closeModal();gotoHome();},sec:true},
+    ]
+  );
+}
+
+function quitPractice() {
+  if(pgRaf){cancelAnimationFrame(pgRaf);pgRaf=null;}
+  gotoPractice();
+}
+
+// ══════════════════════════════════════════════════════════
+//  LEADERBOARD
+// ══════════════════════════════════════════════════════════
+function renderLeaderboard() {
+  const fakePlayers = [
+    {name:'HarmonyKing', xp:12400}, {name:'ChordMaster', xp:9800},
+    {name:'NeonKeys',    xp:7600},  {name:'VoidPlay',    xp:5200},
+    {name:'RhythmX',    xp:3800},  {name:'PixelNote',   xp:2400},
+    {name:'StormKeys',  xp:1200},
+  ];
+  const playerEntry = {name:'You ◄', xp: progress.xp, level: progress.level, isYou:true};
+  const all = [...fakePlayers.map(p=>({...p,level:Math.floor(p.xp/800)+1})), playerEntry];
+  all.sort((a,b)=>b.xp-a.xp);
+
+  sel('#lb-body').innerHTML = all.map((p,i)=>`
+    <tr class="${p.isYou?'lb-you-row':''}">
+      <td><span class="lb-rank-num ${i<3?'top':''}">#${i+1}</span></td>
+      <td><span class="lb-player-name" style="${p.isYou?'color:var(--blue3)':''}">${p.name}</span></td>
+      <td><span class="lb-lv-val">Lv ${p.level}</span></td>
+      <td><span class="lb-xp-val">${p.xp.toLocaleString()}</span></td>
+    </tr>`).join('');
+}
+
+// ══════════════════════════════════════════════════════════
+//  MATCH HISTORY
+// ══════════════════════════════════════════════════════════
+function getMatchHistory() {
+  try { return JSON.parse(localStorage.getItem('cc5_history')||'[]'); } catch { return []; }
+}
+function saveMatchToHistory(match) {
+  const h = getMatchHistory();
+  h.unshift(match);
+  if(h.length>50) h.length=50;
+  try { localStorage.setItem('cc5_history', JSON.stringify(h)); } catch {}
+}
+
+let _currentMatch = null;
+
+function renderMatchHistory() {
+  const hist = getMatchHistory();
+  const list = sel('#mh-list');
+  if(!hist.length) {
+    list.innerHTML = '<div class="mh-empty">No matches yet — play a game first!</div>';
+    return;
+  }
+  list.innerHTML = hist.map((m,i)=>{
+    const date = new Date(m.date).toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+    return `<div class="mh-item ${m.won?'win':'loss'}" onclick="showMatchDetail(${i})">
+      <div class="mh-outcome ${m.won?'win':'loss'}">${m.won?'W':'L'}</div>
+      <div class="mh-info">
+        <div class="mh-title-row">Wave ${m.wave} · ${m.score} pts · +${m.xpGained} XP</div>
+        <div class="mh-meta-row">${date} · ${(m.keyLog||[]).length} chords deployed</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function showMatchDetail(idx) {
+  const hist = getMatchHistory();
+  _currentMatch = hist[idx];
+  if(!_currentMatch) return;
+
+  const date = new Date(_currentMatch.date).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  sel('#md-title').textContent = _currentMatch.won?'VICTORY':'DEFEAT';
+  sel('#md-header').innerHTML = `
+    <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:center;">
+      <div><div style="font-size:10px;color:var(--text2);letter-spacing:2px;text-transform:uppercase;">Result</div>
+        <div style="font-family:'Teko',sans-serif;font-size:28px;color:${_currentMatch.won?'var(--green)':'var(--red)'};">${_currentMatch.won?'VICTORY':'DEFEAT'}</div></div>
+      <div><div style="font-size:10px;color:var(--text2);letter-spacing:2px;text-transform:uppercase;">Wave</div>
+        <div style="font-family:'Teko',sans-serif;font-size:28px;color:var(--gold);">${_currentMatch.wave}</div></div>
+      <div><div style="font-size:10px;color:var(--text2);letter-spacing:2px;text-transform:uppercase;">Score</div>
+        <div style="font-family:'Teko',sans-serif;font-size:28px;color:var(--teal);">${_currentMatch.score} pts</div></div>
+      <div><div style="font-size:10px;color:var(--text2);letter-spacing:2px;text-transform:uppercase;">XP Gained</div>
+        <div style="font-family:'Teko',sans-serif;font-size:28px;color:var(--gold3);">+${_currentMatch.xpGained}</div></div>
+      <div style="margin-left:auto;font-size:11px;color:var(--text2);">${date}</div>
+    </div>`;
+
+  const keyLog = _currentMatch.keyLog || [];
+  if(!keyLog.length) {
+    sel('#md-chord-list').innerHTML = '<div style="font-size:12px;color:var(--text2);padding:12px;">No chord data recorded</div>';
+  } else {
+    sel('#md-chord-list').innerHTML = keyLog.map((entry,i)=>`
+      <div class="md-chord-row deployed">
+        <span class="md-c-num">${i+1}</span>
+        <span class="md-c-chord">${entry.chord}</span>
+        <span class="md-c-keys">${(entry.notes||[]).join(' ')}</span>
+        <span class="md-c-time">${entry.t?entry.t.toFixed(1)+'s':''}</span>
+      </div>`).join('');
+  }
+  showScreen('match-detail');
+}
+
+function exportSheetMusic() {
+  if(!_currentMatch) return;
+  const text = generateSheetMusicText(_currentMatch);
+  downloadText('sheet_music.txt', text);
+}
+
+function exportChordAnalysis() {
+  if(!_currentMatch) return;
+  const text = generateChordAnalysisText(_currentMatch);
+  downloadText('chord_analysis.txt', text);
+}
+
+function generateSheetMusicText(match) {
+  const lines = [];
+  lines.push('CHORD CLASH — SHEET MUSIC EXPORT');
+  lines.push('='.repeat(50));
+  lines.push('Date: '+new Date(match.date).toLocaleString());
+  lines.push('Result: '+(match.won?'VICTORY':'DEFEAT')+' | Wave: '+match.wave+' | Score: '+match.score);
+  lines.push('');
+  lines.push('CHORD LOG');
+  lines.push('-'.repeat(50));
+  const keyLog = match.keyLog || [];
+  keyLog.forEach((entry,i)=>{
+    const pad = String(i+1).padStart(3,' ');
+    lines.push(`${pad}. ${entry.chord.padEnd(20,' ')} Notes: ${(entry.notes||[]).join(' ')}`);
+  });
+  lines.push('');
+  lines.push('STAFF (simplified ASCII):');
+  lines.push('-'.repeat(50));
+  lines.push('|------|------|------|------|');
+  keyLog.forEach((entry,i)=>{
+    lines.push(`| ${(entry.chord).slice(0,6).padEnd(6,' ')} |`);
+    if((i+1)%4===0) lines.push('|------|------|------|------|');
+  });
+  return lines.join('\n');
+}
+
+function generateChordAnalysisText(match) {
+  const lines = [];
+  lines.push('CHORD CLASH — CHORD PROGRESSION ANALYSIS');
+  lines.push('='.repeat(50));
+  lines.push('Date: '+new Date(match.date).toLocaleString());
+  lines.push('');
+  const keyLog = match.keyLog || [];
+  if(!keyLog.length) { lines.push('No chord data.'); return lines.join('\n'); }
+
+  lines.push('CHORDS USED:');
+  const counts = {};
+  keyLog.forEach(e=>{ counts[e.chord]=(counts[e.chord]||0)+1; });
+  Object.entries(counts).sort((a,b)=>b[1]-a[1]).forEach(([name,cnt])=>{
+    lines.push(`  ${name.padEnd(20,' ')} x${cnt}  — ${describeChordType(name)}`);
+  });
+
+  lines.push('');
+  lines.push('PROGRESSIONS DETECTED:');
+  const progs = detectProgressions(keyLog);
+  if(!progs.length) lines.push('  None detected');
+  else progs.forEach(p=>lines.push('  '+p));
+
+  lines.push('');
+  lines.push('MUSIC THEORY NOTES:');
+  lines.push('  Major chords = bright, stable; commonly used as tonic (I) or dominant (V)');
+  lines.push('  Minor chords = melancholic; common as ii, iii, or vi in major keys');
+  lines.push('  Dim chords   = tense, dissonant; often used as passing chords (vii°)');
+  return lines.join('\n');
+}
+
+function describeChordType(name) {
+  const n = name.toLowerCase();
+  if(n.includes('major')) return 'Major triad — consonant, stable';
+  if(n.includes('minor')) return 'Minor triad — melancholic, introspective';
+  if(n.includes('dim'))   return 'Diminished — tense, unstable, needs resolution';
+  return 'Chord — see music theory guides';
+}
+
+function detectProgressions(keyLog) {
+  const found = [];
+  if(keyLog.length < 3) return found;
+  for(let i=0;i<=keyLog.length-3;i++) {
+    const w = keyLog.slice(i,i+3).map(e=>e.chord.toLowerCase());
+    if(w.every(c=>c.includes('major'))) found.push('I-IV-V progression (all major) — Blues / Rock / Pop');
+    if(w[0].includes('minor')&&w[1].includes('major')&&w[2].includes('major')) found.push('ii-V-I progression (minor→major→major) — Jazz turnaround');
+    if(w[0].includes('major')&&w[1].includes('minor')&&w[2].includes('major')) found.push('I-vi-IV progression — Pop ballad (1500+ songs use this!)');
+  }
+  return [...new Set(found)];
+}
+
+function downloadText(filename, text) {
+  const a = document.createElement('a');
+  a.href = 'data:text/plain;charset=utf-8,'+encodeURIComponent(text);
+  a.download = filename;
+  a.click();
+}
+
+// ══════════════════════════════════════════════════════════
+//  LESSONS
+// ══════════════════════════════════════════════════════════
+const LESSONS = [
+  {
+    title:'What is a Chord?', tag:'Basics',
+    desc:'Learn how chords are built from intervals and why they sound the way they do.',
+    content:`<h3>What is a Chord?</h3>
+      <p>A <strong>chord</strong> is three or more notes played simultaneously. The simplest chords are <strong>triads</strong> — built from a root note plus two intervals.</p>
+      <div class="lesson-example">Root → +3 or +4 semitones → +7 semitones from root</div>
+      <p>The gap between notes (interval) determines whether a chord sounds <strong>happy (major)</strong>, <strong>sad (minor)</strong>, or <strong>tense (diminished)</strong>.</p>`,
+  },
+  {
+    title:'Major Chords', tag:'Chords',
+    desc:'Bright, happy, stable. Learn the formula and every major triad.',
+    content:`<h3>Major Chords</h3>
+      <p>A <strong>major chord</strong> = root + major 3rd (4 semitones) + perfect 5th (7 semitones).</p>
+      <div class="lesson-example">C Major: C – E – G &nbsp;|&nbsp; G Major: G – B – D &nbsp;|&nbsp; F Major: F – A – C</div>
+      <p>Major chords sound <strong>bright and resolved</strong>. In a key, the I, IV, and V chords are major — forming the backbone of pop, rock, and blues.</p>`,
+  },
+  {
+    title:'Minor Chords', tag:'Chords',
+    desc:'Melancholic and expressive. The minor third is what changes everything.',
+    content:`<h3>Minor Chords</h3>
+      <p>A <strong>minor chord</strong> = root + minor 3rd (3 semitones) + perfect 5th (7 semitones).</p>
+      <div class="lesson-example">A Minor: A – C – E &nbsp;|&nbsp; D Minor: D – F – A &nbsp;|&nbsp; E Minor: E – G – B</div>
+      <p>Lower the 3rd by one semitone and a chord shifts from major to minor — one note, completely different emotion. Minor chords appear as ii, iii, and vi in major keys.</p>`,
+  },
+  {
+    title:'Diminished Chords', tag:'Chords',
+    desc:'Maximum tension. Learn when and why composers use diminished chords.',
+    content:`<h3>Diminished Chords</h3>
+      <p>A <strong>diminished chord</strong> = root + minor 3rd (3) + diminished 5th (6 semitones).</p>
+      <div class="lesson-example">B Diminished: B – D – F &nbsp;|&nbsp; C Dim: C – E♭ – G♭</div>
+      <p>The flat-5 (tritone) creates extreme dissonance. Diminished chords act as <strong>leading-tone chords (vii°)</strong> that strongly pull toward resolution.</p>`,
+  },
+  {
+    title:'Chord Progressions', tag:'Theory',
+    desc:'How sequences of chords create emotion, tension, and resolution in music.',
+    content:`<h3>Chord Progressions</h3>
+      <p>A <strong>progression</strong> is a sequence of chords. The order matters — it creates <strong>tension and resolution</strong>.</p>
+      <div class="lesson-example">I – IV – V – I: The most common progression in western music (Blues, Rock, Pop)</div>
+      <div class="lesson-example">ii – V – I: The "jazz turnaround" — creates strong forward motion to the tonic</div>
+      <div class="lesson-example">I – V – vi – IV: "Pop progression" — used in thousands of hit songs</div>
+      <p>In Chord Clash, triggering these progressions activates powerful <strong>combo buffs</strong>!</p>`,
+  },
+  {
+    title:'The Circle of Fifths', tag:'Theory',
+    desc:'The map of all keys and their relationships. Essential music theory knowledge.',
+    content:`<h3>Circle of Fifths</h3>
+      <p>Moving clockwise adds one sharp; counterclockwise adds one flat. Adjacent keys are <strong>closely related</strong> — they share many notes and chords.</p>
+      <div class="lesson-example">C → G → D → A → E → B → F# → C#  (clockwise, adding sharps)</div>
+      <p>When you modulate (change key) in a song, you typically move to a neighboring key on the circle. This is why <strong>I–IV–V</strong> sounds so natural: IV and V are directly adjacent to I.</p>`,
+  },
+  {
+    title:'Reading Chord Symbols', tag:'Notation',
+    desc:'Decode chord notation — from C to Cmaj7 to Cm7♭5.',
+    content:`<h3>Chord Symbols</h3>
+      <p>Chord symbols are a compact way to write chords in lead sheets and charts:</p>
+      <div class="lesson-example">C = C Major &nbsp;|&nbsp; Cm = C Minor &nbsp;|&nbsp; C7 = C Dominant 7th</div>
+      <div class="lesson-example">Cmaj7 = C Major 7th &nbsp;|&nbsp; Cm7 = C Minor 7th &nbsp;|&nbsp; C° = C Diminished</div>
+      <p>In Chord Clash, you type note names (C E G) and the game identifies the chord for you — no need to memorize symbols until you're ready!</p>`,
+  },
+];
+
+function renderLessons() {
+  sel('#lesson-list').innerHTML = LESSONS.map((l,i)=>`
+    <div class="lesson-card" onclick="toggleLesson(${i})">
+      <div class="lesson-card-header">
+        <div class="lesson-card-title">${l.title}</div>
+        <span class="lesson-tag">${l.tag}</span>
+      </div>
+      <div class="lesson-card-desc">${l.desc}</div>
+      <div class="lesson-content" id="lesson-${i}">${l.content}</div>
+    </div>`).join('');
+}
+
+function toggleLesson(idx) {
+  const el = sel('#lesson-'+idx);
+  if(!el) return;
+  el.classList.toggle('open');
+}
+
+// ══════════════════════════════════════════════════════════
+//  CREATE SONG
+// ══════════════════════════════════════════════════════════
+const CHORD_BUILD_DEFS = {
+  'Major':   [0,4,7], 'Minor':   [0,3,7],
+  'Dom 7':   [0,4,7,10], 'Major 7': [0,4,7,11],
+  'Minor 7': [0,3,7,10], 'Sus2':    [0,2,7],
+  'Sus4':    [0,5,7],    'Dim':     [0,3,6],
+  'Aug':     [0,4,8],    'Dim7':    [0,3,6,9],
+};
+
+let createSeq = [];
+
+function updateCsPreview() {
+  const root = sel('#cs-root')?.value;
+  const type = sel('#cs-type')?.value;
+  if(!root||!type) return;
+  const intervals = CHORD_BUILD_DEFS[type];
+  if(!intervals) { sel('#cs-preview').textContent='—'; return; }
+  const ri = CHROMATIC.indexOf(root);
+  const notes = intervals.map(i=>CHROMATIC[(ri+i)%12]);
+  sel('#cs-preview').textContent = notes.join(' + ');
+}
+
+function addCsChord() {
+  if(createSeq.length>=24) { showCsMsg('Max 24 chords per song.','var(--red)'); return; }
+  const root = sel('#cs-root').value;
+  const type = sel('#cs-type').value;
+  const intervals = CHORD_BUILD_DEFS[type];
+  if(!intervals) return;
+  const ri = CHROMATIC.indexOf(root);
+  const notes = intervals.map(i=>CHROMATIC[(ri+i)%12]);
+  const label = type==='Major'?root:type==='Minor'?root+'m':root+' '+type;
+  createSeq.push({name:label, notes});
+  renderCsSeq();
+}
+
+function removeFromCsSeq(i) { createSeq.splice(i,1); renderCsSeq(); }
+function clearCsSeq() { createSeq=[]; renderCsSeq(); }
+
+function renderCsSeq() {
+  sel('#cs-count').textContent='('+createSeq.length+')';
+  if(!createSeq.length) {
+    sel('#cs-seq-list').innerHTML='<div style="font-size:12px;color:var(--text2);text-align:center;padding:20px;">No chords yet — add some above!</div>';
+    return;
+  }
+  sel('#cs-seq-list').innerHTML = createSeq.map((c,i)=>`
+    <div class="cs-item">
+      <span class="cs-num">${i+1}</span>
+      <span class="cs-name">${c.name}</span>
+      <span class="cs-notes">${c.notes.join(' + ')}</span>
+      <button class="cs-del" onclick="removeFromCsSeq(${i})">✕</button>
+    </div>`).join('');
+}
+
+function saveCustomSong() {
+  const title = sel('#cs-title')?.value.trim();
+  const artist = sel('#cs-artist')?.value.trim()||'My Band';
+  if(!title) { showCsMsg('Please enter a title.','var(--red)'); return; }
+  if(createSeq.length<2) { showCsMsg('Add at least 2 chords.','var(--red)'); return; }
+  const song = {title, artist, diff:1, chords:[...createSeq], custom:true};
+  const saved = getSavedCustomSongs();
+  saved.push(song);
+  try { localStorage.setItem('cc5_custom', JSON.stringify(saved)); } catch {}
+  createSeq=[]; renderCsSeq();
+  sel('#cs-title').value=''; sel('#cs-artist').value='';
+  showCsMsg('✓ "'+title+'" saved! Find it in Practice.','var(--green)');
+  renderSavedSongs();
+}
+
+function getSavedCustomSongs() { try{return JSON.parse(localStorage.getItem('cc5_custom')||'[]');}catch{return[];} }
+
+function deleteSavedSong(i) {
+  const saved = getSavedCustomSongs();
+  saved.splice(i,1);
+  try{localStorage.setItem('cc5_custom',JSON.stringify(saved));}catch{}
+  renderSavedSongs();
+}
+
+function renderSavedSongs() {
+  const saved = getSavedCustomSongs();
+  const list = sel('#cs-saved-list');
+  if(!list) return;
+  if(!saved.length) { list.innerHTML='<div style="font-size:12px;color:var(--text2);padding:10px 0;">No saved songs yet.</div>'; return; }
+  list.innerHTML = saved.map((s,i)=>`
+    <div class="ss-item">
+      <div style="flex:1;">
+        <div class="ss-title">${s.title} <span class="custom-badge">CUSTOM</span></div>
+        <div class="ss-meta">${s.artist} · ${s.chords.length} chords</div>
+      </div>
+      <button class="ss-del-btn" onclick="deleteSavedSong(${i})">Delete</button>
+    </div>`).join('');
+}
+
+function showCsMsg(msg, color) {
+  const el = sel('#cs-msg');
+  if(!el) return;
+  el.textContent=msg; el.style.color=color||'var(--text2)';
+  setTimeout(()=>{if(el.textContent===msg)el.textContent='';},4000);
 }
 
 // ══════════════════════════════════════════════════════════
