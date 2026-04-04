@@ -1,1903 +1,1603 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Chord Clash</title></head><body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chord Clash</title>
+<link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600;700&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Barlow+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap');
-*{box-sizing:border-box;margin:0;padding:0}
+/* ─── RESET & ROOT ─── */
+*{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --bg:#0a0a0f;--surf:#13131f;--surf2:#1c1c2e;
-  --accent:#00f5ff;--accent2:#ff006e;--accent3:#7b2fff;
-  --gold:#ffd700;--grn:#00ff88;--red:#ff3366;
-  --text:#e0e0ff;--muted:#6060a0;
-  --perf:#00ff88;--good:#ffd700;--miss:#ff3366;
+  --bg:#07080d;
+  --bg2:#0b0d14;
+  --panel:#0e1018;
+  --panel2:#121520;
+  --border:#1a1e2e;
+  --border2:#232840;
+  --gold:#e8b84b;
+  --gold2:#c49030;
+  --gold3:#f5d070;
+  --blue:#3d8aff;
+  --blue2:#2060cc;
+  --blue3:#6aabff;
+  --red:#ff3d50;
+  --red2:#cc2030;
+  --purple:#9955ff;
+  --purple2:#7030cc;
+  --purple3:#bb88ff;
+  --orange:#ff7a20;
+  --orange2:#cc5500;
+  --green:#28cc70;
+  --green2:#189940;
+  --teal:#20c8b0;
+  --text:#bcc5d8;
+  --text2:#5c6480;
+  --text3:#8898b8;
 }
-body{background:var(--bg);color:var(--text);font-family:'Exo 2',sans-serif;min-height:100vh;overflow-x:hidden}
-.screen{display:none;min-height:100vh;padding:16px}
-.screen.active{display:flex;flex-direction:column;align-items:center;justify-content:center}
-h1.logo{font-family:'Orbitron',monospace;font-size:clamp(1.8rem,5vw,3.5rem);font-weight:900;
-  background:linear-gradient(135deg,var(--accent),var(--accent3),var(--accent2));
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:'Barlow',sans-serif;color:var(--text);}
+
+/* ─── SCREENS ─── */
+.screen{position:absolute;inset:0;display:none;flex-direction:column;}
+.screen.active{display:flex;}
+
+/* ══════════════════════════════════════
+   HOME SCREEN
+══════════════════════════════════════ */
+#home{align-items:center;justify-content:center;background:var(--bg);overflow:hidden;}
+
+.home-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 50%, rgba(61,138,255,0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 40% at 20% 80%, rgba(153,85,255,0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 80% 20%, rgba(232,184,75,0.04) 0%, transparent 60%);
+  pointer-events:none;
+}
+/* Animated staff lines */
+.home-staff{position:absolute;inset:0;pointer-events:none;opacity:0.04;}
+.home-staff::before{
+  content:'';position:absolute;left:0;right:0;top:50%;
+  height:60px;transform:translateY(-50%);
+  background:repeating-linear-gradient(0deg,transparent,transparent 10px,var(--gold) 10px,var(--gold) 11px);
+}
+
+.home-inner{position:relative;z-index:1;text-align:center;display:flex;flex-direction:column;align-items:center;gap:0;}
+
+.game-logo{
+  font-family:'Teko',sans-serif;
+  font-size:clamp(64px,10vw,120px);
+  font-weight:700;
+  line-height:0.9;
+  background:linear-gradient(170deg, var(--gold3) 0%, var(--gold) 45%, var(--gold2) 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  letter-spacing:4px;margin-bottom:6px;text-align:center}
-.tagline{color:var(--muted);font-size:13px;letter-spacing:3px;text-transform:uppercase;margin-bottom:32px}
-.btn{background:transparent;border:1px solid var(--accent);color:var(--accent);
-  font-family:'Exo 2',sans-serif;font-size:14px;padding:10px 24px;cursor:pointer;
-  letter-spacing:2px;text-transform:uppercase;transition:all 0.18s;border-radius:4px;font-weight:600}
-.btn:hover{background:var(--accent);color:var(--bg)}
-.btn.gold{border-color:var(--gold);color:var(--gold)}.btn.gold:hover{background:var(--gold);color:var(--bg)}
-.btn.pur{border-color:var(--accent3);color:var(--accent3)}.btn.pur:hover{background:var(--accent3);color:#fff}
-.btn.red{border-color:var(--red);color:var(--red)}.btn.red:hover{background:var(--red);color:#fff}
-.btn.grn{border-color:var(--grn);color:var(--grn)}.btn.grn:hover{background:var(--grn);color:var(--bg)}
-.menu-btns{display:flex;flex-direction:column;gap:10px;width:210px}
-.sec-title{font-family:'Orbitron',monospace;font-size:12px;color:var(--accent);letter-spacing:3px;text-transform:uppercase;margin-bottom:16px;text-align:center}
-.level-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;width:100%;max-width:820px}
-.lvl-card{background:var(--surf);border:1px solid #2a2a4a;border-radius:8px;padding:14px;cursor:pointer;transition:all 0.18s}
-.lvl-card:hover{border-color:var(--accent);transform:translateY(-2px)}
-.lvl-card h3{font-family:'Orbitron',monospace;font-size:11px;color:var(--text);margin-bottom:3px}
-.lvl-card .art{font-size:11px;color:var(--muted);margin-bottom:8px}
-.lvl-card .meta{display:flex;justify-content:space-between;align-items:center}
-.stars{color:var(--gold);font-size:10px}
-.dbadge{padding:2px 6px;border-radius:3px;font-size:9px;font-weight:600;letter-spacing:1px}
-.d0{background:#003322;color:var(--grn);border:1px solid var(--grn)}
-.d1{background:#332200;color:var(--gold);border:1px solid var(--gold)}
-.d2{background:#330011;color:var(--red);border:1px solid var(--red)}
-.d3{background:#1a0033;color:#bf5fff;border:1px solid #bf5fff}
-.diff-opts{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:460px;width:100%}
-.dopt{background:var(--surf);border:2px solid #2a2a4a;border-radius:8px;padding:16px;cursor:pointer;transition:all 0.18s;text-align:center}
-.dopt:hover{transform:scale(1.03)}.dopt.sel{border-color:var(--accent)}
-.dopt h3{font-family:'Orbitron',monospace;font-size:12px;margin-bottom:4px}
-.dopt p{font-size:11px;color:var(--muted)}
-
-/* Gameplay HUD */
-.hud{display:flex;justify-content:space-between;align-items:center;width:100%;max-width:760px;margin-bottom:10px}
-.sb{text-align:center}
-.slabel{font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase}
-.sval{font-family:'Orbitron',monospace;font-size:24px;font-weight:700}
-.sval.p{color:var(--accent)}.sval.a{color:var(--accent2)}
-.prog-bar{width:100%;max-width:760px;height:3px;background:#1c1c2e;border-radius:2px;margin-bottom:12px}
-.prog-fill{height:100%;background:linear-gradient(90deg,var(--accent3),var(--accent));border-radius:2px;transition:width 0.3s}
-.stage{width:100%;max-width:760px;display:flex;flex-direction:column;align-items:center;gap:12px}
-
-/* Tower Defense Lane */
-.lane-wrap{width:100%;max-width:760px;height:80px;background:var(--surf);border:1px solid #2a2a4a;border-radius:8px;position:relative;overflow:hidden}
-.lane-label{position:absolute;top:4px;left:8px;font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;z-index:2}
-.tower{position:absolute;width:28px;height:52px;border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:14px;z-index:3}
-.tower-p{left:8px;top:14px;background:#003322;border:1px solid var(--grn)}
-.tower-a{right:8px;top:14px;background:#330011;border:1px solid var(--red)}
-.hp-bar-wrap{position:absolute;bottom:4px;height:5px;border-radius:2px;background:#2a2a4a;z-index:4}
-.hp-bar-p{left:44px;width:80px}
-.hp-bar-a{right:44px;width:80px}
-.hp-fill{height:100%;border-radius:2px;transition:width 0.3s}
-.hp-fill-p{background:var(--grn)}
-.hp-fill-a{background:var(--red)}
-.unit{position:absolute;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;top:50%;transform:translateY(-50%);z-index:3;transition:left 0.05s linear}
-.unit-p{background:var(--accent);color:var(--bg)}
-.unit-a{background:var(--accent2);color:#fff}
-.hp-text{position:absolute;font-family:'Orbitron',monospace;font-size:9px;bottom:12px;z-index:5}
-.hp-text-p{left:44px;color:var(--grn)}
-.hp-text-a{right:44px;color:var(--red);text-align:right}
-
-/* Chord display */
-.chord-disp{background:var(--surf);border:2px solid #2a2a4a;border-radius:10px;padding:20px 40px;text-align:center;min-width:260px;transition:border-color 0.12s}
-.chord-disp.perf{border-color:var(--perf)}
-.chord-disp.good{border-color:var(--good)}
-.chord-disp.miss{border-color:var(--miss)}
-.chord-name{font-family:'Orbitron',monospace;font-size:26px;font-weight:900;color:var(--text);margin-bottom:6px}
-.chord-notes{font-size:16px;color:var(--accent);letter-spacing:5px;font-weight:600}
-.timing-wrap{width:100%;max-width:360px}
-.t-bar{height:8px;background:var(--surf2);border-radius:4px;position:relative;overflow:hidden}
-.tz-bg{position:absolute;inset:0;background:#1a0008}
-.tz-gl{position:absolute;top:0;bottom:0;left:20%;width:20%;background:#1a1200}
-.tz-gr{position:absolute;top:0;bottom:0;right:20%;width:20%;background:#1a1200}
-.tz-p{position:absolute;top:0;bottom:0;left:40%;right:40%;background:#001a0a}
-.tcur{position:absolute;top:0;bottom:0;width:4px;background:white;border-radius:2px}
-.fb-text{font-family:'Orbitron',monospace;font-size:20px;font-weight:700;min-height:28px;text-align:center}
-.fb-text.perf{color:var(--perf)}.fb-text.good{color:var(--good)}.fb-text.miss{color:var(--miss)}
-.combo-disp{font-size:11px;color:var(--muted);letter-spacing:2px}
-.combo-disp span{color:var(--gold);font-family:'Orbitron',monospace;font-size:16px;font-weight:700}
-
-/* Piano */
-.piano-wrap{position:relative;width:100%;max-width:700px;height:110px;user-select:none}
-.white-keys{display:flex;width:100%;height:100%}
-.wkey{flex:1;background:#ddd8ff;border:1px solid #3a3060;border-radius:0 0 4px 4px;
-  cursor:pointer;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;
-  padding-bottom:5px;transition:background 0.06s;min-width:0}
-.wkey:hover{background:#ccc4ff}
-.wkey.lit{background:var(--accent);border-color:var(--accent)}
-.wkey.tgt{background:#fffa60;border-color:var(--gold);border-width:2px}
-.wkey.tgt.lit{background:var(--accent)}
-.wk-n{font-family:'Orbitron',monospace;font-size:8px;color:#3a3060;font-weight:700;line-height:1}
-.wk-k{font-size:7px;color:#8078b0;margin-top:1px}
-.wkey.lit .wk-n,.wkey.lit .wk-k{color:var(--bg)}
-.wkey.tgt .wk-n,.wkey.tgt .wk-k{color:#4a3800}
-.wkey.tgt.lit .wk-n,.wkey.tgt.lit .wk-k{color:var(--bg)}
-.black-layer{position:absolute;top:0;left:0;width:100%;height:60%;pointer-events:none}
-.bkey{position:absolute;background:#180d30;border:1px solid #4a40a0;border-radius:0 0 3px 3px;
-  height:100%;cursor:pointer;pointer-events:all;display:flex;flex-direction:column;
-  justify-content:flex-end;align-items:center;padding-bottom:4px;transition:background 0.06s;z-index:2}
-.bkey:hover{background:#2a1850}
-.bkey.lit{background:var(--accent3);border-color:var(--accent3)}
-.bkey.tgt{background:#3a2800;border-color:var(--gold);border-width:2px}
-.bkey.tgt.lit{background:var(--accent3)}
-.bk-n{font-family:'Orbitron',monospace;font-size:7px;color:#a090d0;font-weight:700;line-height:1}
-.bk-k{font-size:6px;color:#6050a0;margin-top:1px}
-.bkey.lit .bk-n,.bkey.lit .bk-k{color:#fff}
-.bkey.tgt .bk-n,.bkey.tgt .bk-k{color:var(--gold)}
-.bkey.tgt.lit .bk-n,.bkey.tgt.lit .bk-k{color:#fff}
-
-/* Results */
-.r-out{font-family:'Orbitron',monospace;font-size:clamp(1.8rem,7vw,3rem);font-weight:900;text-align:center}
-.r-out.win{color:var(--grn)}.r-out.loss{color:var(--red)}
-.rstat{background:var(--surf);border-radius:8px;padding:12px;text-align:center;border:1px solid #2a2a4a}
-.rstat label{font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;display:block;margin-bottom:4px}
-.rv{font-family:'Orbitron',monospace;font-size:20px;font-weight:700}
-.eol-line{font-size:12px;color:var(--gold);letter-spacing:2px;text-align:center}
-
-/* Tutorial */
-.tut-box{background:var(--surf);border:1px solid #2a2a4a;border-radius:10px;padding:24px;max-width:500px;width:100%;text-align:center}
-.tut-step{font-size:12px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
-.tut-title{font-family:'Orbitron',monospace;font-size:18px;color:var(--accent);margin-bottom:12px}
-.tut-body{font-size:13px;color:var(--text);line-height:1.7;margin-bottom:18px}
-.tut-hint{font-size:12px;color:var(--muted);margin-bottom:18px}
-.tut-piano{position:relative;width:100%;max-width:360px;height:80px;margin:0 auto 16px}
-
-/* Keybind settings */
-.kb-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:400px;width:100%}
-.kb-row{display:flex;justify-content:space-between;align-items:center;background:var(--surf);
-  border:1px solid #2a2a4a;border-radius:6px;padding:8px 12px;font-size:12px}
-.kb-note{color:var(--accent);font-family:'Orbitron',monospace;font-weight:700}
-.kb-key{background:var(--surf2);border:1px solid #3a3a5a;border-radius:3px;padding:3px 8px;
-  font-family:'Orbitron',monospace;font-size:11px;color:var(--text);cursor:pointer;min-width:36px;text-align:center}
-.kb-key.listening{border-color:var(--accent);color:var(--accent);animation:blink 0.6s infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0.4}}
-
-/* Leaderboard */
-.lb-tbl{width:100%;max-width:520px;border-collapse:collapse}
-.lb-tbl th{font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;padding:7px 10px;text-align:left;border-bottom:1px solid #2a2a4a}
-.lb-tbl td{padding:10px;border-bottom:1px solid #13131f;font-size:12px}
-.lb-rank{font-family:'Orbitron',monospace;color:var(--muted)}.lb-rank.top{color:var(--gold)}
-.lb-eol{font-family:'Orbitron',monospace;color:var(--accent);text-align:right}
-.lb-you{color:var(--accent2)}
-.particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:-1}
-.particle{position:absolute;width:2px;height:2px;border-radius:50%;opacity:0.25;animation:pflt linear infinite}
-@keyframes pflt{0%{transform:translateY(100vh)}100%{transform:translateY(-10px)}}
-
-/* Miss & Perfect animations */
-@keyframes missPulse{
-  0%{transform:scale(1)}15%{transform:scale(1.03) translateX(-5px)}35%{transform:scale(1.02) translateX(5px)}55%{transform:scale(1.03) translateX(-3px)}75%{transform:scale(1.01) translateX(2px)}100%{transform:scale(1)}
+  filter:drop-shadow(0 0 40px rgba(232,184,75,0.35));
+  letter-spacing:6px;
+  animation:logoPulse 4s ease-in-out infinite;
 }
-@keyframes perfectPulse{
-  0%{transform:scale(1)}30%{transform:scale(1.07)}60%{transform:scale(1.03)}100%{transform:scale(1)}
+@keyframes logoPulse{0%,100%{filter:drop-shadow(0 0 30px rgba(232,184,75,0.3))}50%{filter:drop-shadow(0 0 60px rgba(232,184,75,0.6));}}
+
+.game-tagline{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(13px,2vw,18px);
+  letter-spacing:6px;
+  color:var(--text2);
+  text-transform:uppercase;
+  margin-top:6px;
+  margin-bottom:40px;
 }
-.chord-disp.anim-miss{animation:missPulse 0.45s ease}
-.chord-disp.anim-perf{animation:perfectPulse 0.5s ease}
 
-/* Lesson cards */
-.lesson-card{background:var(--surf);border:1px solid #2a2a4a;border-radius:8px;padding:18px;cursor:pointer;transition:all 0.18s;max-width:680px;width:100%;margin-bottom:10px}
-.lesson-card:hover{border-color:var(--accent);transform:translateX(4px)}
-.lesson-card h3{font-family:'Orbitron',monospace;font-size:13px;color:var(--accent);margin-bottom:6px}
-.lesson-card p{font-size:12px;color:var(--muted);line-height:1.6}
-.lesson-detail{background:var(--surf2);border-radius:6px;padding:12px;margin-top:10px;font-size:12px;color:var(--text);line-height:1.8;display:none}
-.lesson-card.open .lesson-detail{display:block}
-.lesson-tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:9px;font-weight:700;letter-spacing:1px;margin-right:6px;margin-bottom:6px}
-
-/* Create Song screen */
-.create-form{width:100%;max-width:720px;display:flex;flex-direction:column;gap:14px}
-.create-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.create-inp{background:var(--surf);border:1px solid #2a2a4a;border-radius:6px;color:var(--text);font-family:'Exo 2',sans-serif;font-size:13px;padding:9px 13px;outline:none;transition:border-color 0.15s;width:100%}
-.create-inp:focus{border-color:var(--accent)}
-.create-sel{background:var(--surf);border:1px solid #2a2a4a;border-radius:6px;color:var(--text);font-family:'Exo 2',sans-serif;font-size:12px;padding:8px 10px;outline:none;cursor:pointer;transition:border-color 0.15s}
-.create-sel:focus{border-color:var(--accent)}
-.chord-builder-row{display:flex;align-items:center;gap:10px;background:var(--surf);border:1px solid #2a2a4a;border-radius:8px;padding:12px;flex-wrap:wrap}
-.cb-preview{font-size:11px;color:var(--accent);letter-spacing:2px;min-width:80px}
-.chord-seq{display:flex;flex-direction:column;gap:5px;max-height:260px;overflow-y:auto;padding-right:4px}
-.chord-seq::-webkit-scrollbar{width:4px}.chord-seq::-webkit-scrollbar-track{background:#1c1c2e}.chord-seq::-webkit-scrollbar-thumb{background:#3a3a5a;border-radius:2px}
-.cs-item{display:flex;align-items:center;gap:8px;background:var(--surf);border:1px solid #2a2a4a;border-radius:6px;padding:8px 11px;font-size:12px;transition:border-color 0.12s}
-.cs-item:hover{border-color:#3a3a5a}
-.cs-num{font-family:'Orbitron',monospace;font-size:9px;color:var(--muted);min-width:18px}
-.cs-name{flex:1;color:var(--accent);font-family:'Orbitron',monospace;font-size:11px}
-.cs-notes{font-size:10px;color:var(--muted)}
-.cs-del{background:none;border:1px solid #2a2a4a;color:var(--muted);width:20px;height:20px;border-radius:3px;cursor:pointer;font-size:11px;line-height:1;transition:all 0.12s}
-.cs-del:hover{border-color:var(--red);color:var(--red)}
-.cs-empty{font-size:11px;color:var(--muted);text-align:center;padding:20px;border:1px dashed #2a2a4a;border-radius:6px}
-.saved-song-row{display:flex;align-items:center;gap:8px;background:var(--surf);border:1px solid #2a2a4a;border-radius:6px;padding:9px 12px;margin-bottom:5px}
-.ss-title{flex:1;font-family:'Orbitron',monospace;font-size:11px;color:var(--text)}
-.ss-artist{font-size:10px;color:var(--muted);margin-right:4px}
-.custom-badge{display:inline-block;background:#001a33;border:1px solid var(--accent);color:var(--accent);font-size:8px;font-weight:700;letter-spacing:1px;padding:1px 5px;border-radius:3px;margin-left:4px}
-
-/* Exit overlay */
-.exit-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.82);z-index:100;align-items:center;justify-content:center;flex-direction:column;gap:16px}
-.exit-overlay.active{display:flex}
-.exit-box{background:var(--surf);border:1px solid var(--red);border-radius:12px;padding:32px 40px;text-align:center;max-width:340px;width:90%}
-.exit-box h2{font-family:'Orbitron',monospace;font-size:18px;color:var(--red);margin-bottom:10px}
-.exit-box p{font-size:12px;color:var(--muted);margin-bottom:22px;line-height:1.6}
-.exit-btns{display:flex;gap:10px;justify-content:center}
-.exit-btn-quit{background:transparent;border:1px solid var(--red);color:var(--red);font-family:'Exo 2',sans-serif;font-size:13px;padding:9px 22px;cursor:pointer;letter-spacing:2px;text-transform:uppercase;border-radius:4px;font-weight:600;transition:all 0.15s}
-.exit-btn-quit:hover{background:var(--red);color:#fff}
-.exit-btn-stay{background:transparent;border:1px solid var(--grn);color:var(--grn);font-family:'Exo 2',sans-serif;font-size:13px;padding:9px 22px;cursor:pointer;letter-spacing:2px;text-transform:uppercase;border-radius:4px;font-weight:600;transition:all 0.15s}
-.exit-btn-stay:hover{background:var(--grn);color:var(--bg)}
-.hud-exit{background:transparent;border:1px solid #3a3a5a;color:var(--muted);font-size:10px;padding:4px 10px;cursor:pointer;border-radius:4px;font-family:'Exo 2',sans-serif;letter-spacing:1px;text-transform:uppercase;transition:all 0.15s;align-self:flex-start}
-.hud-exit:hover{border-color:var(--red);color:var(--red)}
-
-/* Music bar */
-.music-bar{display:none;align-items:center;gap:10px;width:100%;max-width:760px;background:var(--surf);border:1px solid #2a2a4a;border-radius:6px;padding:6px 12px;margin-bottom:6px}
-.music-note{font-size:14px;animation:musicPulse 1.2s ease-in-out infinite;color:var(--accent)}
-@keyframes musicPulse{0%,100%{opacity:0.4;transform:scale(0.9)}50%{opacity:1;transform:scale(1.1)}}
-.music-track{flex:1;font-size:10px;color:var(--muted);letter-spacing:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.music-mute{background:none;border:1px solid #2a2a4a;border-radius:4px;color:var(--muted);font-size:12px;padding:2px 7px;cursor:pointer;transition:all 0.15s}
-.music-mute:hover{border-color:var(--accent);color:var(--accent)}
-.music-vol{-webkit-appearance:none;appearance:none;width:70px;height:4px;border-radius:2px;background:#2a2a4a;outline:none;cursor:pointer}
-.music-vol::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--accent);cursor:pointer}
-
-/* ── Practice / Regular mode toggle ─────────────────────────────────── */
-.mode-toggle{display:flex;border:1px solid #2a2a4a;border-radius:6px;overflow:hidden;max-width:280px;margin:0 auto}
-.mode-btn{flex:1;background:transparent;border:none;color:var(--muted);font-family:'Exo 2',sans-serif;font-size:11px;padding:9px 8px;cursor:pointer;letter-spacing:1px;text-transform:uppercase;transition:all 0.15s;font-weight:600}
-.mode-btn:not(:last-child){border-right:1px solid #2a2a4a}
-.mode-btn.active{background:var(--accent3);color:#fff}
-.mode-desc{font-size:10px;color:var(--muted);margin-top:6px;min-height:14px;text-align:center}
-/* ── Instrument selector ─────────────────────────────────────────────── */
-.instr-row{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
-.instr-btn{background:var(--surf);border:1px solid #2a2a4a;border-radius:20px;color:var(--muted);font-family:'Exo 2',sans-serif;font-size:10px;padding:5px 14px;cursor:pointer;letter-spacing:1px;transition:all 0.15s;font-weight:600;white-space:nowrap}
-.instr-btn:hover{background:rgba(0,245,255,0.08);border-color:var(--accent);color:var(--accent)}
-.instr-btn.active{background:rgba(0,245,255,0.12);border-color:var(--accent);color:var(--accent)}
-/* ── In-game compact controls ────────────────────────────────────────── */
-.gp-ctrl-row{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:760px;gap:8px;background:var(--surf);border:1px solid #2a2a4a;border-radius:6px;padding:5px 12px;margin-bottom:2px}
-.gp-mode-toggle{display:flex;border:1px solid #2a2a4a;border-radius:4px;overflow:hidden}
-.gp-mode-btn{background:transparent;border:none;color:var(--muted);font-family:'Exo 2',sans-serif;font-size:9px;padding:4px 9px;cursor:pointer;letter-spacing:1px;text-transform:uppercase;transition:all 0.12s;font-weight:600}
-.gp-mode-btn:not(:last-child){border-right:1px solid #2a2a4a}
-.gp-mode-btn.active{background:var(--accent3);color:#fff}
-.gp-instr-row{display:flex;gap:3px}
-.gp-instr-btn{background:transparent;border:1px solid #2a2a4a;border-radius:4px;color:var(--muted);font-size:14px;width:27px;height:23px;cursor:pointer;transition:all 0.12s;display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
-.gp-instr-btn:hover,.gp-instr-btn.active{border-color:var(--accent);background:rgba(0,245,255,0.08)}
-
-/* ── Chord Notation ──────────────────────────────────────────────────── */
-.notation-row{display:flex;align-items:center;justify-content:center;gap:16px;padding:0 0 10px}
-#chordSym{font-family:'Georgia',serif;font-size:36px;font-weight:700;color:var(--accent3);min-width:58px;text-align:center;line-height:1;letter-spacing:-1px;transition:color 0.2s}
-.staff-svg{overflow:visible;display:block;flex-shrink:0}
-
-/* ── Beat Visualizer / Deaf-Friendly ─────────────────────────────────── */
-.beat-vis{display:flex;align-items:flex-end;justify-content:center;gap:3px;height:34px;width:100%;max-width:760px;padding:0 4px}
-.bvb{flex:1;max-width:10px;min-height:3px;border-radius:3px 3px 0 0;background:var(--accent3);opacity:0.55}
-@keyframes beatRing{
-  0%{box-shadow:0 0 0 0 rgba(123,47,255,0.8),0 0 0 0 rgba(0,245,255,0.35)}
-  65%{box-shadow:0 0 0 18px rgba(123,47,255,0),0 0 0 30px rgba(0,245,255,0)}
-  100%{box-shadow:0 0 0 0 rgba(123,47,255,0)}
+.home-xp-badge{
+  background:var(--panel);
+  border:1px solid var(--border2);
+  border-radius:12px;
+  padding:10px 24px;
+  margin-bottom:32px;
+  display:flex;align-items:center;gap:16px;
 }
-.beat-ring{animation:beatRing 0.6s ease-out}
-#beatEdge{pointer-events:none;position:fixed;inset:0;z-index:998;opacity:0;border:4px solid var(--accent3);border-radius:2px}
-@keyframes edgeFlash{0%{opacity:0.85}100%{opacity:0}}
-#beatEdge.flash{animation:edgeFlash 0.55s ease-out forwards}
+.xp-level-big{font-family:'Teko',sans-serif;font-size:32px;color:var(--gold);line-height:1;}
+.xp-details{text-align:left;}
+.xp-label{font-size:10px;letter-spacing:2px;color:var(--text2);text-transform:uppercase;}
+.xp-bar-home{width:120px;height:6px;background:rgba(255,255,255,0.07);border-radius:3px;overflow:hidden;margin-top:3px;}
+.xp-bar-fill-home{height:100%;background:linear-gradient(90deg,var(--gold2),var(--gold3));border-radius:3px;transition:width 0.5s;}
 
-/* ── Accessibility / Community Impact ────────────────────────────────── */
-.a11y-wrap{margin-top:16px;text-align:center}
-.a11y-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(0,245,255,0.07);border:1px solid rgba(0,245,255,0.22);border-radius:20px;padding:5px 14px;font-size:10px;color:var(--accent);letter-spacing:1px;cursor:pointer;transition:all 0.15s;font-family:'Exo 2',sans-serif;user-select:none}
-.a11y-badge:hover{background:rgba(0,245,255,0.14);border-color:var(--accent)}
-.a11y-panel{background:var(--surf);border:1px solid rgba(0,245,255,0.2);border-radius:10px;padding:14px 18px;max-width:340px;margin:8px auto 0;display:none;text-align:left}
-.a11y-panel.open{display:block}
-.a11y-panel h4{font-family:'Orbitron',monospace;font-size:11px;color:var(--accent);margin-bottom:10px;letter-spacing:2px;text-align:center}
-.a11y-feat{display:flex;align-items:flex-start;gap:8px;margin-bottom:7px;font-size:11px;color:var(--muted);line-height:1.6}
-.a11y-icon{font-size:15px;flex-shrink:0;margin-top:1px}
-.a11y-feat strong{color:var(--text)}
-.a11y-quote{margin-top:10px;font-size:10px;color:var(--accent3);font-style:italic;text-align:center;border-top:1px solid #2a2a4a;padding-top:8px}
+.home-btns{display:flex;flex-direction:column;gap:12px;align-items:center;width:260px;}
 
-/* Battle screen */
-.battle-card{background:var(--surf);border:1px solid var(--accent2);border-radius:8px;padding:14px;cursor:pointer;transition:all 0.18s}
-.battle-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 0 14px rgba(255,0,110,0.25)}
-.battle-card .bonus{font-size:10px;color:var(--gold);margin-top:4px}
-.battle-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;width:100%;max-width:820px}
-.opp-banner{background:var(--surf);border:1px solid #2a2a4a;border-radius:8px;padding:14px 20px;margin-bottom:16px;display:flex;align-items:center;gap:14px;max-width:820px;width:100%}
-.opp-icon{font-size:28px}
-.opp-info{flex:1}
-.opp-name{font-family:'Orbitron',monospace;font-size:13px;color:var(--accent2)}
-.opp-pet{font-size:11px;color:var(--muted)}
+.home-btn{
+  width:100%;padding:14px 24px;
+  border-radius:10px;border:1px solid;
+  font-family:'Teko',sans-serif;font-size:22px;letter-spacing:3px;
+  cursor:pointer;transition:all 0.22s;
+  position:relative;overflow:hidden;
+}
+.home-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.05),transparent);pointer-events:none;}
+.home-btn-play{background:linear-gradient(135deg,rgba(232,184,75,0.18),rgba(232,184,75,0.05));border-color:var(--gold2);color:var(--gold3);}
+.home-btn-play:hover{background:rgba(232,184,75,0.28);box-shadow:0 0 30px rgba(232,184,75,0.25);transform:translateY(-2px);}
+.home-btn-tutorial{background:rgba(61,138,255,0.08);border-color:var(--blue2);color:var(--blue3);}
+.home-btn-tutorial:hover{background:rgba(61,138,255,0.18);box-shadow:0 0 20px rgba(61,138,255,0.2);transform:translateY(-2px);}
+.home-btn-skills{background:rgba(153,85,255,0.08);border-color:var(--purple2);color:var(--purple3);}
+.home-btn-skills:hover{background:rgba(153,85,255,0.18);box-shadow:0 0 20px rgba(153,85,255,0.2);transform:translateY(-2px);}
+
+.home-footer{position:absolute;bottom:20px;font-size:11px;color:var(--text2);letter-spacing:1px;}
+
+/* ══════════════════════════════════════
+   TUTORIAL SCREEN
+══════════════════════════════════════ */
+#tutorial{background:var(--bg);overflow:hidden;}
+
+.tut-header{
+  background:var(--panel);border-bottom:1px solid var(--border);
+  padding:14px 24px;display:flex;align-items:center;gap:16px;flex-shrink:0;
+}
+.tut-title{font-family:'Teko',sans-serif;font-size:28px;letter-spacing:3px;color:var(--gold);}
+.tut-step-dots{display:flex;gap:6px;margin-left:auto;}
+.tut-dot{width:8px;height:8px;border-radius:50%;background:var(--border2);transition:background 0.2s;}
+.tut-dot.active{background:var(--gold);}
+.tut-dot.done{background:var(--gold2);}
+
+.tut-body{flex:1;display:flex;align-items:center;justify-content:center;padding:30px;overflow:auto;}
+
+.tut-card{
+  background:var(--panel);border:1px solid var(--border2);border-radius:16px;
+  padding:36px 40px;max-width:640px;width:100%;
+  animation:fadeSlideIn 0.4s ease-out;
+}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+.tut-step-num{
+  font-family:'Teko',sans-serif;font-size:13px;letter-spacing:3px;
+  color:var(--text2);text-transform:uppercase;margin-bottom:8px;
+}
+.tut-heading{
+  font-family:'Teko',sans-serif;font-size:36px;letter-spacing:2px;
+  color:var(--gold3);margin-bottom:16px;
+}
+.tut-text{font-size:15px;line-height:1.8;color:var(--text3);margin-bottom:20px;}
+.tut-text strong{color:var(--text);}
+
+/* Interactive demo area */
+.tut-demo{
+  background:var(--bg2);border:1px solid var(--border2);border-radius:10px;
+  padding:20px;margin:16px 0;
+}
+.tut-demo-label{font-size:11px;letter-spacing:2px;color:var(--text2);text-transform:uppercase;margin-bottom:10px;}
+
+.kbd-demo{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:10px 0;}
+.kbd{
+  background:var(--panel2);border:1px solid var(--border2);border-bottom:3px solid var(--border2);
+  border-radius:6px;padding:5px 10px;
+  font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:600;
+  color:var(--text);display:inline-block;min-width:32px;text-align:center;
+}
+.kbd.shift{background:rgba(232,184,75,0.1);border-color:var(--gold2);color:var(--gold);}
+.kbd.note{background:rgba(61,138,255,0.1);border-color:var(--blue2);color:var(--blue3);}
+.kbd.result{background:rgba(40,204,112,0.1);border-color:var(--green2);color:var(--green);font-size:16px;font-weight:700;}
+.kbd-arrow{color:var(--text2);font-size:18px;}
+
+.tut-input-live{
+  background:var(--bg);border:1px solid var(--border2);border-radius:8px;
+  padding:10px 14px;font-family:'Barlow Condensed',sans-serif;font-size:20px;
+  color:var(--gold);letter-spacing:2px;width:100%;outline:none;margin-top:8px;
+}
+.tut-input-live:focus{border-color:var(--gold2);}
+
+.chord-pill{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:4px 12px;border-radius:20px;border:1px solid;font-size:13px;font-weight:600;
+  font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;
+}
+.pill-major{border-color:var(--blue);color:var(--blue3);background:rgba(61,138,255,0.1);}
+.pill-minor{border-color:var(--purple);color:var(--purple3);background:rgba(153,85,255,0.1);}
+.pill-dim{border-color:var(--orange);color:var(--orange);background:rgba(255,122,32,0.1);}
+
+.combo-example{
+  display:flex;align-items:center;gap:8px;margin:10px 0;flex-wrap:wrap;
+}
+.combo-arrow{color:var(--gold);font-size:18px;font-family:'Teko',sans-serif;}
+.combo-result{
+  padding:4px 14px;border-radius:6px;
+  background:rgba(232,184,75,0.15);border:1px solid var(--gold2);
+  color:var(--gold3);font-weight:600;font-size:13px;font-family:'Barlow Condensed',sans-serif;
+}
+
+.tut-footer{
+  background:var(--panel);border-top:1px solid var(--border);
+  padding:14px 24px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+}
+.tut-nav-btn{
+  padding:9px 24px;border-radius:8px;border:1px solid var(--border2);
+  background:transparent;color:var(--text3);
+  font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:600;letter-spacing:1px;
+  cursor:pointer;transition:all 0.2s;
+}
+.tut-nav-btn:hover{border-color:var(--gold2);color:var(--gold);}
+.tut-nav-btn.primary{background:rgba(232,184,75,0.15);border-color:var(--gold);color:var(--gold3);}
+.tut-nav-btn.primary:hover{background:rgba(232,184,75,0.28);}
+.tut-progress-text{font-size:12px;color:var(--text2);}
+
+/* ══════════════════════════════════════
+   SKILL TREE SCREEN
+══════════════════════════════════════ */
+#skilltree{background:var(--bg);overflow:hidden;}
+.st-header{
+  background:var(--panel);border-bottom:1px solid var(--border);
+  padding:14px 24px;display:flex;align-items:center;gap:16px;flex-shrink:0;
+}
+.st-title{font-family:'Teko',sans-serif;font-size:28px;letter-spacing:3px;color:var(--gold);}
+.st-xp-chip{
+  margin-left:auto;display:flex;align-items:center;gap:10px;
+  background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:6px 14px;
+}
+.st-xp-num{font-family:'Teko',sans-serif;font-size:20px;color:var(--gold);}
+.st-xp-lbl{font-size:11px;color:var(--text2);letter-spacing:1px;}
+
+.st-body{flex:1;padding:24px;overflow:auto;display:flex;flex-direction:column;gap:24px;align-items:center;}
+
+.st-tier{width:100%;max-width:800px;}
+.st-tier-label{
+  font-family:'Teko',sans-serif;font-size:13px;letter-spacing:3px;color:var(--text2);
+  text-transform:uppercase;margin-bottom:12px;
+  display:flex;align-items:center;gap:10px;
+}
+.st-tier-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.st-tier-label::before{content:'';flex:1;height:1px;background:var(--border);}
+
+.st-nodes{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
+
+.st-node{
+  width:148px;border-radius:12px;border:1px solid var(--border2);
+  background:var(--panel);padding:14px;text-align:center;
+  position:relative;transition:all 0.25s;cursor:default;
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+}
+.st-node.unlocked{border-color:var(--green2);background:rgba(40,204,112,0.05);}
+.st-node.available{border-color:var(--gold2);background:rgba(232,184,75,0.05);cursor:pointer;}
+.st-node.available:hover{background:rgba(232,184,75,0.12);transform:translateY(-3px);box-shadow:0 8px 24px rgba(232,184,75,0.15);}
+.st-node.locked{opacity:0.45;}
+
+.st-node-icon{font-size:28px;line-height:1;}
+.st-node-name{font-family:'Teko',sans-serif;font-size:18px;letter-spacing:1px;line-height:1;}
+.st-node-desc{font-size:11px;color:var(--text2);line-height:1.4;}
+.st-node-cost{
+  font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:600;
+  padding:3px 10px;border-radius:12px;margin-top:4px;
+}
+.st-node.unlocked .st-node-cost{background:rgba(40,204,112,0.15);color:var(--green);border:1px solid var(--green2);}
+.st-node.available .st-node-cost{background:rgba(232,184,75,0.15);color:var(--gold);border:1px solid var(--gold2);}
+.st-node.locked .st-node-cost{background:rgba(255,255,255,0.05);color:var(--text2);border:1px solid var(--border);}
+.st-node-badge{
+  position:absolute;top:-8px;right:-8px;
+  background:var(--green);color:#000;border-radius:50%;width:20px;height:20px;
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;
+}
+
+.st-footer{
+  background:var(--panel);border-top:1px solid var(--border);
+  padding:12px 24px;display:flex;align-items:center;gap:12px;flex-shrink:0;
+}
+
+/* ══════════════════════════════════════
+   GAME SCREEN
+══════════════════════════════════════ */
+#game{background:var(--bg);overflow:hidden;}
+
+/* Top bar */
+.game-topbar{
+  background:var(--panel);border-bottom:1px solid var(--border);
+  padding:8px 16px;display:flex;align-items:center;gap:14px;
+  flex-shrink:0;height:52px;
+}
+.game-logo-sm{
+  font-family:'Teko',sans-serif;font-size:22px;letter-spacing:4px;color:var(--gold);
+  white-space:nowrap;
+}
+.tower-block{display:flex;flex-direction:column;gap:2px;min-width:130px;}
+.tower-lbl{font-size:9px;letter-spacing:2px;color:var(--text2);text-transform:uppercase;}
+.tower-hprow{display:flex;align-items:center;gap:6px;}
+.tower-hp-bar{flex:1;height:7px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;}
+.tower-hp-fill{height:100%;border-radius:4px;transition:width 0.35s;}
+.thp-player{background:linear-gradient(90deg,var(--blue2),var(--blue3));}
+.thp-enemy{background:linear-gradient(90deg,var(--red2),var(--red));}
+.tower-hp-num{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:600;min-width:36px;}
+
+.wave-pill{
+  font-family:'Teko',sans-serif;font-size:16px;letter-spacing:2px;
+  color:var(--gold3);background:rgba(232,184,75,0.08);
+  border:1px solid var(--gold2);border-radius:6px;padding:2px 12px;white-space:nowrap;
+}
+.xp-hud{
+  display:flex;flex-direction:column;gap:2px;min-width:80px;
+}
+.xp-hud-bar{width:100%;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;}
+.xp-hud-fill{height:100%;background:linear-gradient(90deg,var(--gold2),var(--gold3));border-radius:2px;transition:width 0.4s;}
+.xp-hud-txt{font-size:10px;color:var(--text2);white-space:nowrap;}
+
+.spd-btns{display:flex;gap:4px;}
+.spd-btn{
+  padding:3px 10px;border-radius:5px;border:1px solid var(--border2);
+  background:transparent;color:var(--text2);
+  font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;
+  cursor:pointer;transition:all 0.15s;
+}
+.spd-btn.on{border-color:var(--gold);color:var(--gold);background:rgba(232,184,75,0.1);}
+
+.topbar-spacer{flex:1;}
+
+/* Canvas */
+#gc{display:block;width:100%;}
+
+/* Bottom bar */
+.game-bot{
+  background:var(--panel);border-top:1px solid var(--border);
+  padding:10px 16px;display:flex;align-items:center;gap:14px;flex-shrink:0;
+}
+
+/* Mana */
+.mana-col{display:flex;flex-direction:column;align-items:center;gap:3px;}
+.mana-lbl{font-size:9px;letter-spacing:2px;color:var(--text2);text-transform:uppercase;}
+.mana-track{width:44px;height:64px;background:rgba(255,255,255,0.04);border-radius:6px;overflow:hidden;position:relative;}
+.mana-fill{
+  position:absolute;bottom:0;left:0;right:0;
+  background:linear-gradient(0deg,var(--blue2),var(--blue3));border-radius:6px;
+  transition:height 0.25s;
+}
+.mana-val{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;color:var(--blue3);}
+
+/* Costs */
+.cost-col{display:flex;flex-direction:column;gap:4px;font-size:11px;font-family:'Barlow Condensed',sans-serif;}
+.cost-row{display:flex;align-items:center;gap:5px;padding:2px 6px;border-radius:4px;border:1px solid;font-weight:600;}
+.cr-major{border-color:var(--blue2);color:var(--blue3);background:rgba(61,138,255,0.07);}
+.cr-minor{border-color:var(--purple2);color:var(--purple3);background:rgba(153,85,255,0.07);}
+.cr-dim{border-color:var(--orange2);color:var(--orange);background:rgba(255,122,32,0.07);}
+
+/* Chord input */
+.input-col{flex:1;display:flex;flex-direction:column;gap:6px;}
+.input-row2{display:flex;gap:8px;align-items:center;}
+
+#chord-input{
+  background:var(--bg2);border:1px solid var(--border2);border-radius:8px;
+  color:var(--gold3);font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:500;
+  padding:8px 14px;width:200px;outline:none;letter-spacing:3px;
+  transition:border-color 0.15s,box-shadow 0.15s;
+  caret-color:var(--gold);
+}
+#chord-input::placeholder{color:var(--text2);font-size:14px;letter-spacing:1px;}
+#chord-input:focus{border-color:var(--gold2);}
+#chord-input.v-major{border-color:var(--blue);box-shadow:0 0 12px rgba(61,138,255,0.35);}
+#chord-input.v-minor{border-color:var(--purple);box-shadow:0 0 12px rgba(153,85,255,0.35);}
+#chord-input.v-dim{border-color:var(--orange);box-shadow:0 0 12px rgba(255,122,32,0.35);}
+#chord-input.v-bad{border-color:var(--red);box-shadow:0 0 8px rgba(255,61,80,0.3);}
+
+#deploy-btn{
+  padding:9px 18px;border-radius:8px;border:1px solid var(--gold2);
+  background:rgba(232,184,75,0.12);color:var(--gold3);
+  font-family:'Teko',sans-serif;font-size:20px;letter-spacing:2px;
+  cursor:pointer;transition:all 0.2s;white-space:nowrap;
+}
+#deploy-btn:hover{background:rgba(232,184,75,0.25);box-shadow:0 0 16px rgba(232,184,75,0.25);}
+
+#chord-fb{
+  font-size:12px;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;
+  height:15px;transition:color 0.15s;
+}
+.fb-hint{color:var(--text2);}
+.fb-major{color:var(--blue3);}
+.fb-minor{color:var(--purple3);}
+.fb-dim{color:var(--orange);}
+.fb-err{color:var(--red);}
+
+/* Current chord display */
+.chord-live{
+  display:flex;gap:4px;align-items:center;flex-wrap:wrap;min-height:22px;
+}
+.note-chip{
+  font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;
+  padding:1px 8px;border-radius:4px;border:1px solid var(--border2);
+  background:rgba(232,184,75,0.1);color:var(--gold);
+}
+
+/* Combo display */
+.combo-hud{
+  position:absolute;top:56px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  pointer-events:none;z-index:20;
+}
+.combo-banner{
+  font-family:'Teko',sans-serif;font-size:26px;letter-spacing:3px;
+  padding:4px 20px;border-radius:8px;
+  background:rgba(232,184,75,0.9);color:#000;
+  animation:comboBounce 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow:0 4px 24px rgba(232,184,75,0.6);
+}
+@keyframes comboBounce{from{transform:scale(0.5);opacity:0}to{transform:scale(1);opacity:1}}
+.combo-sub{font-size:12px;color:var(--gold);letter-spacing:2px;font-family:'Barlow Condensed',sans-serif;}
+
+/* Float text */
+.ft{
+  position:fixed;pointer-events:none;z-index:999;
+  font-family:'Teko',sans-serif;font-size:22px;letter-spacing:2px;
+  animation:ftUp 1.1s ease-out forwards;
+}
+@keyframes ftUp{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-70px) scale(1.4)}}
+
+/* ── MODAL ── */
+.modal-bg{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,0.82);z-index:500;
+  align-items:center;justify-content:center;backdrop-filter:blur(6px);
+}
+.modal-bg.show{display:flex;}
+.modal-box{
+  background:var(--panel);border:1px solid var(--border2);border-radius:16px;
+  padding:36px 44px;text-align:center;max-width:440px;width:92%;
+  animation:popIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes popIn{from{transform:scale(0.6);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-box h2{font-family:'Teko',sans-serif;font-size:48px;letter-spacing:4px;margin-bottom:10px;}
+.modal-box p{font-size:15px;color:var(--text3);line-height:1.8;margin-bottom:24px;}
+.modal-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.mbtn{
+  padding:11px 28px;border-radius:8px;border:1px solid var(--gold2);
+  background:rgba(232,184,75,0.12);color:var(--gold3);
+  font-family:'Teko',sans-serif;font-size:20px;letter-spacing:2px;
+  cursor:pointer;transition:all 0.2s;
+}
+.mbtn:hover{background:rgba(232,184,75,0.28);}
+.mbtn.sec{border-color:var(--border2);background:transparent;color:var(--text3);}
+.mbtn.sec:hover{border-color:var(--text2);color:var(--text);}
+
+/* back btn */
+.back-btn{
+  padding:6px 16px;border-radius:7px;border:1px solid var(--border2);
+  background:transparent;color:var(--text2);
+  font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:600;letter-spacing:1px;
+  cursor:pointer;transition:all 0.2s;
+}
+.back-btn:hover{border-color:var(--gold2);color:var(--gold);}
+
+/* tooltip */
+.tooltip{
+  display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+  background:var(--bg);border:1px solid var(--border2);border-radius:8px;
+  padding:8px 12px;white-space:nowrap;z-index:50;
+  font-size:12px;color:var(--text3);
+  box-shadow:0 4px 16px rgba(0,0,0,0.5);
+}
+.st-node:hover .tooltip{display:block;}
 </style>
+</head>
+<body>
 
-<div class="particles" id="particles"></div>
+<!-- ══════ HOME ══════ -->
+<div id="home" class="screen active">
+  <div class="home-bg"></div>
+  <div class="home-staff"></div>
+  <div class="home-inner">
+    <div class="game-logo">CHORD<br>CLASH</div>
+    <div class="game-tagline">Tower Defense · Music Theory · Strategy</div>
 
-<!-- TUTORIAL -->
-<div class="screen active" id="tutorial">
-  <div class="tut-box" id="tutBox">
-    <div class="tut-step" id="tutStep">Step 1 of 5</div>
-    <div class="tut-title" id="tutTitle">Welcome to Chord Clash</div>
-    <div class="tut-body" id="tutBody">You'll be shown a chord name and the notes that make it up. Press the matching piano keys to play it!</div>
-    <div class="tut-hint" id="tutHint">Letters on your keyboard = piano keys. C key = C note.</div>
-    <div class="tut-piano" id="tutPiano"></div>
-    <div id="tutFb" style="font-family:'Orbitron',monospace;font-size:16px;min-height:24px;margin-bottom:12px;color:var(--perf)"></div>
-    <button class="btn" id="tutNextBtn" onclick="tutNext()">Next &#8594;</button>
-  </div>
-</div>
-
-<!-- MAIN MENU -->
-<div class="screen" id="mainMenu">
-  <h1 class="logo">CHORD CLASH</h1>
-  <p class="tagline">Press the keys. Beat the AI.</p>
-  <div class="menu-btns">
-    <button class="btn" onclick="showScreen('levelSelect')">Play</button>
-    <button class="btn" style="border-color:#ff6b35;color:#ff6b35" onclick="showScreen('battleMode')">Battle</button>
-    <button class="btn" style="border-color:#00d4ff;color:#00d4ff" onclick="showScreen('lessons')">Learn</button>
-    <button class="btn" style="border-color:#ff9f43;color:#ff9f43" onclick="showScreen('createSong')">Create</button>
-    <button class="btn gold" onclick="showScreen('leaderboard')">Leaderboard</button>
-    <button class="btn pur" onclick="showScreen('keybinds')">Keybinds</button>
-    <button class="btn" style="border-color:var(--muted);color:var(--muted)" onclick="showScreen('tutorial')">Tutorial</button>
-  </div>
-  <p style="margin-top:28px;font-size:11px;color:var(--muted)">EOL: <span id="menuEol" style="font-family:'Orbitron',monospace;color:var(--gold)">0</span></p>
-  <div class="a11y-wrap">
-    <div class="a11y-badge" onclick="toggleA11yPanel()">&#9835; Deaf &amp; HH Friendly &#10003;</div>
-    <div class="a11y-panel" id="a11yPanel">
-      <h4>&#9834; Accessibility Features</h4>
-      <div class="a11y-feat"><span class="a11y-icon">&#128261;</span><span><strong>Visual Beat Pulse</strong> — Screen edges flash in sync with every chord so deaf and hard-of-hearing players can feel the rhythm visually.</span></div>
-      <div class="a11y-feat"><span class="a11y-icon">&#127926;</span><span><strong>Music Notation Signs</strong> — Every chord shows its symbol (Cm7, F♯, G°) <em>and</em> a mini treble-clef staff so you learn real sheet music while playing.</span></div>
-      <div class="a11y-feat"><span class="a11y-icon">&#127381;</span><span><strong>Beat Visualizer</strong> — Animated equalizer bars pulse to the chord rhythm, giving a visual metronome for all players.</span></div>
-      <div class="a11y-feat"><span class="a11y-icon">&#127929;</span><span><strong>Color-Coded Piano</strong> — Target notes glow gold; correct hits turn cyan. You can play entirely by color — no hearing required.</span></div>
-      <div class="a11y-feat"><span class="a11y-icon">&#127981;</span><span><strong>Create Your Own Songs</strong> — Build chord sequences so family members with hearing loss can still participate and perform music.</span></div>
-      <p class="a11y-quote">"Music is for everyone." &mdash; Chord Clash is designed to make music theory accessible regardless of hearing ability.</p>
-    </div>
-  </div>
-</div>
-
-<!-- LEVEL SELECT -->
-<div class="screen" id="levelSelect" style="justify-content:flex-start;padding:16px">
-  <button class="btn" onclick="showScreen('mainMenu')" style="margin-bottom:12px;align-self:flex-start">&#8592; Back</button>
-  <p class="sec-title" style="width:100%;max-width:820px">Select Song</p>
-  <div class="level-grid" id="levelGrid"></div>
-</div>
-
-<!-- DIFF SELECT -->
-<div class="screen" id="diffSelect">
-  <button class="btn" onclick="showScreen('levelSelect')" style="margin-bottom:12px;align-self:flex-start">&#8592; Back</button>
-  <p class="sec-title" id="diffTitle">Choose Difficulty</p>
-  <div class="diff-opts">
-    <div class="dopt" onclick="selDiff(0)" id="d0"><h3 style="color:var(--grn)">Easy</h3><p>AI: 60%</p><p style="color:var(--gold);font-size:10px;margin-top:4px">+10 EOL</p></div>
-    <div class="dopt" onclick="selDiff(1)" id="d1"><h3 style="color:var(--gold)">Medium</h3><p>AI: 75%</p><p style="color:var(--gold);font-size:10px;margin-top:4px">+25 EOL</p></div>
-    <div class="dopt" onclick="selDiff(2)" id="d2"><h3 style="color:var(--red)">Hard</h3><p>AI: 90%</p><p style="color:var(--gold);font-size:10px;margin-top:4px">+50 EOL</p></div>
-    <div class="dopt" onclick="selDiff(3)" id="d3"><h3 style="color:#bf5fff">Expert</h3><p>AI: 98%</p><p style="color:var(--gold);font-size:10px;margin-top:4px">+100 EOL</p></div>
-  </div>
-  <!-- Game Settings -->
-  <div style="width:100%;max-width:460px;margin-top:20px;background:var(--surf);border:1px solid #2a2a4a;border-radius:10px;padding:16px 18px">
-    <p class="sec-title" style="margin-bottom:14px;text-align:left">&#9881; Game Settings</p>
-    <!-- Mode -->
-    <div style="margin-bottom:16px">
-      <div style="font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:7px;text-align:center">Game Mode</div>
-      <div class="mode-toggle">
-        <button class="mode-btn" id="modeBtn_practice" data-mode="practice" onclick="setGameMode('practice')">&#127891; Practice</button>
-        <button class="mode-btn" id="modeBtn_regular"  data-mode="regular"  onclick="setGameMode('regular')">&#127942; Regular</button>
-      </div>
-      <p class="mode-desc" id="modeDesc"></p>
-    </div>
-    <!-- Instrument -->
-    <div>
-      <div style="font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;text-align:center">Instrument</div>
-      <div class="instr-row">
-        <button class="instr-btn" data-instr="piano"   onclick="setInstrument('piano')">&#127929; Piano</button>
-        <button class="instr-btn" data-instr="strings" onclick="setInstrument('strings')">&#127931; Strings</button>
-        <button class="instr-btn" data-instr="synth"   onclick="setInstrument('synth')">&#9889; Synth</button>
-        <button class="instr-btn" data-instr="guitar"  onclick="setInstrument('guitar')">&#127928; Guitar</button>
-        <button class="instr-btn" data-instr="bell"    onclick="setInstrument('bell')">&#128276; Bell</button>
-      </div>
-    </div>
-  </div>
-  <button class="btn" style="margin-top:16px" onclick="startGame()">&#9654; Start</button>
-</div>
-
-<!-- GAMEPLAY -->
-<div class="screen" id="gameplay" style="justify-content:flex-start">
-  <div style="display:flex;justify-content:flex-end;width:100%;max-width:760px;margin-bottom:4px">
-    <button class="hud-exit" onclick="showExitConfirm()">&#10005; Exit</button>
-  </div>
-  <div class="hud">
-    <div class="sb"><div class="slabel">You</div><div class="sval p" id="pScore">0</div></div>
-    <div style="text-align:center">
-      <div style="font-family:'Orbitron',monospace;font-size:11px;color:var(--muted)">VS</div>
-      <div id="hudTitle" style="font-size:10px;color:var(--muted);margin-top:1px"></div>
-      <div style="margin-top:6px;display:flex;align-items:baseline;justify-content:center;gap:5px">
-        <span style="font-size:8px;color:var(--muted);letter-spacing:2px;text-transform:uppercase">EOL</span>
-        <span id="hudEolVal" style="font-family:'Orbitron',monospace;font-size:15px;color:var(--gold);font-weight:700">0</span>
-        <span id="hudEolBonus" style="font-size:9px;color:var(--grn);letter-spacing:1px"></span>
-      </div>
-    </div>
-    <div class="sb"><div class="slabel">AI</div><div class="sval a" id="aScore">0</div></div>
-  </div>
-  <div class="music-bar" id="musicBar">
-    <span class="music-note">&#9835;</span>
-    <span class="music-track" id="musicTrackName">—</span>
-    <input type="range" class="music-vol" id="musicVol" min="0" max="1" step="0.05" value="0.4" oninput="setBgVol(this.value)">
-    <button class="music-mute" id="musicMuteBtn" onclick="toggleMute()">&#128266;</button>
-  </div>
-  <!-- Compact mode + instrument controls -->
-  <div class="gp-ctrl-row">
-    <div class="gp-mode-toggle">
-      <button class="gp-mode-btn" data-mode="practice" onclick="setGameMode('practice')">&#127891; Practice</button>
-      <button class="gp-mode-btn" data-mode="regular"  onclick="setGameMode('regular')">&#127942; Regular</button>
-    </div>
-    <div class="gp-instr-row">
-      <button class="gp-instr-btn" data-instr="piano"   onclick="setInstrument('piano')"   title="Piano">&#127929;</button>
-      <button class="gp-instr-btn" data-instr="strings" onclick="setInstrument('strings')" title="Strings">&#127931;</button>
-      <button class="gp-instr-btn" data-instr="synth"   onclick="setInstrument('synth')"   title="Synth">&#9889;</button>
-      <button class="gp-instr-btn" data-instr="guitar"  onclick="setInstrument('guitar')"  title="Guitar">&#127928;</button>
-      <button class="gp-instr-btn" data-instr="bell"    onclick="setInstrument('bell')"    title="Bell">&#128276;</button>
-    </div>
-  </div>
-  <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
-  <div class="stage">
-    <!-- Tower Defense Lane -->
-    <div class="lane-wrap" id="lane">
-      <div class="lane-label">Battle Lane</div>
-      <div class="tower tower-p" title="Your tower">&#9632;</div>
-      <div class="tower tower-a" title="AI tower">&#9632;</div>
-      <div class="hp-bar-wrap hp-bar-p"><div class="hp-fill hp-fill-p" id="phpFill" style="width:100%"></div></div>
-      <div class="hp-bar-wrap hp-bar-a" style="right:44px;width:80px;"><div class="hp-fill hp-fill-a" id="ahpFill" style="width:100%"></div></div>
-      <div class="hp-text hp-text-p" id="phpTxt">100</div>
-      <div class="hp-text hp-text-a" id="ahpTxt">100</div>
-    </div>
-    <div class="combo-disp">Combo: <span id="comboVal">0</span></div>
-    <div class="chord-disp" id="chordDisp">
-      <div class="notation-row">
-        <div id="chordSym" class="chord-sym">&#9835;</div>
-        <svg id="staffSvg" class="staff-svg" width="106" height="58" viewBox="0 0 106 58" aria-hidden="true"></svg>
-      </div>
-      <div class="chord-name" id="chordName">Ready...</div>
-      <div class="chord-notes practice-only" id="chordNotes">&#8212; &#8212; &#8212;</div>
-    </div>
-    <div class="beat-vis" id="beatVis"></div>
-    <div class="fb-text" id="fbText">&nbsp;</div>
-    <div class="timing-wrap">
-      <div class="t-bar"><div class="tz-bg"></div><div class="tz-gl"></div><div class="tz-gr"></div><div class="tz-p"></div><div class="tcur" id="tCur" style="left:50%"></div></div>
-      <div style="display:flex;justify-content:space-between;margin-top:3px;font-size:9px;color:var(--muted)">
-        <span>Miss</span><span style="color:var(--good)">Good</span><span style="color:var(--perf)">Perfect</span><span style="color:var(--good)">Good</span><span>Miss</span>
-      </div>
-    </div>
-    <div class="piano-wrap" id="pianoWrap">
-      <div class="white-keys" id="whiteKeys"></div>
-      <div class="black-layer" id="blackLayer"></div>
-    </div>
-    <p style="font-size:10px;color:var(--muted);text-align:center">C D E F G A B = white keys &nbsp;|&nbsp; <span style="color:var(--accent)">Shift+key = sharp/flat</span></p>
-    <p id="keyHintLine" class="practice-only" style="font-size:10px;color:var(--gold);text-align:center;min-height:14px;letter-spacing:1px"></p>
-    <p class="practice-only" style="font-size:9px;color:#404070;text-align:center">Bb=Shift+A &nbsp; Eb=Shift+D &nbsp; Ab=Shift+G &nbsp; Db=Shift+C &nbsp; Gb=Shift+F</p>
-  </div>
-</div>
-
-<!-- EXIT CONFIRM OVERLAY -->
-<div class="exit-overlay" id="exitOverlay">
-  <div class="exit-box">
-    <h2>Quit Game?</h2>
-    <p>Your current progress and score will be lost. The AI wins by default.</p>
-    <div class="exit-btns">
-      <button class="exit-btn-stay" onclick="cancelQuit()">Keep Playing</button>
-      <button class="exit-btn-quit" onclick="confirmQuit()">Quit</button>
-    </div>
-  </div>
-</div>
-
-<!-- RESULTS -->
-<div class="screen" id="results">
-  <div class="r-out" id="rOut">VICTORY!</div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;max-width:440px;margin:16px 0">
-    <div class="rstat"><label>Your Score</label><div class="rv" id="rPS" style="color:var(--accent)">0</div></div>
-    <div class="rstat"><label>AI Score</label><div class="rv" id="rAS" style="color:var(--accent2)">0</div></div>
-    <div class="rstat"><label>Accuracy</label><div class="rv" id="rAcc" style="color:var(--text)">0%</div></div>
-    <div class="rstat"><label>Chords Hit</label><div class="rv" id="rHit" style="color:var(--text)">0</div></div>
-  </div>
-  <div class="eol-line" id="eolLine" style="margin-bottom:16px"></div>
-  <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
-    <button class="btn" onclick="startGame()">&#8634; Retry</button>
-    <button class="btn gold" onclick="showScreen('levelSelect')">Songs</button>
-    <button class="btn pur" onclick="showScreen('mainMenu')">Menu</button>
-  </div>
-</div>
-
-<!-- LEADERBOARD -->
-<div class="screen" id="leaderboard" style="justify-content:flex-start;padding:16px">
-  <button class="btn" onclick="showScreen('mainMenu')" style="margin-bottom:12px;align-self:flex-start">&#8592; Back</button>
-  <p class="sec-title" style="width:100%;max-width:520px">Global Leaderboard</p>
-  <table class="lb-tbl"><thead><tr><th>#</th><th>Player</th><th style="text-align:right">EOL</th></tr></thead><tbody id="lbBody"></tbody></table>
-</div>
-
-<!-- KEYBINDS -->
-<div class="screen" id="keybinds">
-  <button class="btn" onclick="showScreen('mainMenu')" style="margin-bottom:12px;align-self:flex-start">&#8592; Back</button>
-  <p class="sec-title">Keybind Settings</p>
-  <p style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:14px">Click a key binding, then press a new key to rebind</p>
-  <div class="kb-grid" id="kbGrid"></div>
-  <div style="display:flex;gap:10px;margin-top:16px">
-    <button class="btn grn" onclick="saveKeybinds()">&#10003; Save</button>
-    <button class="btn red" onclick="resetKeybinds()">&#8635; Reset</button>
-  </div>
-  <p id="kbMsg" style="font-size:11px;color:var(--grn);margin-top:10px;min-height:16px;text-align:center"></p>
-</div>
-
-<!-- LESSONS -->
-<div class="screen" id="lessons" style="justify-content:flex-start;padding:16px">
-  <button class="btn" onclick="showScreen('mainMenu')" style="margin-bottom:12px;align-self:flex-start">Back</button>
-  <p class="sec-title" style="width:100%;max-width:680px">Music Theory Lessons</p>
-  <div class="lesson-card" onclick="toggleLesson(this)">
-    <h3>1. Major Chords</h3>
-    <p>The foundation of music — bright, happy sounds built from three notes.</p>
-    <div class="lesson-detail">
-      <strong style="color:var(--accent)">Formula:</strong> Root + Major 3rd (4 semitones) + Perfect 5th (7 semitones)<br><br>
-      <span class="lesson-tag" style="background:#003322;color:var(--grn);border:1px solid var(--grn)">C Major</span> C + E + G<br>
-      <span class="lesson-tag" style="background:#003322;color:var(--grn);border:1px solid var(--grn)">G Major</span> G + B + D<br>
-      <span class="lesson-tag" style="background:#003322;color:var(--grn);border:1px solid var(--grn)">D Major</span> D + F# + A<br><br>
-      <strong style="color:var(--accent)">Sound:</strong> Bright, confident, happy. Used in pop, rock, and classical.<br>
-      <strong style="color:var(--accent)">Tip:</strong> The gap between Root and 3rd is always 4 keys on a piano (counting black keys).
-    </div>
-  </div>
-  <div class="lesson-card" onclick="toggleLesson(this)">
-    <h3>2. Minor Chords</h3>
-    <p>Darker, more emotional versions of major chords — one note lowered by a semitone.</p>
-    <div class="lesson-detail">
-      <strong style="color:var(--accent)">Formula:</strong> Root + Minor 3rd (3 semitones) + Perfect 5th (7 semitones)<br><br>
-      <span class="lesson-tag" style="background:#330011;color:var(--red);border:1px solid var(--red)">A Minor</span> A + C + E<br>
-      <span class="lesson-tag" style="background:#330011;color:var(--red);border:1px solid var(--red)">E Minor</span> E + G + B<br>
-      <span class="lesson-tag" style="background:#330011;color:var(--red);border:1px solid var(--red)">D Minor</span> D + F + A<br><br>
-      <strong style="color:var(--accent)">Sound:</strong> Sad, mysterious, emotional. Common in ballads and metal.<br>
-      <strong style="color:var(--accent)">Tip:</strong> Minor = Major with the middle note lowered by one semitone (one black key).
-    </div>
-  </div>
-  <div class="lesson-card" onclick="toggleLesson(this)">
-    <h3>3. Power Chords</h3>
-    <p>Two-note chords (root + 5th) beloved by rock and metal guitarists for their raw sound.</p>
-    <div class="lesson-detail">
-      <strong style="color:var(--accent)">Formula:</strong> Root + Perfect 5th (7 semitones) — no 3rd!<br><br>
-      <span class="lesson-tag" style="background:#1a0033;color:#bf5fff;border:1px solid #bf5fff">E5</span> E + B<br>
-      <span class="lesson-tag" style="background:#1a0033;color:#bf5fff;border:1px solid #bf5fff">A5</span> A + E<br>
-      <span class="lesson-tag" style="background:#1a0033;color:#bf5fff;border:1px solid #bf5fff">G5</span> G + D<br><br>
-      <strong style="color:var(--accent)">Sound:</strong> Heavy, neutral (neither major nor minor). Great for distorted guitar tones.<br>
-      <strong style="color:var(--accent)">Tip:</strong> Because there's no 3rd, power chords work equally well as major or minor substitutes.
-    </div>
-  </div>
-  <div class="lesson-card" onclick="toggleLesson(this)">
-    <h3>4. Chord Progressions</h3>
-    <p>How chords move together to create musical phrases, tension, and resolution.</p>
-    <div class="lesson-detail">
-      <strong style="color:var(--accent)">Common Progressions:</strong><br><br>
-      <span class="lesson-tag" style="background:#003322;color:var(--grn);border:1px solid var(--grn)">I–V–vi–IV</span> C–G–Am–F (Pop standard — used in hundreds of hits)<br>
-      <span class="lesson-tag" style="background:#332200;color:var(--gold);border:1px solid var(--gold)">I–IV–V</span> G–C–D (Classic blues/rock foundation)<br>
-      <span class="lesson-tag" style="background:#330011;color:var(--red);border:1px solid var(--red)">vi–IV–I–V</span> Am–F–C–G (Emotional pop/ballad feel)<br><br>
-      <strong style="color:var(--accent)">Why it matters:</strong> Progressions create the emotional arc of a song. Learning them helps you predict — and play — new songs faster.<br>
-      <strong style="color:var(--accent)">Tip:</strong> Roman numerals (I, IV, V) refer to scale degrees, so the same progression works in any key.
-    </div>
-  </div>
-  <div class="lesson-card" onclick="toggleLesson(this)">
-    <h3>5. 7th Chords &amp; Extensions</h3>
-    <p>Add a fourth note to triads for richer, more complex harmonic color.</p>
-    <div class="lesson-detail">
-      <strong style="color:var(--accent)">Types:</strong><br><br>
-      <span class="lesson-tag" style="background:#003322;color:var(--grn);border:1px solid var(--grn)">Major 7th</span> Major triad + Major 7th — e.g. Cmaj7: C E G B (dreamy, jazz)<br>
-      <span class="lesson-tag" style="background:#332200;color:var(--gold);border:1px solid var(--gold)">Dominant 7th</span> Major triad + Minor 7th — e.g. G7: G B D F (bluesy tension)<br>
-      <span class="lesson-tag" style="background:#330011;color:var(--red);border:1px solid var(--red)">Minor 7th</span> Minor triad + Minor 7th — e.g. Am7: A C E G (smooth, soulful)<br>
-      <span class="lesson-tag" style="background:#1a0033;color:#bf5fff;border:1px solid #bf5fff">Diminished 7th</span> 3 minor 3rds stacked — e.g. Cdim7: C Eb Gb A (eerie, dramatic)<br><br>
-      <strong style="color:var(--accent)">Tip:</strong> 7th chords are the gateway to jazz. Once comfortable with triads, start adding the 7th to your progressions.
-    </div>
-  </div>
-</div>
-
-<!-- BATTLE MODE -->
-<div class="screen" id="battleMode" style="justify-content:flex-start;padding:16px">
-  <button class="btn" onclick="showScreen('mainMenu')" style="margin-bottom:12px;align-self:flex-start">Back</button>
-  <p class="sec-title" style="width:100%;max-width:820px">Battle Mode</p>
-  <div class="opp-banner" id="oppBanner" style="display:none">
-    <div class="opp-icon" id="oppIcon"></div>
-    <div class="opp-info">
-      <div class="opp-name" id="oppName"></div>
-      <div class="opp-pet" id="oppPet"></div>
-    </div>
-    <div style="font-size:11px;color:var(--gold);font-family:'Orbitron',monospace">+50 EOL BONUS</div>
-  </div>
-  <p style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;max-width:820px">Pick a song to battle. A random opponent will challenge you — win to earn bonus EOL!</p>
-  <div class="battle-grid" id="battleGrid"></div>
-</div>
-
-<!-- CREATE SONG -->
-<div class="screen" id="createSong" style="justify-content:flex-start;padding:16px">
-  <button class="btn" onclick="showScreen('mainMenu')" style="margin-bottom:12px;align-self:flex-start">Back</button>
-  <p class="sec-title" style="width:100%;max-width:720px">Create Your Song</p>
-  <div class="create-form">
-
-    <!-- Title / Artist -->
-    <div class="create-row">
-      <input class="create-inp" id="createTitle" placeholder="Song title..." maxlength="40" oninput="updateCreatePreview()">
-      <input class="create-inp" id="createArtist" placeholder="Artist name..." maxlength="32" value="My Band">
-    </div>
-
-    <!-- Difficulty -->
-    <div style="display:flex;align-items:center;gap:12px;background:var(--surf);border:1px solid #2a2a4a;border-radius:8px;padding:12px">
-      <span style="font-size:11px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;white-space:nowrap">Difficulty</span>
-      <input type="range" id="createDiff" min="1" max="10" value="3" style="flex:1" oninput="document.getElementById('createDiffLbl').textContent=this.value">
-      <span id="createDiffLbl" style="font-family:'Orbitron',monospace;font-size:14px;color:var(--gold);min-width:20px">3</span>
-    </div>
-
-    <!-- Chord builder -->
-    <div>
-      <p class="sec-title" style="text-align:left;margin-bottom:8px">Build Chord Sequence</p>
-      <div class="chord-builder-row">
-        <select id="cbRoot" class="create-sel" onchange="updateCbPreview()">
-          <option>C</option><option>C#</option><option>D</option><option>D#</option><option>E</option>
-          <option>F</option><option>F#</option><option>G</option><option>G#</option><option>A</option><option>A#</option><option>B</option>
-        </select>
-        <select id="cbType" class="create-sel" onchange="updateCbPreview()">
-          <option>Major</option><option>Minor</option><option>Power</option><option>Dom 7</option>
-          <option>Major 7</option><option>Minor 7</option><option>Sus2</option><option>Sus4</option>
-          <option>Dim</option><option>Aug</option><option>Dim7</option>
-        </select>
-        <span class="cb-preview" id="cbPreview">C + E + G</span>
-        <button class="btn grn" style="padding:6px 16px;font-size:12px" onclick="addChordToSeq()">+ Add</button>
+    <div class="home-xp-badge">
+      <div class="xp-level-big">Lv.<span id="home-level">1</span></div>
+      <div class="xp-details">
+        <div class="xp-label">Experience</div>
+        <div class="xp-bar-home"><div class="xp-bar-fill-home" id="home-xp-fill" style="width:0%"></div></div>
+        <div style="font-size:11px;color:var(--text2);margin-top:2px"><span id="home-xp-cur">0</span> / <span id="home-xp-max">100</span> XP</div>
       </div>
     </div>
 
-    <!-- Sequence list -->
-    <div>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-        <p class="sec-title" style="text-align:left;margin:0">Sequence <span id="seqCount" style="color:var(--muted)">(0)</span></p>
-        <button class="btn red" style="padding:4px 12px;font-size:10px" onclick="clearChordSeq()">Clear All</button>
-      </div>
-      <div class="chord-seq" id="chordSeq">
-        <div class="cs-empty" id="seqEmpty">No chords yet — add some above!</div>
+    <div class="home-btns">
+      <button class="home-btn home-btn-play" onclick="gotoGame()">▶ PLAY</button>
+      <button class="home-btn home-btn-tutorial" onclick="gotoTutorial()">📖 TUTORIAL</button>
+      <button class="home-btn home-btn-skills" onclick="gotoSkillTree()">🌟 SKILL TREE</button>
+    </div>
+  </div>
+  <div class="home-footer">Left Shift + letter = ♭ &nbsp;|&nbsp; Right Shift + letter = ♯ &nbsp;|&nbsp; Press Enter to deploy</div>
+</div>
+
+<!-- ══════ TUTORIAL ══════ -->
+<div id="tutorial" class="screen">
+  <div class="tut-header">
+    <button class="back-btn" onclick="gotoHome()">← Back</button>
+    <div class="tut-title">TUTORIAL</div>
+    <div class="tut-step-dots" id="tut-dots"></div>
+  </div>
+  <div class="tut-body">
+    <div class="tut-card" id="tut-card"></div>
+  </div>
+  <div class="tut-footer">
+    <button class="tut-nav-btn" id="tut-prev" onclick="tutNav(-1)">← Previous</button>
+    <div class="tut-progress-text" id="tut-prog"></div>
+    <button class="tut-nav-btn primary" id="tut-next" onclick="tutNav(1)">Next →</button>
+  </div>
+</div>
+
+<!-- ══════ SKILL TREE ══════ -->
+<div id="skilltree" class="screen">
+  <div class="st-header">
+    <button class="back-btn" onclick="gotoHome()">← Back</button>
+    <div class="st-title">🌟 SKILL TREE</div>
+    <div style="font-size:12px;color:var(--text2);font-family:'Barlow Condensed',sans-serif;">Click an available node to unlock it</div>
+    <div class="st-xp-chip" style="margin-left:auto;">
+      <div class="st-xp-num" id="st-xp">0</div>
+      <div class="st-xp-lbl">XP</div>
+    </div>
+  </div>
+  <div class="st-body" id="st-body"></div>
+  <div class="st-footer">
+    <button class="back-btn" onclick="gotoHome()">← Back to Home</button>
+    <div style="font-size:12px;color:var(--text2);margin-left:auto;">Earn XP by defeating enemies in battle</div>
+  </div>
+</div>
+
+<!-- ══════ GAME ══════ -->
+<div id="game" class="screen">
+  <div class="game-topbar">
+    <div class="game-logo-sm">⚔ CHORD CLASH</div>
+
+    <div class="tower-block">
+      <div class="tower-lbl">Your Tower</div>
+      <div class="tower-hprow">
+        <div class="tower-hp-bar"><div class="tower-hp-fill thp-player" id="php-bar" style="width:100%"></div></div>
+        <div class="tower-hp-num" id="php-num">200</div>
       </div>
     </div>
 
-    <!-- Actions -->
-    <div style="display:flex;gap:10px;flex-wrap:wrap">
-      <button class="btn" style="border-color:var(--accent3);color:var(--accent3)" onclick="previewCreatedSong()">&#9654; Preview</button>
-      <button class="btn grn" onclick="saveCreatedSong()">&#128190; Save &amp; Add to Playlist</button>
-    </div>
-    <p id="createMsg" style="font-size:11px;min-height:16px;text-align:center"></p>
+    <div class="wave-pill" id="wave-pill">WAVE 1</div>
 
-    <!-- Saved custom songs -->
-    <div id="savedSongsSection" style="margin-top:6px">
-      <p class="sec-title" style="text-align:left;margin-bottom:10px">Your Songs</p>
-      <div id="savedSongsList"></div>
+    <div class="tower-block">
+      <div class="tower-lbl">Enemy Tower</div>
+      <div class="tower-hprow">
+        <div class="tower-hp-bar"><div class="tower-hp-fill thp-enemy" id="ehp-bar" style="width:100%"></div></div>
+        <div class="tower-hp-num" id="ehp-num">200</div>
+      </div>
+    </div>
+
+    <div class="topbar-spacer"></div>
+
+    <div class="xp-hud">
+      <div class="xp-hud-txt">Lv.<span id="g-level">1</span> &nbsp;<span id="g-xp-txt">0/100 XP</span></div>
+      <div class="xp-hud-bar"><div class="xp-hud-fill" id="g-xp-bar" style="width:0%"></div></div>
+    </div>
+
+    <div class="spd-btns">
+      <button class="spd-btn on" id="spd1" onclick="setSpd(1,this)">1×</button>
+      <button class="spd-btn" id="spd2" onclick="setSpd(2,this)">2×</button>
+    </div>
+
+    <div style="font-size:11px;color:var(--text2)" id="score-hud">0 pts</div>
+    <button class="back-btn" onclick="quitGame()">✕ Menu</button>
+  </div>
+
+  <div style="position:relative;flex:1;min-height:0;">
+    <canvas id="gc"></canvas>
+    <div class="combo-hud" id="combo-hud" style="display:none"></div>
+  </div>
+
+  <div class="game-bot">
+    <div class="mana-col">
+      <div class="mana-lbl">Mana</div>
+      <div class="mana-track"><div class="mana-fill" id="mana-fill" style="height:100%"></div></div>
+      <div class="mana-val" id="mana-val">100</div>
+    </div>
+
+    <div class="cost-col" id="cost-col">
+      <div class="cost-row cr-major">● MAJOR 20</div>
+      <div class="cost-row cr-minor">● MINOR 15</div>
+      <div class="cost-row cr-dim">● DIM 10</div>
+    </div>
+
+    <div class="input-col">
+      <div class="chord-live" id="chord-live"></div>
+      <div class="input-row2">
+        <input id="chord-input" placeholder="Type notes…" autocomplete="off" autocorrect="off" spellcheck="false" readonly />
+        <button id="deploy-btn" onclick="submitChord()">DEPLOY ↵</button>
+      </div>
+      <div id="chord-fb" class="fb-hint">Type note names — Left Shift+key = ♭, Right Shift+key = ♯</div>
+    </div>
+
+    <div style="font-size:11px;color:var(--text2);max-width:140px;line-height:1.6;font-family:'Barlow Condensed',sans-serif;">
+      <b style="color:var(--text)">Combos:</b><br>
+      I→IV→V = Rally<br>
+      ii→V→I = Jazz Rush<br>
+      I→vi→IV = Ballad<br>
+      <span style="color:var(--gold2)">&lt;3s between chords</span>
     </div>
   </div>
 </div>
 
-<!-- Screen-edge beat flash for deaf/HH players -->
-<div id="beatEdge"></div>
+<!-- MODAL -->
+<div class="modal-bg" id="modal-bg">
+  <div class="modal-box">
+    <h2 id="modal-h"></h2>
+    <p id="modal-p"></p>
+    <div class="modal-btns" id="modal-btns"></div>
+  </div>
+</div>
 
 <script>
-const SONGS=[
-  {title:"Neon Boulevard",artist:"Chromavex",diff:2,chords:[
-    {name:"C Major",notes:["C","E","G"]},{name:"G Major",notes:["G","B","D"]},{name:"A Minor",notes:["A","C","E"]},{name:"F Major",notes:["F","A","C"]},
-    {name:"C Major",notes:["C","E","G"]},{name:"G Major",notes:["G","B","D"]},{name:"A Minor",notes:["A","C","E"]},{name:"F Major",notes:["F","A","C"]},
-    {name:"C Major",notes:["C","E","G"]},{name:"G Major",notes:["G","B","D"]},{name:"A Minor",notes:["A","C","E"]},{name:"F Major",notes:["F","A","C"]}
-  ]},
-  {title:"Static Rain",artist:"Echo Engine",diff:3,chords:[
-    {name:"E Minor",notes:["E","G","B"]},{name:"C Major",notes:["C","E","G"]},{name:"G Major",notes:["G","B","D"]},{name:"D Major",notes:["D","F#","A"]},
-    {name:"E Minor",notes:["E","G","B"]},{name:"C Major",notes:["C","E","G"]},{name:"G Major",notes:["G","B","D"]},{name:"D Major",notes:["D","F#","A"]},
-    {name:"E Minor",notes:["E","G","B"]},{name:"C Major",notes:["C","E","G"]},{name:"G Major",notes:["G","B","D"]},{name:"D Major",notes:["D","F#","A"]}
-  ]},
-  {title:"Crystal Grid",artist:"Data Pulse",diff:3,chords:[
-    {name:"A Minor",notes:["A","C","E"]},{name:"F Major",notes:["F","A","C"]},{name:"C Major",notes:["C","E","G"]},{name:"G Major",notes:["G","B","D"]},
-    {name:"A Minor",notes:["A","C","E"]},{name:"F Major",notes:["F","A","C"]},{name:"C Major",notes:["C","E","G"]},{name:"G Major",notes:["G","B","D"]},
-    {name:"A Minor",notes:["A","C","E"]},{name:"F Major",notes:["F","A","C"]},{name:"C Major",notes:["C","E","G"]},{name:"G Major",notes:["G","B","D"]}
-  ]},
-  {title:"Midnight Signal",artist:"Velvet Circuit",diff:4,chords:[
-    {name:"D Minor",notes:["D","F","A"]},{name:"Bb Major",notes:["Bb","D","F"]},{name:"F Major",notes:["F","A","C"]},{name:"C Major",notes:["C","E","G"]},
-    {name:"D Minor",notes:["D","F","A"]},{name:"Bb Major",notes:["Bb","D","F"]},{name:"F Major",notes:["F","A","C"]},{name:"C Major",notes:["C","E","G"]},
-    {name:"D Minor",notes:["D","F","A"]},{name:"Bb Major",notes:["Bb","D","F"]},{name:"F Major",notes:["F","A","C"]},{name:"C Major",notes:["C","E","G"]}
-  ]},
-  {title:"Solar Wind",artist:"Orbit",diff:4,chords:[
-    {name:"G Major",notes:["G","B","D"]},{name:"E Minor",notes:["E","G","B"]},{name:"C Major",notes:["C","E","G"]},{name:"D Major",notes:["D","F#","A"]},
-    {name:"G Major",notes:["G","B","D"]},{name:"E Minor",notes:["E","G","B"]},{name:"C Major",notes:["C","E","G"]},{name:"D Major",notes:["D","F#","A"]},
-    {name:"G Major",notes:["G","B","D"]},{name:"E Minor",notes:["E","G","B"]},{name:"C Major",notes:["C","E","G"]},{name:"D Major",notes:["D","F#","A"]}
-  ]},
-  {title:"Phantom Drive",artist:"Ghost Protocol",diff:5,chords:[
-    {name:"E Minor",notes:["E","G","B"]},{name:"G Major",notes:["G","B","D"]},{name:"D Major",notes:["D","F#","A"]},{name:"A Major",notes:["A","C#","E"]},
-    {name:"E Minor",notes:["E","G","B"]},{name:"C Major",notes:["C","E","G"]},{name:"D Major",notes:["D","F#","A"]},{name:"B Minor",notes:["B","D","F#"]},
-    {name:"E Minor",notes:["E","G","B"]},{name:"G Major",notes:["G","B","D"]},{name:"D Major",notes:["D","F#","A"]},{name:"A Major",notes:["A","C#","E"]}
-  ]},
-  {title:"Aurora Chase",artist:"Prism",diff:5,chords:[
-    {name:"B Minor",notes:["B","D","F#"]},{name:"G Major",notes:["G","B","D"]},{name:"D Major",notes:["D","F#","A"]},{name:"A Major",notes:["A","C#","E"]},
-    {name:"B Minor",notes:["B","D","F#"]},{name:"G Major",notes:["G","B","D"]},{name:"D Major",notes:["D","F#","A"]},{name:"A Major",notes:["A","C#","E"]},
-    {name:"B Minor",notes:["B","D","F#"]},{name:"G Major",notes:["G","B","D"]},{name:"D Major",notes:["D","F#","A"]},{name:"A Major",notes:["A","C#","E"]}
-  ]},
-  {title:"Deep Frequency",artist:"Bass Divide",diff:5,chords:[
-    {name:"A Minor",notes:["A","C","E"]},{name:"E Minor",notes:["E","G","B"]},{name:"F Major",notes:["F","A","C"]},{name:"G Major",notes:["G","B","D"]},
-    {name:"A Minor",notes:["A","C","E"]},{name:"E Minor",notes:["E","G","B"]},{name:"F Major",notes:["F","A","C"]},{name:"G Major",notes:["G","B","D"]},
-    {name:"A Minor",notes:["A","C","E"]},{name:"E Minor",notes:["E","G","B"]},{name:"F Major",notes:["F","A","C"]},{name:"G Major",notes:["G","B","D"]}
-  ]},
-  {title:"Warp Gate",artist:"Zero Shift",diff:6,chords:[
-    {name:"E5",notes:["E","B"]},{name:"A5",notes:["A","E"]},{name:"D5",notes:["D","A"]},{name:"B5",notes:["B","F#"]},
-    {name:"E5",notes:["E","B"]},{name:"A5",notes:["A","E"]},{name:"G5",notes:["G","D"]},{name:"F5",notes:["F","C"]},
-    {name:"E5",notes:["E","B"]},{name:"A5",notes:["A","E"]},{name:"D5",notes:["D","A"]},{name:"B5",notes:["B","F#"]}
-  ]},
-  {title:"Cascade Override",artist:"Signal Break",diff:6,chords:[
-    {name:"D Minor",notes:["D","F","A"]},{name:"A Minor",notes:["A","C","E"]},{name:"Bb Major",notes:["Bb","D","F"]},{name:"C Major",notes:["C","E","G"]},
-    {name:"D Minor",notes:["D","F","A"]},{name:"A Minor",notes:["A","C","E"]},{name:"Bb Major",notes:["Bb","D","F"]},{name:"C Major",notes:["C","E","G"]},
-    {name:"D Minor",notes:["D","F","A"]},{name:"A Minor",notes:["A","C","E"]},{name:"Bb Major",notes:["Bb","D","F"]},{name:"C Major",notes:["C","E","G"]}
-  ]},
-  {title:"Neural Drift",artist:"Void Walker",diff:7,chords:[
-    {name:"A Minor",notes:["A","C","E"]},{name:"G Major",notes:["G","B","D"]},{name:"F Major",notes:["F","A","C"]},{name:"E Major",notes:["E","G#","B"]},
-    {name:"A Minor",notes:["A","C","E"]},{name:"G Major",notes:["G","B","D"]},{name:"F Major",notes:["F","A","C"]},{name:"E Major",notes:["E","G#","B"]},
-    {name:"A Minor",notes:["A","C","E"]},{name:"G Major",notes:["G","B","D"]},{name:"F Major",notes:["F","A","C"]},{name:"E Major",notes:["E","G#","B"]}
-  ]},
-  {title:"Parallel Lines",artist:"Mirror State",diff:7,chords:[
-    {name:"Cmaj7",notes:["C","E","G","B"]},{name:"Am7",notes:["A","C","E","G"]},{name:"Dm7",notes:["D","F","A","C"]},{name:"G7",notes:["G","B","D","F"]},
-    {name:"Cmaj7",notes:["C","E","G","B"]},{name:"Am7",notes:["A","C","E","G"]},{name:"Dm7",notes:["D","F","A","C"]},{name:"G7",notes:["G","B","D","F"]},
-    {name:"Cmaj7",notes:["C","E","G","B"]},{name:"Am7",notes:["A","C","E","G"]},{name:"Dm7",notes:["D","F","A","C"]},{name:"G7",notes:["G","B","D","F"]}
-  ]},
-  {title:"Hologram Sky",artist:"Neon Arc",diff:8,chords:[
-    {name:"F# Minor",notes:["F#","A","C#"]},{name:"D Major",notes:["D","F#","A"]},{name:"A Major",notes:["A","C#","E"]},{name:"E Major",notes:["E","G#","B"]},
-    {name:"F# Minor",notes:["F#","A","C#"]},{name:"D Major",notes:["D","F#","A"]},{name:"A Major",notes:["A","C#","E"]},{name:"E Major",notes:["E","G#","B"]},
-    {name:"F# Minor",notes:["F#","A","C#"]},{name:"D Major",notes:["D","F#","A"]},{name:"A Major",notes:["A","C#","E"]},{name:"E Major",notes:["E","G#","B"]}
-  ]},
-  {title:"Quantum Rush",artist:"Particle",diff:8,chords:[
-    {name:"A Minor",notes:["A","C","E"]},{name:"Dm7",notes:["D","F","A","C"]},{name:"G7",notes:["G","B","D","F"]},{name:"Cmaj7",notes:["C","E","G","B"]},
-    {name:"F Major",notes:["F","A","C"]},{name:"E7",notes:["E","G#","B","D"]},{name:"A Minor",notes:["A","C","E"]},{name:"Dm7",notes:["D","F","A","C"]},
-    {name:"G7",notes:["G","B","D","F"]},{name:"Cmaj7",notes:["C","E","G","B"]},{name:"E7",notes:["E","G#","B","D"]},{name:"A Minor",notes:["A","C","E"]}
-  ]},
-  {title:"Fracture Zone",artist:"Dark Pixel",diff:9,chords:[
-    {name:"E5",notes:["E","B"]},{name:"A5",notes:["A","E"]},{name:"G5",notes:["G","D"]},{name:"F5",notes:["F","C"]},
-    {name:"D5",notes:["D","A"]},{name:"E5",notes:["E","B"]},{name:"A5",notes:["A","E"]},{name:"G5",notes:["G","D"]},
-    {name:"F5",notes:["F","C"]},{name:"D5",notes:["D","A"]},{name:"E5",notes:["E","B"]},{name:"A5",notes:["A","E"]}
-  ]},
-  {title:"Hyperion",artist:"Stellar Crash",diff:9,chords:[
-    {name:"E7",notes:["E","G#","B","D"]},{name:"A7",notes:["A","C#","E","G"]},{name:"B7",notes:["B","D#","F#","A"]},{name:"E7",notes:["E","G#","B","D"]},
-    {name:"A7",notes:["A","C#","E","G"]},{name:"D7",notes:["D","F#","A","C"]},{name:"G7",notes:["G","B","D","F"]},{name:"E7",notes:["E","G#","B","D"]},
-    {name:"A7",notes:["A","C#","E","G"]},{name:"B7",notes:["B","D#","F#","A"]},{name:"E7",notes:["E","G#","B","D"]},{name:"A7",notes:["A","C#","E","G"]}
-  ]},
-  {title:"Void Matrix",artist:"DARKNET",diff:10,chords:[
-    {name:"Cdim7",notes:["C","Eb","Gb","A"]},{name:"B7",notes:["B","D#","F#","A"]},{name:"Bbm7",notes:["Bb","Db","F","Ab"]},{name:"Eb7",notes:["Eb","G","Bb","Db"]},
-    {name:"Abmaj7",notes:["Ab","C","Eb","G"]},{name:"Dm7b5",notes:["D","F","Ab","C"]},{name:"G7",notes:["G","B","D","F"]},{name:"Cmaj7",notes:["C","E","G","B"]},
-    {name:"Cdim7",notes:["C","Eb","Gb","A"]},{name:"B7",notes:["B","D#","F#","A"]},{name:"Bbm7",notes:["Bb","Db","F","Ab"]},{name:"Eb7",notes:["Eb","G","Bb","Db"]}
-  ]},
-  {title:"Pixel Heart",artist:"Chromavex",diff:3,chords:[
-    {name:"C Major",notes:["C","E","G"]},{name:"G Major",notes:["G","B","D"]},{name:"A Minor",notes:["A","C","E"]},{name:"E Minor",notes:["E","G","B"]},
-    {name:"F Major",notes:["F","A","C"]},{name:"C Major",notes:["C","E","G"]},{name:"G Major",notes:["G","B","D"]},{name:"F Major",notes:["F","A","C"]},
-    {name:"C Major",notes:["C","E","G"]},{name:"G Major",notes:["G","B","D"]},{name:"A Minor",notes:["A","C","E"]},{name:"F Major",notes:["F","A","C"]}
-  ]},
-  {title:"Cosmic Drift",artist:"Astral Keys",diff:6,chords:[
-    {name:"Cmaj7",notes:["C","E","G","B"]},{name:"Am7",notes:["A","C","E","G"]},{name:"Dm7",notes:["D","F","A","C"]},{name:"G7",notes:["G","B","D","F"]},
-    {name:"Em7",notes:["E","G","B","D"]},{name:"A7",notes:["A","C#","E","G"]},{name:"Dm7",notes:["D","F","A","C"]},{name:"G7",notes:["G","B","D","F"]},
-    {name:"Cmaj7",notes:["C","E","G","B"]},{name:"Am7",notes:["A","C","E","G"]},{name:"Dm7",notes:["D","F","A","C"]},{name:"G7",notes:["G","B","D","F"]}
-  ]},
-  {title:"Neon Samurai",artist:"Ryuken",diff:7,chords:[
-    {name:"E Minor",notes:["E","G","B"]},{name:"G Major",notes:["G","B","D"]},{name:"A Major",notes:["A","C#","E"]},{name:"C Major",notes:["C","E","G"]},
-    {name:"D Major",notes:["D","F#","A"]},{name:"E Minor",notes:["E","G","B"]},{name:"B Minor",notes:["B","D","F#"]},{name:"C Major",notes:["C","E","G"]},
-    {name:"E Minor",notes:["E","G","B"]},{name:"G Major",notes:["G","B","D"]},{name:"A Major",notes:["A","C#","E"]},{name:"B Major",notes:["B","D#","F#"]}
-  ]},
-  {title:"Sunbreaker",artist:"Dawn Protocol",diff:6,chords:[
-    {name:"D Major",notes:["D","F#","A"]},{name:"A Major",notes:["A","C#","E"]},{name:"B Minor",notes:["B","D","F#"]},{name:"G Major",notes:["G","B","D"]},
-    {name:"D Major",notes:["D","F#","A"]},{name:"E Major",notes:["E","G#","B"]},{name:"F# Minor",notes:["F#","A","C#"]},{name:"A Major",notes:["A","C#","E"]},
-    {name:"D Major",notes:["D","F#","A"]},{name:"A Major",notes:["A","C#","E"]},{name:"B Minor",notes:["B","D","F#"]},{name:"G Major",notes:["G","B","D"]}
-  ]},
-  {title:"Digital Thunder",artist:"Zero Shift",diff:8,chords:[
-    {name:"A5",notes:["A","E"]},{name:"G5",notes:["G","D"]},{name:"E5",notes:["E","B"]},{name:"D5",notes:["D","A"]},
-    {name:"A5",notes:["A","E"]},{name:"G5",notes:["G","D"]},{name:"F5",notes:["F","C"]},{name:"E5",notes:["E","B"]},
-    {name:"A5",notes:["A","E"]},{name:"G5",notes:["G","D"]},{name:"E5",notes:["E","B"]},{name:"D5",notes:["D","A"]}
-  ]},
-  {title:"Stardust",artist:"Nova Sync",diff:5,chords:[
-    {name:"A Minor",notes:["A","C","E"]},{name:"F Major",notes:["F","A","C"]},{name:"C Major",notes:["C","E","G"]},{name:"G Major",notes:["G","B","D"]},
-    {name:"A Minor",notes:["A","C","E"]},{name:"F Major",notes:["F","A","C"]},{name:"E Major",notes:["E","G#","B"]},{name:"A Minor",notes:["A","C","E"]},
-    {name:"A Minor",notes:["A","C","E"]},{name:"F Major",notes:["F","A","C"]},{name:"C Major",notes:["C","E","G"]},{name:"G Major",notes:["G","B","D"]}
-  ]},
-  {title:"Velvet Code",artist:"Mirror State",diff:5,chords:[
-    {name:"D Minor",notes:["D","F","A"]},{name:"G Minor",notes:["G","Bb","D"]},{name:"Bb Major",notes:["Bb","D","F"]},{name:"A Major",notes:["A","C#","E"]},
-    {name:"D Minor",notes:["D","F","A"]},{name:"G Minor",notes:["G","Bb","D"]},{name:"C Major",notes:["C","E","G"]},{name:"A7",notes:["A","C#","E","G"]},
-    {name:"D Minor",notes:["D","F","A"]},{name:"G Minor",notes:["G","Bb","D"]},{name:"Bb Major",notes:["Bb","D","F"]},{name:"A Major",notes:["A","C#","E"]}
-  ]},
-  {title:"Infinity Loop",artist:"Dark Pixel",diff:9,chords:[
-    {name:"Cmaj7",notes:["C","E","G","B"]},{name:"Em7",notes:["E","G","B","D"]},{name:"Am7",notes:["A","C","E","G"]},{name:"Fmaj7",notes:["F","A","C","E"]},
-    {name:"Dm7",notes:["D","F","A","C"]},{name:"G7",notes:["G","B","D","F"]},{name:"Em7",notes:["E","G","B","D"]},{name:"Am7",notes:["A","C","E","G"]},
-    {name:"Dm7",notes:["D","F","A","C"]},{name:"G7",notes:["G","B","D","F"]},{name:"Cmaj7",notes:["C","E","G","B"]},{name:"Fmaj7",notes:["F","A","C","E"]}
-  ]}
-];
+'use strict';
 
-const DIFFS=[
-  {name:"Easy",accuracy:0.6,eol:10,unitPow:0.5},
-  {name:"Medium",accuracy:0.75,eol:25,unitPow:0.7},
-  {name:"Hard",accuracy:0.9,eol:50,unitPow:0.85},
-  {name:"Expert",accuracy:0.98,eol:100,unitPow:0.95}
-];
-
-// Battle mode state
-const OPPONENTS=[
-  {name:"Alex",pet:"Evil Bot",icon:"&#129302;",color:"#ff3366"},
-  {name:"Jordan",pet:"Dark Wizard",icon:"&#129497;",color:"#7b2fff"},
-  {name:"Casey",pet:"Cyber Dragon",icon:"&#129409;",color:"#00f5ff"}
-];
-let isBattle=false;
-let currentOpponent=null;
-
-function startBattle(songIdx){
-  isBattle=true;
-  const oppIdx=Math.floor(Math.random()*OPPONENTS.length);
-  currentOpponent=OPPONENTS[oppIdx];
-  G.song=songIdx;
-  // Show opponent banner in battle mode screen briefly
-  document.getElementById('diffTitle').textContent=SONGS[songIdx].title;
-  showScreen('diffSelect');
+// ══════════════════════════════════════════════════════════
+//  MUSIC THEORY ENGINE
+// ══════════════════════════════════════════════════════════
+const SEMITONE = {
+  C:0, D:2, E:4, F:5, G:7, A:9, B:11
+};
+// Normalize any note token to semitone 0-11
+// Accidentals: ♭ lowers, ♯ raises
+function tokenToSemitone(tok) {
+  // tok already processed: letter + optional ♭/♯
+  const letter = tok[0];
+  const acc = tok.slice(1);
+  const base = SEMITONE[letter];
+  if (base === undefined) return null;
+  if (acc === '♭') return (base - 1 + 12) % 12;
+  if (acc === '♯') return (base + 1) % 12;
+  if (acc === '') return base;
+  return null;
 }
 
-function renderBattleGrid(){
-  const dc=['d0','d1','d2','d2','d3'];
-  const dn=['Beginner','Easy','Medium','Hard','Expert'];
-  // Pick random opponent to show
-  const opp=OPPONENTS[Math.floor(Math.random()*OPPONENTS.length)];
-  const banner=document.getElementById('oppBanner');
-  banner.style.display='flex';
-  document.getElementById('oppIcon').innerHTML=opp.icon;
-  document.getElementById('oppName').textContent=opp.name;
-  document.getElementById('oppPet').textContent='Companion: '+opp.pet;
-  document.getElementById('battleGrid').innerHTML=SONGS.map((s,i)=>`
-    <div class="battle-card" onclick="startBattle(${i})">
-      <h3 style="font-family:'Orbitron',monospace;font-size:11px;color:var(--text);margin-bottom:3px">${s.title}${s.custom?' <span class="custom-badge">CUSTOM</span>':''}</h3>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:8px">${s.artist}</div>
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <span class="${dc[Math.floor((s.diff-1)/2)]} dbadge">${dn[Math.floor((s.diff-1)/2)]}</span>
-        <span class="bonus">+50 EOL</span>
-      </div>
-    </div>`).join('');
-}
+const NOTE_DISPLAY_NAMES = ['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'];
 
-// Audio context
-function getAudioContext(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
-
-function playSuccessSound(){
-  try{
-    const ctx=getAudioContext();
-    const freqs=[523.25,659.25,783.99]; // C5 E5 G5
-    freqs.forEach((freq,i)=>{
-      const osc=ctx.createOscillator();const gain=ctx.createGain();
-      osc.connect(gain);gain.connect(ctx.destination);
-      osc.type='sine';osc.frequency.value=freq;
-      const t=ctx.currentTime+i*0.07;
-      gain.gain.setValueAtTime(0,t);gain.gain.linearRampToValueAtTime(0.13,t+0.02);
-      gain.gain.exponentialRampToValueAtTime(0.001,t+0.38);
-      osc.start(t);osc.stop(t+0.4);
-    });
-  }catch(e){}
-}
-
-function playMissSound(){
-  try{
-    const ctx=getAudioContext();
-    const osc=ctx.createOscillator();const gain=ctx.createGain();
-    osc.connect(gain);gain.connect(ctx.destination);
-    osc.type='sawtooth';
-    osc.frequency.setValueAtTime(280,ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(70,ctx.currentTime+0.3);
-    gain.gain.setValueAtTime(0.1,ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.3);
-    osc.start(ctx.currentTime);osc.stop(ctx.currentTime+0.3);
-  }catch(e){}
-}
-
-// Song-matched chord synthesizer background music
-// Each song's actual chord progression plays as a looping ambient pad
-let bgSynthActive=false;
-let bgSynthChords=[];
-let bgSynthIdx=0;
-let bgSynthGain=null;
-let bgSynthMuted=false;
-
-function _synthVol(){
-  const v=document.getElementById('musicVol');
-  return bgSynthMuted?0:(v?parseFloat(v.value)*0.13:0.07);
-}
-
-function startBackgroundMusic(chords){
-  stopBackgroundMusic();
-  if(!chords||!chords.length)return;
-  try{
-    const ctx=getAudioContext();
-    bgSynthGain=ctx.createGain();
-    bgSynthGain.gain.value=_synthVol();
-    bgSynthGain.connect(ctx.destination);
-    bgSynthChords=chords;
-    bgSynthIdx=0;
-    bgSynthActive=true;
-    playNextBgChord();
-    const bar=document.getElementById('musicBar');
-    if(bar)bar.style.display='flex';
-  }catch(e){}
-}
-
-function stopBackgroundMusic(){
-  bgSynthActive=false;
-  if(bgSynthGain){
-    try{bgSynthGain.gain.setTargetAtTime(0,bgSynthGain.context.currentTime,0.08);}catch(e){}
-    bgSynthGain=null;
+function classifyChord(semitones) {
+  const pcs = [...new Set(semitones.map(s => ((s % 12) + 12) % 12))];
+  if (pcs.length < 2) return null;
+  for (let i = 0; i < pcs.length; i++) {
+    const root = pcs[i];
+    const ivls = pcs.map(p => (p - root + 12) % 12).sort((a,b)=>a-b).filter(x=>x>0);
+    if (ivls.includes(4) && ivls.includes(7)) return {type:'major',root};
+    if (ivls.includes(3) && ivls.includes(7)) return {type:'minor',root};
+    if (ivls.includes(3) && ivls.includes(6)) return {type:'dim',root};
   }
-  const bar=document.getElementById('musicBar');
-  if(bar)bar.style.display='none';
-}
-
-function playNextBgChord(){
-  if(!bgSynthActive||!bgSynthGain)return;
-  try{
-    const ctx=getAudioContext();
-    const chord=bgSynthChords[bgSynthIdx%bgSynthChords.length];
-    const dur=2.4;
-    // Show the chord currently playing in the background
-    const tn=document.getElementById('musicTrackName');
-    if(tn)tn.textContent='\u266a '+chord.name;
-    chord.notes.forEach(note=>{
-      const freq=(NOTE_FREQS[note]||261.63)/2; // one octave down — warm pad range
-      // Sine fundamental — smooth, full-bodied tone
-      const o1=ctx.createOscillator(),g1=ctx.createGain();
-      o1.type='sine';o1.frequency.value=freq;
-      o1.connect(g1);g1.connect(bgSynthGain);
-      g1.gain.setValueAtTime(0,ctx.currentTime);
-      g1.gain.linearRampToValueAtTime(0.30,ctx.currentTime+0.10);
-      g1.gain.setValueAtTime(0.30,ctx.currentTime+dur-0.55);
-      g1.gain.linearRampToValueAtTime(0,ctx.currentTime+dur);
-      o1.start(ctx.currentTime);o1.stop(ctx.currentTime+dur+0.05);
-      // Triangle at octave above — adds harmonic warmth, fades early
-      const o2=ctx.createOscillator(),g2=ctx.createGain();
-      o2.type='triangle';o2.frequency.value=freq*2;
-      o2.connect(g2);g2.connect(bgSynthGain);
-      g2.gain.setValueAtTime(0,ctx.currentTime);
-      g2.gain.linearRampToValueAtTime(0.07,ctx.currentTime+0.07);
-      g2.gain.linearRampToValueAtTime(0,ctx.currentTime+dur*0.55);
-      o2.start(ctx.currentTime);o2.stop(ctx.currentTime+dur*0.6);
-    });
-    bgSynthIdx++;
-    triggerBeatPulse();
-    setTimeout(()=>{if(bgSynthActive)playNextBgChord();},dur*1000);
-  }catch(e){}
-}
-
-function toggleMute(){
-  bgSynthMuted=!bgSynthMuted;
-  if(bgSynthGain)bgSynthGain.gain.setValueAtTime(_synthVol(),bgSynthGain.context.currentTime);
-  document.getElementById('musicMuteBtn').innerHTML=bgSynthMuted?'&#128264;':'&#128266;';
-}
-
-function setBgVol(v){
-  if(bgSynthGain&&!bgSynthMuted)bgSynthGain.gain.setValueAtTime(parseFloat(v)*0.13,bgSynthGain.context.currentTime);
-}
-
-function playBackgroundLoop(){} // no-op, kept for compatibility
-
-// Miss & Perfect animations
-function animateMiss(){
-  const d=document.getElementById('chordDisp');
-  d.classList.remove('anim-miss','anim-perf');
-  void d.offsetWidth;
-  d.classList.add('anim-miss');
-  setTimeout(()=>d.classList.remove('anim-miss'),500);
-}
-
-function animatePerfect(){
-  const d=document.getElementById('chordDisp');
-  d.classList.remove('anim-miss','anim-perf');
-  void d.offsetWidth;
-  d.classList.add('anim-perf');
-  setTimeout(()=>d.classList.remove('anim-perf'),600);
-}
-
-// Lesson toggle
-function toggleLesson(card){card.classList.toggle('open');}
-
-function showExitConfirm(){
-  if(!G.active)return;
-  // Pause the timing so the chord doesn't auto-miss while dialog is open
-  clearTimeout(G.cTimeout);
-  clearInterval(G.tInterval);
-  document.getElementById('exitOverlay').classList.add('active');
-}
-
-function cancelQuit(){
-  document.getElementById('exitOverlay').classList.remove('active');
-  // Resume the current chord timer from scratch (give them a fresh window)
-  if(G.active)nextChord();
-}
-
-function confirmQuit(){
-  document.getElementById('exitOverlay').classList.remove('active');
-  G.active=false;
-  cancelAnimationFrame(laneAnimFrame);
-  clearTimeout(G.cTimeout);
-  clearInterval(G.tInterval);
-  stopBackgroundMusic();
-  showScreen(isBattle?'battleMode':'levelSelect');
-}
-
-// Map a note name to its keyboard shortcut label
-function noteToKey(note){
-  // Flats: map to enharmonic sharp for BINDS lookup
-  let lookup=note;
-  if(note.includes('b')&&ENH[note])lookup=ENH[note];
-  const key=BINDS[lookup];
-  if(!key)return note;
-  const needsShift=lookup.includes('#');
-  return needsShift?'Shift+'+key.toUpperCase():key.toUpperCase();
-}
-
-const ENH={'C#':'Db','Db':'C#','D#':'Eb','Eb':'D#','F#':'Gb','Gb':'F#','G#':'Ab','Ab':'G#','A#':'Bb','Bb':'A#'};
-function noteEq(a,b){return a===b||(ENH[a]&&ENH[a]===b)||(ENH[b]&&ENH[b]===a)}
-
-// Default keybinds: note -> keyboard key (lowercase)
-const DEFAULT_BINDS={'C':'c','D':'d','E':'e','F':'f','G':'g','A':'a','B':'b',
-  'C#':'C','D#':'D','F#':'F','G#':'G','A#':'A'};
-let BINDS={...DEFAULT_BINDS};
-function loadBinds(){try{const s=localStorage.getItem('cc4_binds');if(s)BINDS=JSON.parse(s);}catch{}}
-function saveBind(){try{localStorage.setItem('cc4_binds',JSON.stringify(BINDS));}catch{}}
-loadBinds();
-
-// Key -> note lookup (built from BINDS)
-function keyToNote(key,shift){
-  for(const [note,k] of Object.entries(BINDS)){
-    const isSharp=note.includes('#');
-    if(isSharp&&shift&&k.toLowerCase()===key.toLowerCase())return note;
-    if(!isSharp&&!shift&&k.toLowerCase()===key.toLowerCase())return note;
+  // dyad fallback
+  if (pcs.length === 2) {
+    const d = (pcs[1]-pcs[0]+12)%12;
+    if (d===4||d===8) return {type:'major',root:pcs[0]};
+    if (d===3||d===9) return {type:'minor',root:pcs[0]};
+    if (d===6)        return {type:'dim',root:pcs[0]};
   }
   return null;
 }
 
-// Audio via Web Audio API
-let audioCtx=null;
-function getAudio(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
+// ══════════════════════════════════════════════════════════
+//  PLAYER PROGRESS (localStorage)
+// ══════════════════════════════════════════════════════════
+const XP_TABLE = [0,100,250,500,900,1500,2400,3600,5200,7500];
+function xpForLevel(lv) { return XP_TABLE[Math.min(lv-1, XP_TABLE.length-1)] || (lv*800); }
+function xpToNext(lv)   { return xpForLevel(lv+1) - xpForLevel(lv); }
 
-const NOTE_FREQS={'C':261.63,'C#':277.18,'Db':277.18,'D':293.66,'D#':311.13,'Eb':311.13,
-  'E':329.63,'F':349.23,'F#':369.99,'Gb':369.99,'G':392.00,'G#':415.30,'Ab':415.30,
-  'A':440.00,'A#':466.16,'Bb':466.16,'B':493.88};
+let progress = {xp:0, level:1, unlocked:['major']};
+function loadProgress() {
+  try {
+    const s = localStorage.getItem('chord_clash_save');
+    if (s) progress = JSON.parse(s);
+  } catch(e){}
+  // always ensure major unlocked
+  if (!progress.unlocked) progress.unlocked = ['major'];
+  if (!progress.unlocked.includes('major')) progress.unlocked.push('major');
+  updateLevelFromXP();
+}
+function saveProgress() { try{localStorage.setItem('chord_clash_save',JSON.stringify(progress));}catch(e){} }
 
-// ════════════════════════════════════════════════════════════════════════
-// REALISTIC INSTRUMENT SYNTHESIS
-// ════════════════════════════════════════════════════════════════════════
-function playNote(note,dur=0.5,vol=0.15){
-  try{
-    const ctx=getAudio();
-    const freq=NOTE_FREQS[note]||261.63;
-    const now=ctx.currentTime;
-    switch(currentInstrument){
-      case 'strings': _playStrings(ctx,freq,dur,vol,now); break;
-      case 'synth':   _playSynth(ctx,freq,dur,vol,now);   break;
-      case 'guitar':  _playGuitar(ctx,freq,dur,vol,now);  break;
-      case 'bell':    _playBell(ctx,freq,dur,vol,now);    break;
-      default:        _playPiano(ctx,freq,dur,vol,now);   break;
-    }
-  }catch(e){}
+function addXP(amt) {
+  progress.xp += amt;
+  updateLevelFromXP();
+  saveProgress();
+  updateAllXPUI();
 }
 
-function playChord(notes){
-  notes.forEach((n,i)=>setTimeout(()=>playNote(n,0.65,0.12),i*10));
+function updateLevelFromXP() {
+  let lv = 1;
+  while (lv < XP_TABLE.length && progress.xp >= xpForLevel(lv+1)) lv++;
+  progress.level = lv;
 }
 
-// ── Piano: triangle partials + low-pass + inharmonic series + stereo pan ──
-function _playPiano(ctx,freq,dur,vol,now){
-  const master=ctx.createGain();
-  const panner=ctx.createStereoPanner?ctx.createStereoPanner():null;
-  if(panner){panner.pan.value=Math.max(-0.28,Math.min(0.28,(freq-440)/2600));panner.connect(ctx.destination);master.connect(panner);}
-  else master.connect(ctx.destination);
-  const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=Math.min(freq*6.5,8500);lp.Q.value=0.7;lp.connect(master);
-  // Inharmonicity increases with frequency (like real piano strings)
-  const inh=0.00018*freq;
-  [[1,'triangle',1.0,1.0],[2+inh,'sine',0.38,0.60],[3+inh*3,'sine',0.13,0.38],[4+inh*6,'sine',0.05,0.22]].forEach(([m,t,gm,dm])=>{
-    const o=ctx.createOscillator(),g=ctx.createGain();
-    o.type=t;o.frequency.value=freq*m;o.connect(g);g.connect(lp);
-    const pk=vol*gm,dc=dur*dm;
-    g.gain.setValueAtTime(0,now);
-    g.gain.linearRampToValueAtTime(pk,now+0.004);        // sharp hammer attack
-    g.gain.exponentialRampToValueAtTime(pk*0.30,now+0.045); // quick high-harmonic decay
-    g.gain.exponentialRampToValueAtTime(0.0001,now+dc);  // long fundamental tail
-    o.start(now);o.stop(now+dc+0.06);
-  });
-  // Subtle room echo (single reflection, no feedback)
-  const delay=ctx.createDelay(0.15);delay.delayTime.value=0.065;
-  const dg=ctx.createGain();dg.gain.value=0.10;
-  lp.connect(delay);delay.connect(dg);dg.connect(ctx.destination);
+function updateAllXPUI() {
+  const lv = progress.level;
+  const cur = progress.xp - xpForLevel(lv);
+  const needed = xpToNext(lv);
+  const pct = Math.min(100, (cur/needed)*100);
+  // Home
+  sel('#home-level').textContent = lv;
+  sel('#home-xp-cur').textContent = progress.xp;
+  sel('#home-xp-max').textContent = xpForLevel(lv+1);
+  sel('#home-xp-fill').style.width = pct+'%';
+  // Game HUD
+  sel('#g-level').textContent = lv;
+  sel('#g-xp-txt').textContent = cur+'/'+needed+' XP';
+  sel('#g-xp-bar').style.width = pct+'%';
+  // Skill tree
+  sel('#st-xp').textContent = progress.xp;
 }
 
-// ── Strings: 3 detuned sawtooths + slow attack/release + warm low-pass ──
-function _playStrings(ctx,freq,dur,vol,now){
-  const master=ctx.createGain();master.connect(ctx.destination);
-  const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=freq*3.5;lp.Q.value=1.8;lp.connect(master);
-  [-4,0,4].forEach((det,i)=>{
-    const o=ctx.createOscillator(),g=ctx.createGain();
-    o.type='sawtooth';o.frequency.value=freq;o.detune.value=det;o.connect(g);g.connect(lp);
-    const att=0.22+i*0.04,pk=vol*0.36;
-    g.gain.setValueAtTime(0,now);
-    g.gain.linearRampToValueAtTime(pk,now+att);         // slow string bow-on attack
-    g.gain.setValueAtTime(pk,now+Math.max(att+0.01,dur-0.30));
-    g.gain.linearRampToValueAtTime(0,now+dur);
-    o.start(now);o.stop(now+dur+0.06);
-  });
-}
-
-// ── Synth: square wave + pitch-drop attack + sub-octave sine + band-pass ──
-function _playSynth(ctx,freq,dur,vol,now){
-  const master=ctx.createGain();master.connect(ctx.destination);
-  const bp=ctx.createBiquadFilter();bp.type='bandpass';bp.frequency.value=freq*1.8;bp.Q.value=1.0;bp.connect(master);
-  // Main square with slight pitch-envelope (analog "plop")
-  const o=ctx.createOscillator(),g=ctx.createGain();
-  o.type='square';o.frequency.setValueAtTime(freq*1.015,now);o.frequency.exponentialRampToValueAtTime(freq,now+0.025);
-  o.connect(g);g.connect(bp);
-  g.gain.setValueAtTime(0,now);
-  g.gain.linearRampToValueAtTime(vol*0.72,now+0.007);
-  g.gain.setValueAtTime(vol*0.72,now+Math.max(0.01,dur-0.10));
-  g.gain.linearRampToValueAtTime(0,now+dur);
-  o.start(now);o.stop(now+dur+0.05);
-  // Sub-octave weight
-  const o2=ctx.createOscillator(),g2=ctx.createGain();
-  o2.type='sine';o2.frequency.value=freq*0.5;o2.connect(g2);g2.connect(master);
-  g2.gain.setValueAtTime(0,now);
-  g2.gain.linearRampToValueAtTime(vol*0.18,now+0.01);
-  g2.gain.exponentialRampToValueAtTime(0.001,now+dur*0.65);
-  o2.start(now);o2.stop(now+dur*0.7);
-}
-
-// ── Guitar: sawtooth pluck + resonant filter + quick exponential decay ──
-function _playGuitar(ctx,freq,dur,vol,now){
-  const master=ctx.createGain();master.connect(ctx.destination);
-  const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=freq*4.5;lp.Q.value=5;lp.connect(master);
-  const pd=Math.min(dur,0.6); // pluck only lasts ~0.6s
-  const o=ctx.createOscillator(),g=ctx.createGain();
-  o.type='sawtooth';o.frequency.value=freq;o.connect(g);g.connect(lp);
-  g.gain.setValueAtTime(0,now);
-  g.gain.linearRampToValueAtTime(vol,now+0.001);         // instant pluck attack
-  g.gain.exponentialRampToValueAtTime(vol*0.55,now+0.04);
-  g.gain.exponentialRampToValueAtTime(0.001,now+pd);
-  o.start(now);o.stop(now+pd+0.04);
-  // Body resonance: triangle at slight detune
-  const o2=ctx.createOscillator(),g2=ctx.createGain();
-  o2.type='triangle';o2.frequency.value=freq*0.997;o2.connect(g2);g2.connect(master);
-  g2.gain.setValueAtTime(0,now);
-  g2.gain.linearRampToValueAtTime(vol*0.20,now+0.003);
-  g2.gain.exponentialRampToValueAtTime(0.001,now+pd*0.75);
-  o2.start(now);o2.stop(now+pd*0.8);
-}
-
-// ── Bell: inharmonic sine partials + very long exponential decay ──
-function _playBell(ctx,freq,dur,vol,now){
-  const master=ctx.createGain();master.connect(ctx.destination);
-  // Bell partial series (physically-derived ratios)
-  [[1,1.0,4.2],[2.756,0.52,2.9],[5.40,0.25,2.0],[8.93,0.11,1.3],[13.34,0.04,0.9]].forEach(([m,gm,dm])=>{
-    const o=ctx.createOscillator(),g=ctx.createGain();
-    o.type='sine';o.frequency.value=freq*m;o.connect(g);g.connect(master);
-    const pk=vol*gm*0.55,dc=dur*dm;
-    g.gain.setValueAtTime(0,now);
-    g.gain.linearRampToValueAtTime(pk,now+0.001);        // instant strike
-    g.gain.exponentialRampToValueAtTime(0.0001,now+dc);
-    o.start(now);o.stop(now+dc+0.05);
-  });
-}
-
-// ════════════════════════════════════════════════════════════════════════
-// GAME MODE (Practice / Regular) + INSTRUMENT STATE
-// ════════════════════════════════════════════════════════════════════════
-let gameMode='practice';
-let currentInstrument='piano';
-
-function loadPrefs(){
-  try{const m=localStorage.getItem('cc4_mode');if(m)gameMode=m;}catch{}
-  try{const i=localStorage.getItem('cc4_instr');if(i)currentInstrument=i;}catch{}
-  updateModeUI();updateInstrUI();
-}
-
-function setGameMode(mode){
-  gameMode=mode;
-  try{localStorage.setItem('cc4_mode',mode);}catch{}
-  updateModeUI();
-  updateChordHints();
-}
-
-function setInstrument(name){
-  currentInstrument=name;
-  try{localStorage.setItem('cc4_instr',name);}catch{}
-  updateInstrUI();
-}
-
-function updateModeUI(){
-  document.querySelectorAll('[data-mode]').forEach(el=>{
-    el.classList.toggle('active',el.dataset.mode===gameMode);
-  });
-  const desc=document.getElementById('modeDesc');
-  if(desc)desc.textContent=gameMode==='practice'
-    ?'Shows note letters & key hints during play'
-    :'Chord symbols only \u2014 no note hints';
-}
-
-function updateInstrUI(){
-  document.querySelectorAll('[data-instr]').forEach(el=>{
-    el.classList.toggle('active',el.dataset.instr===currentInstrument);
-  });
-}
-
-function updateChordHints(){
-  const show=gameMode==='practice';
-  document.querySelectorAll('.practice-only').forEach(el=>{
-    el.style.display=show?'':'none';
-  });
-}
-
-// Tower defense state
-let towers={php:100,ahp:100,units:[]};
-let unitIdCounter=0;
-let laneAnimFrame=null;
-
-function spawnUnit(fromPlayer,power){
-  const lane=document.getElementById('lane');
-  const u=document.createElement('div');
-  const uid='u'+(unitIdCounter++);
-  u.id=uid;
-  u.className='unit '+(fromPlayer?'unit-p':'unit-a');
-  u.textContent=fromPlayer?'&#9654;':'&#9664;';
-  u.innerHTML=fromPlayer?'&#9654;':'&#9664;';
-  const startPct=fromPlayer?6:92;
-  u.style.left=startPct+'%';
-  lane.appendChild(u);
-  towers.units.push({id:uid,fromPlayer,pct:startPct,power,el:u});
-}
-
-function updateLane(){
-  if(!G.active)return;
-  const dead=[];
-  for(const unit of towers.units){
-    unit.pct+=unit.fromPlayer?0.4:-0.4;
-    unit.el.style.left=unit.pct+'%';
-    if(unit.fromPlayer&&unit.pct>=90){
-      towers.ahp=Math.max(0,towers.ahp-unit.power);
-      unit.el.remove();dead.push(unit.id);
-    } else if(!unit.fromPlayer&&unit.pct<=10){
-      towers.php=Math.max(0,towers.php-unit.power);
-      unit.el.remove();dead.push(unit.id);
-    }
-  }
-  towers.units=towers.units.filter(u=>!dead.includes(u.id));
-  document.getElementById('phpFill').style.width=towers.php+'%';
-  document.getElementById('ahpFill').style.width=towers.ahp+'%';
-  document.getElementById('phpTxt').textContent=Math.round(towers.php);
-  document.getElementById('ahpTxt').textContent=Math.round(towers.ahp);
-  laneAnimFrame=requestAnimationFrame(updateLane);
-}
-
-// Piano layout
-const WHITE_K=[
-  {n:'C',k:'C'},{n:'D',k:'D'},{n:'E',k:'E'},{n:'F',k:'F'},
-  {n:'G',k:'G'},{n:'A',k:'A'},{n:'B',k:'B'},
-  {n:'C',k:'C'},{n:'D',k:'D'},{n:'E',k:'E'},{n:'F',k:'F'},
-  {n:'G',k:'G'},{n:'A',k:'A'},{n:'B',k:'B'}
-];
-const BLACK_K=[
-  {after:0,n:'C#',k:'⇧C'},{after:1,n:'D#',k:'⇧D'},
-  {after:3,n:'F#',k:'⇧F'},{after:4,n:'G#',k:'⇧G'},{after:5,n:'A#',k:'⇧A'},
-  {after:7,n:'C#',k:'⇧C'},{after:8,n:'D#',k:'⇧D'},
-  {after:10,n:'F#',k:'⇧F'},{after:11,n:'G#',k:'⇧G'},{after:12,n:'A#',k:'⇧A'}
+// ══════════════════════════════════════════════════════════
+//  SKILL TREE DATA
+// ══════════════════════════════════════════════════════════
+const SKILL_TREE = [
+  {
+    tier:'Tier 1 — Foundation', nodes:[
+      {id:'major', icon:'🔵', name:'Major',   desc:'Bright, stable troop',  cost:0,    prereq:null,    troops:'Tank: high HP, slow'},
+      {id:'minor', icon:'🟣', name:'Minor',   desc:'Melancholic fighter',   cost:100,  prereq:'major', troops:'Fighter: balanced'},
+      {id:'dim',   icon:'🟠', name:'Diminished', desc:'Tense, fragile skirmisher', cost:250, prereq:'minor', troops:'Skirmisher: fast, low HP'},
+    ]
+  },
+  {
+    tier:'Tier 2 — Harmony', nodes:[
+      {id:'combo_iv', icon:'⚡', name:'IV Chord',  desc:'Unlock I→IV→V combo buff', cost:500, prereq:'major', troops:'Enables Rally combo'},
+      {id:'combo_ii', icon:'🎷', name:'ii Chord',  desc:'Unlock ii→V→I Jazz Rush',  cost:750, prereq:'minor', troops:'Enables Jazz Rush combo'},
+      {id:'combo_vi', icon:'🎸', name:'vi Chord',  desc:'Unlock I→vi→IV Ballad',    cost:600, prereq:'minor', troops:'Enables Ballad combo'},
+    ]
+  },
+  {
+    tier:'Tier 3 — Mastery', nodes:[
+      {id:'buff_tank',   icon:'🛡', name:'Fortify',  desc:'Major troops gain +25% HP',    cost:1200, prereq:'combo_iv', troops:'+25% HP on Major'},
+      {id:'buff_speed',  icon:'⚡', name:'Velocity', desc:'Dim troops gain +30% speed',   cost:1000, prereq:'dim',      troops:'+30% spd on Dim'},
+      {id:'buff_attack', icon:'⚔', name:'Fury',     desc:'Minor troops gain +20% attack', cost:1100, prereq:'combo_ii', troops:'+20% atk on Minor'},
+    ]
+  },
 ];
 
-function buildPiano(tgt,container='whiteKeys',bContainer='blackLayer',small=false){
-  const wk=document.getElementById(container);
-  const bl=document.getElementById(bContainer);
-  const total=WHITE_K.length;
-  const ht=small?70:110;
-  wk.innerHTML=WHITE_K.map((w,i)=>{
-    const isTgt=tgt.some(n=>noteEq(n,w.n));
-    return `<div class="wkey${isTgt?' tgt':''}" id="${container}_w${i}" onmousedown="clickNote('${w.n}')">
-      <div class="wk-n">${w.n}</div><div class="wk-k">${w.k}</div></div>`;
-  }).join('');
-  if(!bl)return;
-  bl.innerHTML='';
-  const wPct=100/total;
-  BLACK_K.forEach((b,j)=>{
-    const isTgt=tgt.some(n=>noteEq(n,b.n));
-    const el=document.createElement('div');
-    el.className='bkey'+(isTgt?' tgt':'');
-    el.id=`${container}_b${j}`;
-    el.style.cssText=`left:${(b.after+1)*wPct-wPct*0.33}%;width:${wPct*0.58}%`;
-    el.innerHTML=`<div class="bk-n">${b.n}</div><div class="bk-k">${b.k}</div>`;
-    el.addEventListener('mousedown',e=>{e.preventDefault();clickNote(b.n)});
-    bl.appendChild(el);
-  });
+// ══════════════════════════════════════════════════════════
+//  SCREEN NAVIGATION
+// ══════════════════════════════════════════════════════════
+function sel(q){return document.querySelector(q);}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));sel('#'+id).classList.add('active');}
+
+function gotoHome(){showScreen('home');updateAllXPUI();}
+function gotoTutorial(){showScreen('tutorial');tutStep=0;renderTutorial();}
+function gotoSkillTree(){showScreen('skilltree');renderSkillTree();}
+function gotoGame(){showScreen('game');startGame();}
+function quitGame(){
+  if(gameRaf){cancelAnimationFrame(gameRaf);gameRaf=null;}
+  gotoHome();
 }
 
-function lightKey(note,on,prefix='whiteKeys'){
-  WHITE_K.forEach((w,i)=>{if(noteEq(w.n,note)){const el=document.getElementById(prefix+'_w'+i);if(el)el.classList.toggle('lit',on);}});
-  BLACK_K.forEach((b,j)=>{if(noteEq(b.n,note)){const el=document.getElementById(prefix+'_b'+j);if(el)el.classList.toggle('lit',on);}});
-}
-
-// Game state
-let G={song:null,diff:0,pScore:0,aScore:0,chordIdx:0,combo:0,hits:0,total:0,startTime:0,buf:[],cTimeout:null,tInterval:null,active:false};
-
-function getEol(){try{return parseInt(localStorage.getItem('cc4_eol')||0)}catch{return 0}}
-function saveEol(v){try{localStorage.setItem('cc4_eol',v)}catch{}}
-function getLb(){try{return JSON.parse(localStorage.getItem('cc4_lb')||'[]')}catch{return[]}}
-function saveLb(v){try{localStorage.setItem('cc4_lb',JSON.stringify(v))}catch{}}
-
-function showScreen(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  if(id==='mainMenu'){document.getElementById('menuEol').textContent=getEol();isBattle=false;currentOpponent=null;}
-  if(id==='leaderboard')renderLb();
-  if(id==='levelSelect'){renderLevels();isBattle=false;}
-  if(id==='keybinds')renderKeybinds();
-  if(id==='battleMode')renderBattleGrid();
-  if(id==='createSong'){renderSavedSongs();updateCbPreview();}
-  if(id==='diffSelect'){updateModeUI();updateInstrUI();}
-}
-
-function renderLevels(){
-  const dc=['d0','d1','d2','d2','d3'];
-  const dn=['Beginner','Easy','Medium','Hard','Expert'];
-  document.getElementById('levelGrid').innerHTML=SONGS.map((s,i)=>`
-    <div class="lvl-card" onclick="pickSong(${i})">
-      <h3>${s.title}</h3><div class="art">${s.artist}</div>
-      <div class="meta">
-        <span class="stars">${'&#9733;'.repeat(Math.min(Math.ceil(s.diff/2),5))}</span>
-        <span class="${dc[Math.floor((s.diff-1)/2)]} dbadge">${dn[Math.floor((s.diff-1)/2)]}</span>
+// ══════════════════════════════════════════════════════════
+//  TUTORIAL
+// ══════════════════════════════════════════════════════════
+const TUT_STEPS = [
+  {
+    heading:'Welcome to Chord Clash!',
+    text:`<strong>Chord Clash</strong> is a tower defense game powered by real music theory. You summon troops by typing actual musical chords on your keyboard — and the game recognizes them automatically.<br><br>Your goal: destroy the enemy tower before it destroys yours. Troops march across the battlefield, clash with enemies, and deal damage to towers.`,
+    demo: () => `<div class="tut-demo"><div class="tut-demo-label">The Battlefield</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;gap:8px">
+        <div style="text-align:center"><div style="font-size:32px">🏰</div><div style="font-size:11px;color:var(--blue3)">YOUR TOWER</div></div>
+        <div style="flex:1;height:3px;background:linear-gradient(90deg,var(--blue2),var(--red2));border-radius:2px;position:relative">
+          <span style="position:absolute;left:30%;font-size:18px">🔵</span>
+          <span style="position:absolute;right:30%;font-size:18px;transform:scaleX(-1)">🔴</span>
+        </div>
+        <div style="text-align:center"><div style="font-size:32px">💀</div><div style="font-size:11px;color:var(--red)">ENEMY TOWER</div></div>
+      </div></div>`
+  },
+  {
+    heading:'Typing Note Names',
+    text:`Type note names using the letters <strong>A B C D E F G</strong>. Just press the letter — no shift needed for natural notes.<br><br>Separate multiple notes with <strong>spaces</strong>. When you've typed your chord, press <strong>Enter</strong> to deploy your troop!`,
+    demo: () => `<div class="tut-demo"><div class="tut-demo-label">Example — C Major (C E G)</div>
+      <div class="kbd-demo">
+        <span class="kbd note">C</span><span class="kbd-arrow">+</span>
+        <span class="kbd">Space</span><span class="kbd-arrow">+</span>
+        <span class="kbd note">E</span><span class="kbd-arrow">+</span>
+        <span class="kbd">Space</span><span class="kbd-arrow">+</span>
+        <span class="kbd note">G</span><span class="kbd-arrow">+</span>
+        <span class="kbd">Enter</span>
+        <span class="kbd-arrow">→</span>
+        <span class="kbd result">🔵 MAJOR</span>
       </div>
-      <div style="margin-top:6px;display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--muted)">
-        <span>${s.chords.length} chords</span>
-        ${s.custom?'<span class="custom-badge">CUSTOM</span>':''}
+      <div style="margin-top:10px;font-size:13px;color:var(--text2)">The game instantly identifies the chord type and sends the right troop!</div></div>`
+  },
+  {
+    heading:'Adding Accidentals',
+    text:`<strong>Left Shift + letter</strong> types a <strong>flat (♭)</strong> note.<br>
+    <strong>Right Shift + letter</strong> types a <strong>sharp (♯)</strong> note.<br><br>
+    Just hold the shift key as you press the letter — the accidental is added automatically. You never type the ♭ or ♯ symbols yourself.`,
+    demo: () => `<div class="tut-demo"><div class="tut-demo-label">Accidental Examples</div>
+      <div class="kbd-demo" style="margin-bottom:10px">
+        <span class="kbd shift">Left⇧</span><span class="kbd-arrow">+</span><span class="kbd note">B</span>
+        <span class="kbd-arrow">=</span><span class="kbd result">B♭</span>
+        <span style="margin-left:16px;color:var(--text2);font-size:13px">B flat</span>
       </div>
-    </div>`).join('');
-}
-
-function pickSong(i){G.song=i;document.getElementById('diffTitle').textContent=SONGS[i].title;showScreen('diffSelect');}
-function selDiff(d){G.diff=d;document.querySelectorAll('.dopt').forEach((el,i)=>el.classList.toggle('sel',i===d));}
-
-function startGame(){
-  if(G.song===null)return;
-  const song=SONGS[G.song];
-  G.pScore=0;G.aScore=0;G.chordIdx=0;G.combo=0;G.hits=0;G.total=song.chords.length;G.buf=[];G.active=true;
-  towers={php:100,ahp:100,units:[]};
-  document.querySelectorAll('.unit').forEach(u=>u.remove());
-  ['pScore','aScore','comboVal'].forEach(id=>document.getElementById(id).textContent='0');
-  const hudLabel=isBattle&&currentOpponent?'vs '+currentOpponent.name:song.title;
-  document.getElementById('hudTitle').textContent=hudLabel;
-  document.getElementById('progFill').style.width='0%';
-  document.getElementById('phpFill').style.width='100%';
-  document.getElementById('ahpFill').style.width='100%';
-  document.getElementById('phpTxt').textContent='100';
-  document.getElementById('ahpTxt').textContent='100';
-  buildPiano([]);
-  showScreen('gameplay');
-  initBeatVis();
-  updateModeUI();updateInstrUI();updateChordHints();
-  // Live EOL display — current balance + potential win bonus
-  document.getElementById('hudEolVal').textContent=getEol();
-  const bonusAmt=DIFFS[G.diff].eol+(isBattle?50:0);
-  document.getElementById('hudEolBonus').textContent='+'+bonusAmt+' if win';
-  stopBackgroundMusic();
-  startBackgroundMusic(song.chords);
-  if(laneAnimFrame)cancelAnimationFrame(laneAnimFrame);
-  updateLane();
-  setTimeout(nextChord,600);
-}
-
-const PERFECT_MS=900;
-const GOOD_MS=2000;
-
-function nextChord(){
-  if(!G.active)return;
-  const song=SONGS[G.song];
-  if(G.chordIdx>=song.chords.length){endGame();return;}
-  const chord=song.chords[G.chordIdx];
-  G.buf=[];G.startTime=Date.now();
-  document.getElementById('chordName').textContent=chord.name;
-  document.getElementById('chordNotes').textContent=chord.notes.join(' + ');
-  document.getElementById('keyHintLine').textContent='Keys: '+chord.notes.map(noteToKey).join(' + ');
-  renderChordNotation(chord);
-  updateChordHints();
-  document.getElementById('fbText').textContent='\u00a0';
-  document.getElementById('chordDisp').className='chord-disp';
-  document.getElementById('progFill').style.width=Math.round((G.chordIdx/song.chords.length)*100)+'%';
-  buildPiano(chord.notes);
-  clearInterval(G.tInterval);
-  const dur=GOOD_MS+500,start=Date.now();
-  G.tInterval=setInterval(()=>{
-    const t=Math.min((Date.now()-start)/dur,1);
-    document.getElementById('tCur').style.left=(Math.sin(t*Math.PI*2)*0.4+0.5)*100+'%';
-    if(t>=1)clearInterval(G.tInterval);
-  },16);
-  clearTimeout(G.cTimeout);
-  G.cTimeout=setTimeout(()=>{if(G.active)doResult('miss');},dur);
-}
-
-function clickNote(note){
-  if(!G.active)return;
-  playNote(note,0.35,0.1);
-  lightKey(note,true);
-  setTimeout(()=>lightKey(note,false),160);
-  handleNote(note);
-}
-
-function handleNote(note){
-  if(!G.active)return;
-  const chord=SONGS[G.song].chords[G.chordIdx];
-  if(!chord)return;
-  // Only register notes that belong to the current chord — wrong keys play sound but don't fill the buffer
-  if(!chord.notes.some(cn=>noteEq(cn,note)))return;
-  if(!G.buf.some(n=>noteEq(n,note))){
-    G.buf.push(note);
-    // Light up the corresponding notehead on the staff
-    const chord=SONGS[G.song].chords[G.chordIdx];
-    const ni=chord.notes.findIndex(cn=>noteEq(cn,note));
-    if(ni>=0)hitNoteOnStaff(ni);
+      <div class="kbd-demo">
+        <span class="kbd shift">Right⇧</span><span class="kbd-arrow">+</span><span class="kbd note">F</span>
+        <span class="kbd-arrow">=</span><span class="kbd result">F♯</span>
+        <span style="margin-left:16px;color:var(--text2);font-size:13px">F sharp</span>
+      </div>
+      <div style="margin-top:12px;font-size:13px;color:var(--text2)">Try it — type a B♭ minor chord: Left⇧+B, space, D, space, F</div></div>`
+  },
+  {
+    heading:'Three Troop Types',
+    text:`The chord you type determines which troop you summon. There are three types, each with different stats:<br><br>
+    The game detects the chord by analyzing the <strong>intervals between your notes</strong> — any inversion or voicing works!`,
+    demo: () => `<div class="tut-demo"><div class="tut-demo-label">Troop Types</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:12px;padding:8px;background:rgba(61,138,255,0.07);border-radius:8px;border:1px solid var(--blue2)">
+          <div style="font-size:26px">🔵</div>
+          <div><div class="chord-pill pill-major">MAJOR</div><div style="font-size:12px;color:var(--text2);margin-top:4px">High HP, slow — e.g. C E G, D F♯ A, F A C</div></div>
+          <div style="margin-left:auto;font-size:11px;color:var(--blue3);text-align:right">Cost: 20 mana<br><b>Tank</b></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:8px;background:rgba(153,85,255,0.07);border-radius:8px;border:1px solid var(--purple2)">
+          <div style="font-size:26px">🟣</div>
+          <div><div class="chord-pill pill-minor">MINOR</div><div style="font-size:12px;color:var(--text2);margin-top:4px">Balanced — e.g. A C E, D F A, E G B</div></div>
+          <div style="margin-left:auto;font-size:11px;color:var(--purple3);text-align:right">Cost: 15 mana<br><b>Fighter</b></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:8px;background:rgba(255,122,32,0.07);border-radius:8px;border:1px solid var(--orange2)">
+          <div style="font-size:26px">🟠</div>
+          <div><div class="chord-pill pill-dim">DIM</div><div style="font-size:12px;color:var(--text2);margin-top:4px">Fast, fragile — e.g. B D F, C E♭ G♭, D F A♭</div></div>
+          <div style="margin-left:auto;font-size:11px;color:var(--orange);text-align:right">Cost: 10 mana<br><b>Skirmisher</b></div>
+        </div>
+      </div></div>`
+  },
+  {
+    heading:'Chord Combos!',
+    text:`If you type chords in quick succession (within <strong>3 seconds</strong> of each other), the game detects <strong>chord progressions</strong> and grants powerful buffs to all your troops!<br><br>
+    These are real musical progressions used in actual songs. Type them fast to trigger them!`,
+    demo: () => `<div class="tut-demo"><div class="tut-demo-label">Combo Progressions (unlock in Skill Tree)</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div class="combo-example">
+          <span class="chord-pill pill-major">I</span>
+          <span class="combo-arrow">→</span><span class="chord-pill pill-major">IV</span>
+          <span class="combo-arrow">→</span><span class="chord-pill pill-major">V</span>
+          <span class="combo-arrow">⟹</span><span class="combo-result">⚡ RALLY — +40% Speed</span>
+        </div>
+        <div class="combo-example">
+          <span class="chord-pill pill-minor">ii</span>
+          <span class="combo-arrow">→</span><span class="chord-pill pill-major">V</span>
+          <span class="combo-arrow">→</span><span class="chord-pill pill-major">I</span>
+          <span class="combo-arrow">⟹</span><span class="combo-result">🎷 JAZZ RUSH — +60% Attack</span>
+        </div>
+        <div class="combo-example">
+          <span class="chord-pill pill-major">I</span>
+          <span class="combo-arrow">→</span><span class="chord-pill pill-minor">vi</span>
+          <span class="combo-arrow">→</span><span class="chord-pill pill-major">IV</span>
+          <span class="combo-arrow">⟹</span><span class="combo-result">🎸 BALLAD — +50% HP Regen</span>
+        </div>
+      </div></div>`
+  },
+  {
+    heading:'Skill Tree & XP',
+    text:`Earn <strong>XP</strong> by defeating enemy troops and damaging their tower. Level up to unlock new chord types in the <strong>Skill Tree</strong>.<br><br>
+    Higher level also makes the <strong>AI enemy harder</strong> — they'll spawn more chords and use better progressions.<br><br>
+    Head to the Skill Tree from the home screen to spend your XP!`,
+    demo: () => `<div class="tut-demo"><div class="tut-demo-label">XP Rewards</div>
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--text3)">
+        <div>⚔ Enemy troop defeated → <b style="color:var(--gold)">+10 XP</b></div>
+        <div>💀 Tower damage dealt → <b style="color:var(--gold)">+5 XP / hit</b></div>
+        <div>🏆 Enemy tower destroyed → <b style="color:var(--gold)">+100 XP bonus</b></div>
+        <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">Unlocking Minor costs 100 XP · Diminished costs 250 XP</div>
+      </div></div>`
+  },
+  {
+    heading:'You\'re Ready!',
+    text:`That's everything you need to know. Go defeat the Discord Army with the power of harmony!<br><br>
+    <strong>Quick tips:</strong><br>
+    • Watch your mana — it regenerates over time<br>
+    • Mix troop types: lead with tanks (Major), follow with fast Dim skirmishers<br>
+    • Type combos fast — 3 seconds is tighter than you think<br>
+    • Check the Skill Tree between runs to power up`,
+    demo: () => `<div style="text-align:center;padding:20px">
+      <div style="font-size:64px;margin-bottom:12px">⚔</div>
+      <div style="font-family:'Teko',sans-serif;font-size:32px;color:var(--gold);letter-spacing:3px">LET THE BATTLE BEGIN</div>
+      <div style="font-size:13px;color:var(--text2);margin-top:8px">Unlock all chords and climb to the top!</div>
+    </div>`
   }
-  if(G.buf.length>=chord.notes.length){
-    clearTimeout(G.cTimeout);clearInterval(G.tInterval);
-    const ms=Date.now()-G.startTime;
-    const ok=chord.notes.every(cn=>G.buf.some(inp=>noteEq(inp,cn)));
-    if(!ok){doResult('miss');return;}
-    // Fixed: check perfect first, then good
-    if(ms<=PERFECT_MS)doResult('perfect');
-    else if(ms<=GOOD_MS)doResult('good');
-    else doResult('miss');
-  }
-}
-
-function doResult(result){
-  G.chordIdx++;
-  const chord=SONGS[G.song]?SONGS[G.song].chords[G.chordIdx-1]:null;
-  const disp=document.getElementById('chordDisp');
-  const fb=document.getElementById('fbText');
-  if(result==='perfect'){
-    const pts=100+Math.floor(G.combo/5)*10;
-    G.pScore+=pts;G.combo++;G.hits++;
-    disp.className='chord-disp perf';fb.className='fb-text perf';fb.textContent='PERFECT!';
-    if(chord)playChord(chord.notes);
-    playSuccessSound();animatePerfect();
-    spawnUnit(true,20);
-  }else if(result==='good'){
-    G.pScore+=50;G.combo++;G.hits++;
-    disp.className='chord-disp good';fb.className='fb-text good';fb.textContent='GOOD';
-    if(chord)playChord(chord.notes);
-    playSuccessSound();
-    spawnUnit(true,10);
-  }else{
-    G.combo=0;
-    disp.className='chord-disp miss';fb.className='fb-text miss';fb.textContent='MISS';
-    playMissSound();animateMiss();
-  }
-  document.getElementById('pScore').textContent=G.pScore;
-  document.getElementById('comboVal').textContent=G.combo;
-  // AI turn
-  const acc=DIFFS[G.diff].accuracy;
-  const r=Math.random();
-  if(r<acc*0.55){G.aScore+=100;spawnUnit(false,20);}
-  else if(r<acc){G.aScore+=50;spawnUnit(false,10);}
-  document.getElementById('aScore').textContent=G.aScore;
-  setTimeout(nextChord,400);
-}
-
-function endGame(){
-  G.active=false;
-  cancelAnimationFrame(laneAnimFrame);
-  clearInterval(G.tInterval);
-  stopBackgroundMusic();
-  const won=towers.php>towers.ahp||(G.pScore>G.aScore&&towers.php>0);
-  const acc=Math.round((G.hits/G.total)*100);
-  const baseEol=won?DIFFS[G.diff].eol:0;
-  const battleBonus=won&&isBattle?50:0;
-  const eolGain=baseEol+battleBonus;
-  if(eolGain>0){const ne=getEol()+eolGain;saveEol(ne);updateLb(ne);
-    // Update live HUD counter so player sees the new total before results screen
-    document.getElementById('hudEolVal').textContent=ne;
-    document.getElementById('hudEolBonus').textContent='+'+eolGain+' earned!';
-  }
-  document.getElementById('progFill').style.width='100%';
-  // Update results back-button routing
-  const retryBtn=document.querySelector('#results button[onclick="startGame()"]');
-  const songsBtn=document.querySelector('#results .btn.gold');
-  if(songsBtn)songsBtn.onclick=()=>showScreen(isBattle?'battleMode':'levelSelect');
-  setTimeout(()=>{
-    document.getElementById('rOut').textContent=won?'VICTORY!':'DEFEAT';
-    document.getElementById('rOut').className='r-out '+(won?'win':'loss');
-    document.getElementById('rPS').textContent=G.pScore;
-    document.getElementById('rAS').textContent=G.aScore;
-    document.getElementById('rAcc').textContent=acc+'%';
-    document.getElementById('rHit').textContent=G.hits+'/'+G.total;
-    let eolMsg=eolGain>0?'+'+eolGain+' EOL Earned':'No EOL \u2014 must win the battle!';
-    if(won&&battleBonus>0)eolMsg='+'+baseEol+' EOL + '+battleBonus+' Battle Bonus!';
-    document.getElementById('eolLine').textContent=eolMsg;
-    showScreen('results');
-  },500);
-}
-
-function updateLb(eol){
-  let lb=getLb();
-  const i=lb.findIndex(e=>e.name==='You');
-  if(i>=0){if(eol>lb[i].eol)lb[i].eol=eol;}else lb.push({name:'You',eol});
-  lb.sort((a,b)=>b.eol-a.eol);saveLb(lb);
-}
-
-function renderLb(){
-  const sample=[{name:'NeonKeys',eol:4800},{name:'ChordMaster',eol:3950},{name:'VoidPlay',eol:3100},{name:'RhythmX',eol:2400},{name:'PixelNote',eol:1800},{name:'StormKeys',eol:900}];
-  const you=getLb().find(e=>e.name==='You');
-  let merged=[...sample];if(you)merged.push(you);
-  merged=merged.filter((v,i,a)=>a.findIndex(x=>x.name===v.name)===i).sort((a,b)=>b.eol-a.eol);
-  document.getElementById('lbBody').innerHTML=merged.map((e,i)=>`
-    <tr><td class="lb-rank ${i<3?'top':''}">#${i+1}</td>
-    <td class="${e.name==='You'?'lb-you':''} lb-name">${e.name}${e.name==='You'?' &laquo;':''}</td>
-    <td class="lb-eol">${e.eol.toLocaleString()}</td></tr>`).join('');
-}
-
-// Keybinds UI
-let listeningFor=null;
-function renderKeybinds(){
-  const notes=['C','D','E','F','G','A','B','C#','D#','F#','G#','A#'];
-  document.getElementById('kbGrid').innerHTML=notes.map(n=>`
-    <div class="kb-row">
-      <span class="kb-note">${n}</span>
-      <span class="kb-key" id="kb_${n.replace('#','s')}" onclick="startListen('${n}')">${BINDS[n]||'?'}</span>
-    </div>`).join('');
-}
-function startListen(note){
-  if(listeningFor){
-    const prev=listeningFor.replace('#','s');
-    const el=document.getElementById('kb_'+prev);
-    if(el)el.classList.remove('listening');
-  }
-  listeningFor=note;
-  const el=document.getElementById('kb_'+note.replace('#','s'));
-  if(el){el.classList.add('listening');el.textContent='...';}
-}
-function saveKeybinds(){saveBind();document.getElementById('kbMsg').textContent='Saved!';setTimeout(()=>document.getElementById('kbMsg').textContent='',2000);}
-function resetKeybinds(){BINDS={...DEFAULT_BINDS};saveBind();renderKeybinds();document.getElementById('kbMsg').textContent='Reset to defaults';}
-
-// Tutorial state
-const TUT_STEPS=[
-  {title:'Welcome to Chord Clash',body:'Match chords by pressing piano keys before time runs out. Beat the AI to win!',hint:'C D E F G A B keys = white piano keys',action:null,needKey:null},
-  {title:'Try pressing C',body:'Press the C key on your keyboard to play the C note.',hint:'Watch the piano light up!',action:'pressC',needKey:'C'},
-  {title:'Play a chord',body:'A chord uses multiple notes together. Press C, E, and G to play C Major!',hint:'Press all three in any order.',action:'chordCEG',needKey:null,chordNeed:['C','E','G']},
-  {title:'Timing matters',body:'Faster = Perfect (+100 pts). Slower = Good (+50 pts). Too slow = Miss.',hint:'The cursor shows your timing window.',action:null,needKey:null},
-  {title:'Tower Defense',body:"Each chord you nail sends a unit toward the AI's tower. Destroy it to win!",hint:'Perfect = strong unit. Good = weak unit.',action:null,needKey:null}
 ];
-let tutStep=0,tutBuf=[],tutPianoPfx='tutWK';
 
-function initTutPiano(){
-  const pw=document.getElementById('tutPiano');
-  pw.innerHTML=`<div class="white-keys" id="tutWK" style="height:100%"></div><div class="black-layer" id="tutBL" style="height:60%"></div>`;
-  buildPiano([],tutPianoPfx,'tutBL');
+let tutStep = 0;
+function renderTutorial() {
+  const step = TUT_STEPS[tutStep];
+  const dots = sel('#tut-dots');
+  dots.innerHTML = TUT_STEPS.map((_,i)=>`<div class="tut-dot ${i===tutStep?'active':i<tutStep?'done':''}"></div>`).join('');
+
+  sel('#tut-card').innerHTML = `
+    <div class="tut-step-num">Step ${tutStep+1} of ${TUT_STEPS.length}</div>
+    <div class="tut-heading">${step.heading}</div>
+    <div class="tut-text">${step.text}</div>
+    ${step.demo()}
+  `;
+  sel('#tut-prev').style.opacity = tutStep===0?'0.3':'1';
+  sel('#tut-prev').style.pointerEvents = tutStep===0?'none':'auto';
+  sel('#tut-next').textContent = tutStep===TUT_STEPS.length-1 ? '▶ Play Now!' : 'Next →';
+  sel('#tut-prog').textContent = `${tutStep+1} / ${TUT_STEPS.length}`;
+}
+function tutNav(dir) {
+  if (dir === 1 && tutStep === TUT_STEPS.length-1) { gotoGame(); return; }
+  tutStep = Math.max(0, Math.min(TUT_STEPS.length-1, tutStep+dir));
+  renderTutorial();
 }
 
-function renderTutStep(){
-  const s=TUT_STEPS[tutStep];
-  document.getElementById('tutStep').textContent=`Step ${tutStep+1} of ${TUT_STEPS.length}`;
-  document.getElementById('tutTitle').textContent=s.title;
-  document.getElementById('tutBody').textContent=s.body;
-  document.getElementById('tutHint').textContent=s.hint;
-  document.getElementById('tutFb').textContent='';
-  const btn=document.getElementById('tutNextBtn');
-  if(tutStep===TUT_STEPS.length-1){btn.textContent='Play! \u25b6';btn.onclick=()=>showScreen('mainMenu');}
-  else{btn.textContent='Next \u2192';btn.onclick=tutNext;}
-  if(s.action==='chordCEG'){buildPiano(['C','E','G'],tutPianoPfx,'tutBL');tutBuf=[];}
-  else{buildPiano([],tutPianoPfx,'tutBL');}
+// ══════════════════════════════════════════════════════════
+//  SKILL TREE RENDER
+// ══════════════════════════════════════════════════════════
+function isUnlocked(id) { return progress.unlocked.includes(id); }
+function isAvailable(id, prereq) {
+  if (isUnlocked(id)) return false;
+  const node = SKILL_TREE.flatMap(t=>t.nodes).find(n=>n.id===id);
+  if (!node) return false;
+  if (prereq && !isUnlocked(prereq)) return false;
+  return progress.xp >= node.cost;
 }
 
-function tutNext(){tutStep=Math.min(tutStep+1,TUT_STEPS.length-1);renderTutStep();}
+function renderSkillTree() {
+  updateAllXPUI();
+  const body = sel('#st-body');
+  body.innerHTML = '';
+  SKILL_TREE.forEach(tier => {
+    const div = document.createElement('div');
+    div.className = 'st-tier';
+    const unlckd = isUnlocked;
+    div.innerHTML = `<div class="st-tier-label">${tier.tier}</div>
+      <div class="st-nodes">${tier.nodes.map(n => {
+        const unl = isUnlocked(n.id);
+        const avail = isAvailable(n.id, n.prereq);
+        const locked = !unl && !avail;
+        const cls = unl?'unlocked':avail?'available':'locked';
+        return `<div class="st-node ${cls}" onclick="${avail?`unlockNode('${n.id}')`:''}">
+          ${unl?'<div class="st-node-badge">✓</div>':''}
+          <div class="st-node-icon">${n.icon}</div>
+          <div class="st-node-name">${n.name}</div>
+          <div class="st-node-desc">${n.desc}</div>
+          <div class="st-node-cost">${unl?'✓ Unlocked':n.cost===0?'Free':n.cost+' XP'}</div>
+          <div class="tooltip">${n.troops}${n.prereq?'<br>Requires: '+n.prereq:''}</div>
+        </div>`;
+      }).join('')}</div>`;
+    body.appendChild(div);
+  });
+}
 
-function handleTutKey(note){
-  const s=TUT_STEPS[tutStep];
-  if(s.needKey&&note===s.needKey){
-    playNote(note);lightKey(note,true,tutPianoPfx);setTimeout(()=>lightKey(note,false,tutPianoPfx),200);
-    document.getElementById('tutFb').textContent='Great!';
-    setTimeout(tutNext,700);return;
+function unlockNode(id) {
+  const node = SKILL_TREE.flatMap(t=>t.nodes).find(n=>n.id===id);
+  if (!node) return;
+  if (progress.xp < node.cost) return;
+  if (isUnlocked(id)) return;
+  progress.xp -= node.cost;
+  progress.unlocked.push(id);
+  saveProgress();
+  renderSkillTree();
+  floatText('✓ '+node.name+' Unlocked!', window.innerWidth/2, window.innerHeight/2, '#28cc70');
+}
+
+// ══════════════════════════════════════════════════════════
+//  GAME ENGINE
+// ══════════════════════════════════════════════════════════
+let canvas, ctx, gameRaf=null, lastT=0, spd=1, gScore=0;
+let GW, GH, LANE_Y, PTX, ETX;
+let GS; // game state
+
+const TROOP = {
+  major: {col:'#3d8aff',glow:'rgba(61,138,255,0.55)',hp:90, atk:18,spd:38,cost:20,r:18,label:'M'},
+  minor: {col:'#9955ff',glow:'rgba(153,85,255,0.55)',hp:55, atk:15,spd:56,cost:15,r:14,label:'m'},
+  dim:   {col:'#ff7a20',glow:'rgba(255,122,32,0.55)', hp:28, atk:11,spd:82,cost:10,r:11,label:'°'},
+};
+
+// AI chord pools per wave bracket
+const AI_POOL = [
+  [[[0,4,7],'major'],[[9,0,4],'minor'],[[2,5,9],'minor']],            // early: C maj, A min, D min
+  [[[7,11,2],'major'],[[5,9,0],'major'],[[11,2,5],'dim']],            // mid
+  [[[2,6,9],'major'],[[5,8,0],'minor'],[[10,1,4],'major'],[[8,11,2],'dim']], // hard
+];
+
+// Combo detection: chord roots in scale degrees
+// We detect by interval pattern between consecutive roots
+const COMBOS = {
+  'I-IV-V': { name:'⚡ RALLY', desc:'+40% Speed 8s', buff:{spd:1.4,dur:8},
+    check:(hist)=> hist.length>=3 && checkProg(hist.slice(-3),[0,5,7]) },
+  'ii-V-I': { name:'🎷 JAZZ RUSH', desc:'+60% Attack 6s', buff:{atk:1.6,dur:6},
+    check:(hist)=> hist.length>=3 && checkProg(hist.slice(-3),[2,7,0]) },
+  'I-vi-IV': { name:'🎸 BALLAD', desc:'+50% HP Regen', buff:{hpRegen:1.5,dur:10},
+    check:(hist)=> hist.length>=3 && checkProg(hist.slice(-3),[0,9,5]) },
+};
+
+function checkProg(entries, pattern) {
+  // Check if roots follow the pattern of intervals from first root
+  const base = entries[0].root;
+  return pattern.every((p,i) => ((entries[i].root - base + 1200) % 12) === p % 12);
+}
+
+function startGame() {
+  const c = document.getElementById('gc');
+  canvas = c; ctx = c.getContext('2d');
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  gScore = 0;
+  sel('#score-hud').textContent = '0 pts';
+  sel('#wave-pill').textContent = 'WAVE 1';
+
+  GS = {
+    playerHp:200, enemyHp:200, maxHp:200,
+    mana:80, maxMana:120,
+    wave:1, waveTimer:0,
+    troops:[],
+    nextId:0,
+    aiTimer:0,
+    aiInterval: Math.max(2.5, 6 - progress.level * 0.3),
+    manaRegen: 7 + progress.level * 0.4,
+    buffTimer:0,
+    activeBuff:null,
+    over:false,
+    comboHistory:[],
+    playerBuff:null,
+    playerBuffEnd:0,
+  };
+
+  updateHpUI();
+  updateManaUI_game();
+  buildCostUI();
+
+  // Input setup
+  currentNotes = [];
+  inputTokens = [];
+  renderLiveChord();
+  updateFeedback('hint','Type note names — Left⇧=♭, Right⇧=♯, Enter=deploy');
+  sel('#chord-input').value = '';
+
+  if(gameRaf) cancelAnimationFrame(gameRaf);
+  lastT = performance.now();
+  gameRaf = requestAnimationFrame(gameFrame);
+}
+
+function resizeCanvas() {
+  const c = document.getElementById('gc');
+  const parent = c.parentElement;
+  c.width = parent.offsetWidth;
+  c.height = parent.offsetHeight;
+  GW = c.width; GH = c.height;
+  LANE_Y = GH / 2;
+  PTX = 72; ETX = GW - 72;
+}
+
+function gameFrame(now) {
+  const rawDt = Math.min((now-lastT)/1000, 0.05);
+  lastT = now;
+  const dt = rawDt * spd;
+  if (!GS.over) {
+    updateGame(dt);
   }
-  if(s.chordNeed){
-    playNote(note);lightKey(note,true,tutPianoPfx);setTimeout(()=>lightKey(note,false,tutPianoPfx),200);
-    if(!tutBuf.includes(note))tutBuf.push(note);
-    if(s.chordNeed.every(n=>tutBuf.some(b=>noteEq(b,n)))){
-      playChord(s.chordNeed);
-      document.getElementById('tutFb').textContent='C Major! Nice!';
-      setTimeout(tutNext,900);
+  drawGame();
+  if (!GS.over) gameRaf = requestAnimationFrame(gameFrame);
+}
+
+function updateGame(dt) {
+  // Mana
+  GS.mana = Math.min(GS.maxMana, GS.mana + GS.manaRegen * dt);
+  updateManaUI_game();
+
+  // AI spawn
+  GS.aiTimer += dt;
+  const diff = Math.max(1.5, GS.aiInterval - GS.wave * 0.25);
+  if (GS.aiTimer >= diff) {
+    GS.aiTimer = 0;
+    aiSpawn();
+  }
+
+  // Wave timer
+  GS.waveTimer += dt;
+  if (GS.waveTimer >= 45) {
+    GS.waveTimer = 0;
+    GS.wave++;
+    sel('#wave-pill').textContent = 'WAVE '+GS.wave;
+    floatText('WAVE '+GS.wave, GW/2, GH/2-80, '#e8b84b');
+  }
+
+  // Buff timer
+  if (GS.playerBuff && now_sec() > GS.playerBuffEnd) {
+    GS.playerBuff = null;
+    hideComboHUD();
+  }
+
+  const playerT = GS.troops.filter(t=>t.owner==='player'&&t.hp>0);
+  const enemyT  = GS.troops.filter(t=>t.owner==='enemy'&&t.hp>0);
+
+  for (const t of GS.troops) {
+    if (t.hp <= 0) continue;
+    t.atkCd = Math.max(0, t.atkCd-dt);
+    t.atkAnim = Math.max(0, t.atkAnim-dt*4);
+    t.shk *= 0.8;
+
+    const enemies = t.owner==='player' ? enemyT : playerT;
+    const dir = t.owner==='player' ? 1 : -1;
+
+    // Find nearest opponent
+    let near=null, nearD=1e9;
+    for(const e of enemies){
+      if(e.hp<=0)continue;
+      const d=Math.abs(t.x-e.x);
+      if(d<nearD){nearD=d;near=e;}
+    }
+
+    const engR = (t.r + (near?near.r:0)) + 14;
+    if (near && nearD <= engR) {
+      // Attack
+      if (t.atkCd <= 0) {
+        let dmg = t.atk;
+        // Apply buff
+        if (t.owner==='player' && GS.playerBuff?.atk) dmg *= GS.playerBuff.atk;
+        near.hp -= dmg;
+        near.shk = dir * -8;
+        t.atkAnim = 1;
+        t.atkCd = 1.1;
+        if (near.hp <= 0) { addXP(10); gScore+=10; sel('#score-hud').textContent=gScore+' pts'; }
+      }
+    } else {
+      // March
+      let s = t.spd;
+      if (t.owner==='player' && GS.playerBuff?.spd) s *= GS.playerBuff.spd;
+      t.x += dir * s * dt;
+    }
+
+    // Reach tower
+    if (t.owner==='player' && t.x >= ETX-24) {
+      const dmg = t.atk * 0.6;
+      GS.enemyHp -= dmg;
+      t.hp = 0;
+      addXP(5); gScore+=5; sel('#score-hud').textContent=gScore+' pts';
+      floatText('-'+Math.ceil(dmg), ETX, LANE_Y-40,'#ff3d50');
+    }
+    if (t.owner==='enemy' && t.x <= PTX+24) {
+      GS.playerHp -= t.atk * 0.6;
+      t.hp = 0;
+      floatText('-'+Math.ceil(t.atk*0.6), PTX, LANE_Y-40,'#ff7a20');
     }
   }
+
+  GS.troops = GS.troops.filter(t=>t.hp>0);
+  GS.playerHp = Math.max(0, GS.playerHp);
+  GS.enemyHp  = Math.max(0, GS.enemyHp);
+  updateHpUI();
+
+  if (GS.enemyHp<=0) { endGame(true); return; }
+  if (GS.playerHp<=0) { endGame(false); return; }
 }
 
-// Global keyboard listener
-document.addEventListener('keydown',e=>{
-  if(e.repeat)return;
-  // Keybind listening mode
-  if(listeningFor!==null){
-    const k=e.key;
-    BINDS[listeningFor]=k;
-    const el=document.getElementById('kb_'+listeningFor.replace('#','s'));
-    if(el){el.classList.remove('listening');el.textContent=k;}
-    listeningFor=null;
-    e.preventDefault();return;
+function now_sec(){ return performance.now()/1000; }
+
+function aiSpawn() {
+  const bracket = GS.wave<=3?0:GS.wave<=7?1:2;
+  const pool = AI_POOL[bracket];
+  const [pcs, type] = pool[Math.floor(Math.random()*pool.length)];
+  // Higher waves spawn extras
+  const count = 1 + Math.floor(GS.wave / 4);
+  for(let i=0;i<Math.min(count,3);i++){
+    setTimeout(()=>spawnTroop(type,'enemy'), i*700/spd);
   }
-  const lk=e.key.toLowerCase();
-  const note=keyToNote(lk,e.shiftKey);
-  if(!note)return;
-  // Tutorial
-  if(document.getElementById('tutorial').classList.contains('active')){
-    handleTutKey(note);return;
+}
+
+function spawnTroop(type, owner) {
+  // Check if player has this type unlocked
+  if (owner==='player') {
+    const needsUnlock = {'minor':'minor','dim':'dim'};
+    if (needsUnlock[type] && !isUnlocked(needsUnlock[type])) return;
   }
-  // Gameplay
-  if(G.active){
-    playNote(note,0.35,0.1);
-    lightKey(note,true);setTimeout(()=>lightKey(note,false),160);
-    handleNote(note);
+  const def = TROOP[type];
+  if (!def) return;
+
+  let hp = def.hp;
+  let spd2 = def.spd;
+
+  // Apply skill tree passives
+  if (owner==='player') {
+    if (type==='major' && isUnlocked('buff_tank')) hp *= 1.25;
+    if (type==='dim'   && isUnlocked('buff_speed')) spd2 *= 1.3;
+    if (type==='minor' && isUnlocked('buff_attack')) {} // handled on attack
+  }
+
+  // HP regen buff
+  if (owner==='player' && GS.playerBuff?.hpRegen) hp *= GS.playerBuff.hpRegen;
+
+  GS.troops.push({
+    id: GS.nextId++,
+    type, owner,
+    x: owner==='player' ? PTX+60 : ETX-60,
+    y: LANE_Y,
+    hp, maxHp:hp,
+    atk: def.atk * (owner==='enemy' ? (1+progress.level*0.08) : 1)
+       * (type==='minor'&&owner==='player'&&isUnlocked('buff_attack')?1.2:1),
+    spd: spd2 * (owner==='enemy' ? (1+progress.level*0.04) : 1),
+    r: def.r,
+    col: def.col,
+    glow: def.glow,
+    label: def.label,
+    atkCd: 0.5,
+    atkAnim: 0,
+    shk: 0,
+  });
+}
+
+// ── DRAW ──
+function drawGame() {
+  ctx.clearRect(0,0,GW,GH);
+
+  // Background grid
+  ctx.strokeStyle='rgba(26,30,46,0.5)';ctx.lineWidth=1;
+  for(let x=0;x<GW;x+=60){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,GH);ctx.stroke();}
+  for(let y=0;y<GH;y+=50){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(GW,y);ctx.stroke();}
+
+  // Lane
+  const lh=56;
+  ctx.fillStyle='rgba(13,16,24,0.9)';
+  ctx.fillRect(0,LANE_Y-lh/2,GW,lh);
+  ctx.strokeStyle='rgba(30,34,52,0.8)';ctx.lineWidth=1;
+  ctx.strokeRect(0,LANE_Y-lh/2,GW,lh);
+  // Ground
+  ctx.strokeStyle='rgba(50,58,80,0.6)';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(0,LANE_Y+16);ctx.lineTo(GW,LANE_Y+16);ctx.stroke();
+
+  // Towers
+  drawTower(PTX,LANE_Y,true, GS.playerHp/GS.maxHp);
+  drawTower(ETX,LANE_Y,false,GS.enemyHp/GS.maxHp);
+
+  // Troops
+  for(const t of GS.troops) drawTroop(t);
+}
+
+function drawTower(x, ly, isP, frac) {
+  const tw=38,th=88,tx=x-tw/2,ty=ly-th+16;
+  const pc = isP?'rgba(61,138,255,':'rgba(255,61,80,';
+  // Glow
+  const gr=ctx.createRadialGradient(x,ly,0,x,ly,90);
+  gr.addColorStop(0,pc+'0.12)');gr.addColorStop(1,pc+'0)');
+  ctx.fillStyle=gr;ctx.fillRect(x-90,ly-90,180,110);
+
+  // Body
+  ctx.fillStyle=isP?'#080f20':'#1a0808';
+  ctx.strokeStyle=isP?'#3d8aff':'#ff3d50';
+  ctx.lineWidth=2;
+  ctx.beginPath();ctx.roundRect(tx,ty,tw,th,4);ctx.fill();ctx.stroke();
+
+  // HP fill
+  const fh=th*frac;
+  ctx.fillStyle=isP?'rgba(61,138,255,0.22)':'rgba(255,61,80,0.22)';
+  ctx.fillRect(tx+2,ty+th-fh+2,tw-4,fh-2);
+
+  // Crenels
+  const cw=8,ch=13;
+  ctx.strokeStyle=isP?'#3d8aff':'#ff3d50';
+  for(let i=0;i<3;i++){
+    const cx=tx+i*(tw/3)+2;
+    ctx.fillStyle=isP?'#080f20':'#1a0808';
+    ctx.beginPath();ctx.roundRect(cx,ty-ch+4,cw,ch,2);ctx.fill();ctx.stroke();
+  }
+
+  ctx.fillStyle=isP?'#3d8aff':'#ff3d50';
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.font='16px sans-serif';
+  ctx.fillText(isP?'🏰':'💀',x,ty+th/2);
+
+  ctx.font='bold 8px Barlow Condensed';
+  ctx.fillStyle=isP?'#3d8aff':'#ff3d50';
+  ctx.letterSpacing='1px';
+  ctx.fillText(isP?'YOU':'ENEMY',x,ty-18);
+  ctx.letterSpacing='0px';
+}
+
+function drawTroop(t) {
+  const px=t.x+t.shk, py=t.y;
+  const r=t.r;
+  const bounce=(t.atkAnim<0.1)?Math.sin(Date.now()*0.007+t.id)*1.5:0;
+  const atkOff=t.atkAnim*(t.owner==='player'?14:-14);
+
+  // Glow
+  const gg=ctx.createRadialGradient(px,py,0,px,py,r*2.8);
+  gg.addColorStop(0,t.glow);gg.addColorStop(1,'transparent');
+  ctx.fillStyle=gg;ctx.beginPath();ctx.arc(px,py,r*2.8,0,Math.PI*2);ctx.fill();
+
+  ctx.save();
+  ctx.translate(px+atkOff, py+bounce);
+
+  // Shadow
+  ctx.fillStyle='rgba(0,0,0,0.35)';
+  ctx.beginPath();ctx.ellipse(0,r+3,r*0.85,r*0.28,0,0,Math.PI*2);ctx.fill();
+
+  // Circle
+  ctx.fillStyle=t.owner==='player'?t.col:darkenHex(t.col);
+  ctx.strokeStyle=t.col;ctx.lineWidth=t.owner==='player'?2:1.5;
+  ctx.beginPath();ctx.arc(0,0,r,0,Math.PI*2);ctx.fill();ctx.stroke();
+
+  // Face dot
+  const fd=t.owner==='player'?1:-1;
+  ctx.fillStyle='rgba(255,255,255,0.85)';
+  ctx.beginPath();ctx.arc(fd*r*0.33,-r*0.12,r*0.24,0,Math.PI*2);ctx.fill();
+
+  // Label
+  ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.font=`bold ${Math.max(9,r*0.75)}px Teko`;
+  ctx.fillText(t.label,0,1);
+
+  ctx.restore();
+
+  // HP bar (damaged)
+  if(t.hp<t.maxHp){
+    const bw=r*2.8,bh=4,bx=px-bw/2,by=py-r-11;
+    ctx.fillStyle='rgba(0,0,0,0.55)';ctx.fillRect(bx,by,bw,bh);
+    ctx.fillStyle=hpCol(t.hp/t.maxHp);
+    ctx.fillRect(bx,by,bw*(t.hp/t.maxHp),bh);
+  }
+
+  // Enemy indicator
+  if(t.owner==='enemy'){
+    ctx.fillStyle='rgba(255,61,80,0.55)';ctx.font='9px sans-serif';ctx.textAlign='center';
+    ctx.fillText('▾',px,py-r-12);
+  }
+}
+function darkenHex(col){return col+'99';}
+function hpCol(f){return f>0.6?'#28cc70':f>0.3?'#e8b84b':'#ff3d50';}
+
+// ── UI ──
+function updateHpUI(){
+  sel('#php-bar').style.width=(GS.playerHp/GS.maxHp*100)+'%';
+  sel('#ehp-bar').style.width=(GS.enemyHp/GS.maxHp*100)+'%';
+  sel('#php-num').textContent=Math.ceil(GS.playerHp);
+  sel('#ehp-num').textContent=Math.ceil(GS.enemyHp);
+}
+function updateManaUI_game(){
+  const p=GS.mana/GS.maxMana*100;
+  sel('#mana-fill').style.height=p+'%';
+  sel('#mana-val').textContent=Math.floor(GS.mana);
+}
+function buildCostUI(){
+  const col=sel('#cost-col');
+  col.innerHTML='';
+  const types=[['major','MAJOR',20,'cr-major'],['minor','MINOR',15,'cr-minor'],['dim','DIM',10,'cr-dim']];
+  types.forEach(([id,label,cost,cls])=>{
+    if(!isUnlocked(id)&&id!=='major')return;
+    const d=document.createElement('div');
+    d.className='cost-row '+cls;
+    d.textContent=`● ${label} ${cost}`;
+    col.appendChild(d);
+  });
+}
+
+// ── KEYBOARD INPUT ──
+let currentNotes=[]; // array of {letter, accidental} objects
+let inputTokens=[]; // display tokens like "C♭", "F♯", "G"
+
+// Key tracking
+const shiftState = {left:false, right:false};
+const NOTE_LETTERS = new Set(['A','B','C','D','E','F','G']);
+
+document.addEventListener('keydown', e => {
+  if (e.key==='Shift') {
+    if (e.location===1) shiftState.left=true;
+    if (e.location===2) shiftState.right=true;
+    return;
+  }
+  // Only capture in game screen
+  if (!document.getElementById('game').classList.contains('active')) return;
+
+  if (e.key==='Enter') { e.preventDefault(); submitChord(); return; }
+  if (e.key==='Backspace') { e.preventDefault(); removeLastNote(); return; }
+  if (e.key==='Escape') { clearNotes(); return; }
+
+  const letter = e.key.toUpperCase();
+  if (NOTE_LETTERS.has(letter)) {
+    e.preventDefault();
+    let acc = '';
+    if (shiftState.left)  acc = '♭';
+    if (shiftState.right) acc = '♯';
+    addNote(letter, acc);
+  }
+  if (e.key===' ') { e.preventDefault(); } // ignore space — notes auto-separate
+});
+
+document.addEventListener('keyup', e => {
+  if (e.key==='Shift') {
+    if (e.location===1) shiftState.left=false;
+    if (e.location===2) shiftState.right=false;
   }
 });
 
-// Particles
-(()=>{const p=document.getElementById('particles');for(let i=0;i<16;i++){const d=document.createElement('div');d.className='particle';d.style.cssText=`left:${Math.random()*100}%;animation-duration:${8+Math.random()*12}s;animation-delay:${Math.random()*-15}s;background:${['#00f5ff','#7b2fff','#ff006e'][i%3]}`;p.appendChild(d);}})();
-
-// ─── Custom Song Creator ──────────────────────────────────────
-const CHROMATIC_NOTES=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
-const CHORD_DEFS={
-  'Major':  {ivl:[0,4,7],    label:'Major'},
-  'Minor':  {ivl:[0,3,7],    label:'Minor'},
-  'Power':  {ivl:[0,7],      label:'5'},
-  'Dom 7':  {ivl:[0,4,7,10], label:'7'},
-  'Major 7':{ivl:[0,4,7,11], label:'maj7'},
-  'Minor 7':{ivl:[0,3,7,10], label:'m7'},
-  'Sus2':   {ivl:[0,2,7],    label:'sus2'},
-  'Sus4':   {ivl:[0,5,7],    label:'sus4'},
-  'Dim':    {ivl:[0,3,6],    label:'dim'},
-  'Aug':    {ivl:[0,4,8],    label:'aug'},
-  'Dim7':   {ivl:[0,3,6,9],  label:'dim7'},
-};
-
-function buildChord(root,type){
-  const def=CHORD_DEFS[type];if(!def)return null;
-  const ri=CHROMATIC_NOTES.indexOf(root);if(ri<0)return null;
-  const notes=def.ivl.map(i=>CHROMATIC_NOTES[(ri+i)%12]);
-  const name=type==='Major'?root+' Major':type==='Minor'?root+' Minor':root+def.label;
-  return {name,notes};
+function addNote(letter, acc) {
+  if (currentNotes.length >= 6) return; // max 6 notes
+  const token = letter + acc;
+  const semi = tokenToSemitone(token);
+  if (semi === null) return;
+  currentNotes.push({letter, acc, token, semi});
+  renderLiveChord();
+  revalidate();
 }
 
-let createSeq=[];
-
-function updateCbPreview(){
-  const root=document.getElementById('cbRoot').value;
-  const type=document.getElementById('cbType').value;
-  const c=buildChord(root,type);
-  document.getElementById('cbPreview').textContent=c?c.notes.join(' + '):'—';
+function removeLastNote() {
+  if (currentNotes.length===0) return;
+  currentNotes.pop();
+  renderLiveChord();
+  revalidate();
 }
 
-function updateCreatePreview(){}
-
-function addChordToSeq(){
-  if(createSeq.length>=24){showCreateMsg('Max 24 chords per song.','var(--red)');return;}
-  const root=document.getElementById('cbRoot').value;
-  const type=document.getElementById('cbType').value;
-  const chord=buildChord(root,type);if(!chord)return;
-  createSeq.push(chord);
-  renderChordSeq();
+function clearNotes() {
+  currentNotes=[];
+  renderLiveChord();
+  updateFeedback('hint','Type note names — Left⇧=♭, Right⇧=♯, Enter=deploy');
+  sel('#chord-input').className='';
+  sel('#chord-input').value='';
 }
 
-function removeChordFromSeq(i){createSeq.splice(i,1);renderChordSeq();}
-
-function clearChordSeq(){createSeq=[];renderChordSeq();}
-
-function renderChordSeq(){
-  const el=document.getElementById('chordSeq');
-  document.getElementById('seqCount').textContent='('+createSeq.length+')';
-  if(!createSeq.length){el.innerHTML='<div class="cs-empty" id="seqEmpty">No chords yet \u2014 add some above!</div>';return;}
-  el.innerHTML=createSeq.map((c,i)=>`
-    <div class="cs-item">
-      <span class="cs-num">${i+1}</span>
-      <span class="cs-name">${c.name}</span>
-      <span class="cs-notes">${c.notes.join(' + ')}</span>
-      <button class="cs-del" onclick="removeChordFromSeq(${i})">&#10005;</button>
-    </div>`).join('');
+function renderLiveChord() {
+  const live = sel('#chord-live');
+  live.innerHTML = currentNotes.map(n=>`<span class="note-chip">${n.token}</span>`).join('');
+  // Mirror into readonly input for display
+  sel('#chord-input').value = currentNotes.map(n=>n.token).join(' ');
 }
 
-let previewActive=false;
-function previewCreatedSong(){
-  if(!createSeq.length){showCreateMsg('Add at least one chord first.','var(--red)');return;}
-  if(previewActive)return;
-  previewActive=true;
-  showCreateMsg('\u25b6 Previewing\u2026','var(--accent)');
-  // Play through sequence once using synth
-  startBackgroundMusic(createSeq);
-  setTimeout(()=>{
-    stopBackgroundMusic();
-    previewActive=false;
-    showCreateMsg('','');
-  },createSeq.length*2500);
-}
-
-function saveCreatedSong(){
-  const title=document.getElementById('createTitle').value.trim();
-  const artist=document.getElementById('createArtist').value.trim()||'My Band';
-  const diff=parseInt(document.getElementById('createDiff').value);
-  if(!title){showCreateMsg('Please enter a song title.','var(--red)');document.getElementById('createTitle').focus();return;}
-  if(createSeq.length<2){showCreateMsg('Add at least 2 chords.','var(--red)');return;}
-  const song={title,artist,diff,chords:[...createSeq],custom:true};
-  // Save to localStorage
-  const saved=getCustomSongs();
-  saved.push(song);
-  saveCustomSongs(saved);
-  // Append to SONGS so it shows up in level select immediately
-  SONGS.push(song);
-  // Reset form
-  document.getElementById('createTitle').value='';
-  createSeq=[];renderChordSeq();
-  showCreateMsg('\u2713 \u201c'+title+'\u201d saved! Find it in Play & Battle.','var(--grn)');
-  renderSavedSongs();
-}
-
-function showCreateMsg(msg,color){
-  const el=document.getElementById('createMsg');
-  el.textContent=msg;el.style.color=color||'var(--muted)';
-  if(msg)setTimeout(()=>{if(el.textContent===msg)el.textContent='';},4000);
-}
-
-function getCustomSongs(){try{return JSON.parse(localStorage.getItem('cc4_custom')||'[]')}catch{return[];}}
-function saveCustomSongs(arr){try{localStorage.setItem('cc4_custom',JSON.stringify(arr))}catch{}}
-
-function deleteCustomSong(storageIdx){
-  const saved=getCustomSongs();
-  const song=saved[storageIdx];
-  saved.splice(storageIdx,1);
-  saveCustomSongs(saved);
-  // Remove from SONGS
-  const si=SONGS.findIndex(s=>s.custom&&s.title===song.title&&s.artist===song.artist);
-  if(si>=0)SONGS.splice(si,1);
-  renderSavedSongs();
-  renderLevels();
-}
-
-function renderSavedSongs(){
-  const saved=getCustomSongs();
-  const list=document.getElementById('savedSongsList');
-  const section=document.getElementById('savedSongsSection');
-  if(!list)return;
-  if(!saved.length){list.innerHTML='<p style="font-size:11px;color:var(--muted);text-align:center">No saved songs yet.</p>';return;}
-  list.innerHTML=saved.map((s,i)=>`
-    <div class="saved-song-row">
-      <div style="flex:1">
-        <div class="ss-title">${s.title} <span class="custom-badge">CUSTOM</span></div>
-        <div class="ss-artist">${s.artist} &nbsp;&bull;&nbsp; ${s.chords.length} chords &nbsp;&bull;&nbsp; Diff ${s.diff}</div>
-      </div>
-      <button class="btn" style="padding:4px 12px;font-size:10px;margin-right:6px" onclick="playCustomSong(${i})">Play</button>
-      <button class="btn red" style="padding:4px 12px;font-size:10px" onclick="deleteCustomSong(${i})">Delete</button>
-    </div>`).join('');
-}
-
-function playCustomSong(storageIdx){
-  const saved=getCustomSongs();
-  const song=saved[storageIdx];
-  if(!song)return;
-  const si=SONGS.findIndex(s=>s.custom&&s.title===song.title);
-  if(si>=0){G.song=si;showScreen('diffSelect');document.getElementById('diffTitle').textContent=song.title;}
-}
-
-function loadCustomSongs(){
-  const saved=getCustomSongs();
-  saved.forEach(s=>{
-    if(!SONGS.find(x=>x.custom&&x.title===s.title&&x.artist===s.artist))
-      SONGS.push({...s,custom:true});
-  });
-}
-
-// ════════════════════════════════════════════════════════════════════════
-// CHORD NOTATION + DEAF-FRIENDLY VISUAL SYSTEM
-// ════════════════════════════════════════════════════════════════════════
-
-// Convert chord name to standard music notation symbol
-function getChordSymbol(name){
-  const SH='\u266f',FL='\u266d',DEG='\u00b0',TRI='\u25b3',HDIM='\u00f8';
-  const fx=r=>r.replace(/#/g,SH).replace(/b/,FL); // replace accidentals in root
-  // "C Major", "F# Minor", "Bb Major" etc. (space-separated)
-  let m=name.match(/^([A-G][#b]?)\s+(Major|Minor)(\s+7)?$/i);
-  if(m){
-    const r=fx(m[1]),isMin=/minor/i.test(m[2]),has7=!!m[3];
-    if(has7)return r+(isMin?'m7':TRI+'7');
-    return r+(isMin?'m':'');
+function revalidate() {
+  if (currentNotes.length===0) {
+    sel('#chord-input').className='';
+    updateFeedback('hint','Type note names — Left⇧=♭, Right⇧=♯, Enter=deploy');
+    return;
   }
-  // Compact: "Cmaj7","Am7","Eb7","Bbm7","Cdim7","Dm7b5","G5" etc.
-  m=name.match(/^([A-G][#b]?)(.*)/);
-  if(!m)return name;
-  const r=fx(m[1]),t=m[2];
-  if(/^maj7$/i.test(t))return r+TRI+'7';
-  if(/^m7b5$/i.test(t))return r+HDIM+'7';
-  if(/^m7$/i.test(t))return r+'m7';
-  if(/^dim7$/i.test(t))return r+DEG+'7';
-  if(/^dim$/i.test(t))return r+DEG;
-  if(/^aug$/i.test(t))return r+'+';
-  if(/^[0-9]+$/.test(t))return r+t;
-  if(/^sus/i.test(t))return r+t.toLowerCase();
-  if(/^m$/i.test(t))return r+'m';
-  return r+(t||'');
+  if (currentNotes.length===1) {
+    sel('#chord-input').className='';
+    updateFeedback('hint','Keep adding notes…');
+    return;
+  }
+  const semis = currentNotes.map(n=>n.semi);
+  const res = classifyChord(semis);
+  if (!res) {
+    sel('#chord-input').className='v-bad';
+    updateFeedback('err','Not a recognized chord — try different notes');
+  } else {
+    const nt = NOTE_DISPLAY_NAMES[res.root];
+    const maps = {major:['v-major','major',`✓ ${nt} Major — Tank soldier (20 mana)`],
+                  minor:['v-minor','minor',`✓ ${nt} Minor — Fighter (15 mana)`],
+                  dim:  ['v-dim','dim',`✓ ${nt} Dim — Skirmisher (10 mana)`]};
+    const [cls,fb,msg]=maps[res.type];
+    sel('#chord-input').className=cls;
+    updateFeedback(fb,msg);
+  }
 }
 
-// Treble-clef staff position for each note letter (0 = E4, bottom line)
-// Steps of 1 = half a line gap (4px each)
-const STAFF_POS={'C':-2,'D':-1,'E':0,'F':1,'G':2,'A':3,'B':4};
+function updateFeedback(cls, msg) {
+  const el=sel('#chord-fb');
+  el.className='fb-'+cls;
+  el.textContent=msg;
+}
 
-function renderChordNotation(chord){
-  // ── Chord symbol ──
-  const symEl=document.getElementById('chordSym');
-  if(symEl)symEl.textContent=getChordSymbol(chord.name);
+function submitChord() {
+  if (currentNotes.length<2) { shakeInput(); return; }
+  if (!GS||GS.over) return;
 
-  // ── Mini treble-clef staff SVG ──
-  const svg=document.getElementById('staffSvg');
-  if(!svg)return;
-  const W=106, lineGap=8, baseY=42; // baseY = y-coordinate of E4 (bottom line)
-  const noteY=pos=>baseY-pos*4; // each step = lineGap/2 = 4px
-  let h='';
+  const semis=currentNotes.map(n=>n.semi);
+  const res=classifyChord(semis);
+  if(!res){shakeInput();return;}
 
-  // 5 staff lines (lines for E4 G4 B4 D5 F5)
-  for(let i=0;i<5;i++){
-    const y=baseY-i*lineGap;
-    h+=`<line x1="4" y1="${y}" x2="${W-4}" y2="${y}" stroke="#3a3070" stroke-width="1.2"/>`;
+  // Check unlocked
+  if(!isUnlocked(res.type)&&res.type!=='major'){
+    updateFeedback('err',`${res.type} chord not unlocked yet — visit Skill Tree`);
+    shakeInput();return;
   }
-  // Treble clef glyph
-  h+=`<text x="5" y="${baseY+12}" font-size="44" fill="rgba(123,47,255,0.42)" font-family="Georgia,serif" style="font-style:italic">&#119070;</text>`;
 
-  // Noteheads spread across x=56..W-8
-  const nc=chord.notes.length;
-  const xStart=58,xEnd=W-10;
-  const xStep=nc>1?(xEnd-xStart)/(nc-1):0;
+  const cost=TROOP[res.type].cost;
+  if(GS.mana<cost){
+    updateFeedback('err',`Not enough mana! Need ${cost}, have ${Math.floor(GS.mana)}`);
+    shakeInput();return;
+  }
 
-  chord.notes.forEach((note,ni)=>{
-    const letter=note[0];
-    const hasSharp=note.includes('#');
-    const hasFlat=note.length>1&&note[1]==='b';
-    const pos=STAFF_POS[letter]??0;
-    const y=noteY(pos);
-    const x=xStart+ni*xStep;
+  GS.mana-=cost;
+  updateManaUI_game();
+  spawnTroop(res.type,'player');
 
-    // Ledger line below staff for C4 (pos=-2)
-    if(pos<=-2){
-      const ly=noteY(-2);
-      h+=`<line x1="${x-9}" y1="${ly}" x2="${x+9}" y2="${ly}" stroke="#6050a0" stroke-width="1.5"/>`;
+  // Combo tracking
+  const entry={root:res.root, type:res.type, t:now_sec()};
+  GS.comboHistory=GS.comboHistory.filter(h=>now_sec()-h.t<3.5); // keep recent
+  GS.comboHistory.push(entry);
+  checkCombos();
+
+  const nt=NOTE_DISPLAY_NAMES[res.root];
+  const tnames={major:'Major',minor:'Minor',dim:'Dim'};
+  floatText(nt+' '+tnames[res.type]+'!', PTX+100, LANE_Y-60, TROOP[res.type].col);
+
+  clearNotes();
+}
+
+function shakeInput() {
+  const el=sel('#chord-input');
+  el.classList.add('v-bad');
+  el.animate([{transform:'translateX(0)'},{transform:'translateX(-7px)'},{transform:'translateX(7px)'},{transform:'translateX(-5px)'},{transform:'translateX(5px)'},{transform:'translateX(0)'}],{duration:320});
+}
+
+// ── COMBO SYSTEM ──
+function checkCombos() {
+  // Only check if relevant skills unlocked
+  const hist = GS.comboHistory;
+  if (hist.length < 3) return;
+
+  // i-IV-V (all within 3s of first)
+  if (isUnlocked('combo_iv')) {
+    const w = hist.slice(-3);
+    if (now_sec()-w[0].t < 3.0 && checkProg(w,[0,5,7])) {
+      triggerCombo('I-IV-V'); return;
     }
-    // Accidental symbol
-    if(hasSharp)h+=`<text x="${x-13}" y="${y+3.5}" font-size="11" fill="var(--accent)" font-family="Georgia,serif">\u266f</text>`;
-    else if(hasFlat)h+=`<text x="${x-12}" y="${y+3}" font-size="12" fill="var(--accent)" font-family="Georgia,serif">\u266d</text>`;
-    // Notehead (filled ellipse)
-    h+=`<ellipse cx="${x}" cy="${y}" rx="5.5" ry="4" fill="var(--accent)" opacity="0.9" id="snh${ni}"/>`;
-    // Stem
-    if(pos>=3)h+=`<line x1="${x-5.5}" y1="${y}" x2="${x-5.5}" y2="${y+20}" stroke="var(--accent)" stroke-width="1.5" opacity="0.8"/>`;
-    else h+=`<line x1="${x+5.5}" y1="${y}" x2="${x+5.5}" y2="${y-20}" stroke="var(--accent)" stroke-width="1.5" opacity="0.8"/>`;
+  }
+  // ii-V-I
+  if (isUnlocked('combo_ii')) {
+    const w = hist.slice(-3);
+    if (now_sec()-w[0].t < 3.0 && checkProg(w,[2,7,0])) {
+      triggerCombo('ii-V-I'); return;
+    }
+  }
+  // I-vi-IV
+  if (isUnlocked('combo_vi')) {
+    const w = hist.slice(-3);
+    if (now_sec()-w[0].t < 3.0 && checkProg(w,[0,9,5])) {
+      triggerCombo('I-vi-IV'); return;
+    }
+  }
+}
+
+let comboTimeout=null;
+function triggerCombo(key) {
+  const c=COMBOS[key];
+  GS.playerBuff={...c.buff};
+  GS.playerBuffEnd=now_sec()+c.buff.dur;
+  GS.comboHistory=[];
+
+  // Show combo HUD
+  const hud=sel('#combo-hud');
+  hud.style.display='flex';
+  hud.innerHTML=`<div class="combo-banner">${c.name}</div><div class="combo-sub">${c.desc}</div>`;
+  if(comboTimeout)clearTimeout(comboTimeout);
+  comboTimeout=setTimeout(hideComboHUD, 3000);
+
+  floatText(c.name, GW/2, GH/2-100, '#e8b84b');
+  addXP(15);
+}
+
+function hideComboHUD(){ sel('#combo-hud').style.display='none'; }
+
+// ── END GAME ──
+function endGame(won) {
+  GS.over=true;
+  cancelAnimationFrame(gameRaf);
+  gameRaf=null;
+  if(won) addXP(100);
+  addXP(gScore);
+  showModal(
+    won?'⚔ VICTORY':'💀 DEFEATED',
+    won?'#e8b84b':'#ff3d50',
+    `Wave reached: <b>${GS.wave}</b><br>Score: <b>${gScore} pts</b><br>XP gained: <b>${gScore+(won?100:0)} XP</b>`,
+    [
+      {t:'PLAY AGAIN',fn:()=>{closeModal();gotoGame();}},
+      {t:'SKILL TREE',fn:()=>{closeModal();gotoSkillTree();}},
+      {t:'MENU',fn:()=>{closeModal();gotoHome();},sec:true},
+    ]
+  );
+}
+
+function setSpd(s,btn){
+  spd=s;
+  document.querySelectorAll('.spd-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+}
+
+// ── MODAL ──
+function showModal(title,color,body,btns){
+  sel('#modal-h').textContent=title;
+  sel('#modal-h').style.color=color;
+  sel('#modal-p').innerHTML=body;
+  const bc=sel('#modal-btns');bc.innerHTML='';
+  btns.forEach(b=>{
+    const el=document.createElement('button');
+    el.className='mbtn'+(b.sec?' sec':'');
+    el.textContent=b.t;
+    el.onclick=b.fn;
+    bc.appendChild(el);
   });
-  svg.innerHTML=h;
+  sel('#modal-bg').classList.add('show');
+}
+function closeModal(){sel('#modal-bg').classList.remove('show');}
+
+// ── FLOAT TEXT ──
+function floatText(msg,x,y,color){
+  const el=document.createElement('div');
+  el.className='ft';el.textContent=msg;
+  el.style.cssText=`color:${color};left:${x}px;top:${y}px;text-shadow:0 0 14px ${color};`;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),1200);
 }
 
-// Flash a notehead green when its note is hit
-function hitNoteOnStaff(noteIdx){
-  const el=document.getElementById('snh'+noteIdx);
-  if(el){el.setAttribute('fill','var(--grn)');setTimeout(()=>{if(el)el.setAttribute('fill','var(--accent)');},550);}
-}
-
-// ── Beat Pulse system (visual rhythm for deaf / hard-of-hearing players) ──
-const BVB_COUNT=20;
-let beatVisRaf=null;
-
-function initBeatVis(){
-  const vis=document.getElementById('beatVis');
-  if(!vis)return;
-  vis.innerHTML='';
-  for(let i=0;i<BVB_COUNT;i++){
-    const b=document.createElement('div');
-    b.className='bvb';b.style.height='3px';
-    vis.appendChild(b);
-  }
-}
-
-function triggerBeatPulse(){
-  // Screen-edge flash
-  const edge=document.getElementById('beatEdge');
-  if(edge){edge.classList.remove('flash');void edge.offsetWidth;edge.classList.add('flash');}
-  // Chord display ring
-  const cd=document.getElementById('chordDisp');
-  if(cd){cd.classList.remove('beat-ring');void cd.offsetWidth;cd.classList.add('beat-ring');}
-  // Equalizer bars
-  animateBeatVis();
-}
-
-function animateBeatVis(){
-  if(beatVisRaf)cancelAnimationFrame(beatVisRaf);
-  const vis=document.getElementById('beatVis');
-  if(!vis)return;
-  const bars=[...vis.querySelectorAll('.bvb')];
-  const t0=Date.now(),dur=650;
-  function frame(){
-    const t=(Date.now()-t0)/dur;
-    if(t>=1){bars.forEach(b=>b.style.height='3px');beatVisRaf=null;return;}
-    const env=Math.sin(t*Math.PI); // envelope: rises then falls
-    bars.forEach((b,i)=>{
-      const wave=Math.abs(Math.sin(i*0.65+t*14));
-      b.style.height=Math.max(3,env*wave*28+3)+'px';
-    });
-    beatVisRaf=requestAnimationFrame(frame);
-  }
-  beatVisRaf=requestAnimationFrame(frame);
-}
-
-function toggleA11yPanel(){
-  const p=document.getElementById('a11yPanel');
-  if(p)p.classList.toggle('open');
-}
-
-// Init
-loadPrefs();
-initTutPiano();
-renderTutStep();
-loadCustomSongs();
+// ══════════════════════════════════════════════════════════
+//  BOOT
+// ══════════════════════════════════════════════════════════
+loadProgress();
+updateAllXPUI();
 </script>
+</body>
+</html>
