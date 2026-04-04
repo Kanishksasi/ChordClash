@@ -1,0 +1,1154 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Chord Clash</title></head><body>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0f;--surf:#13131f;--surf2:#1c1c2e;
+  --accent:#00f5ff;--accent2:#ff006e;--accent3:#7b2fff;
+  --gold:#ffd700;--grn:#00ff88;--red:#ff3366;
+  --text:#e0e0ff;--muted:#6060a0;
+  --perf:#00ff88;--good:#ffd700;--miss:#ff3366;
+}
+body{background:var(--bg);color:var(--text);font-family:'Exo 2',sans-serif;min-height:100vh;overflow-x:hidden}
+.screen{display:none;min-height:100vh;padding:16px}
+.screen.active{display:flex;flex-direction:column;align-items:center;justify-content:center}
+h1.logo{font-family:'Orbitron',monospace;font-size:clamp(1.8rem,5vw,3.5rem);font-weight:900;
+  background:linear-gradient(135deg,var(--accent),var(--accent3),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  letter-spacing:4px;margin-bottom:6px;text-align:center}
+.tagline{color:var(--muted);font-size:13px;letter-spacing:3px;text-transform:uppercase;margin-bottom:32px}
+.btn{background:transparent;border:1px solid var(--accent);color:var(--accent);
+  font-family:'Exo 2',sans-serif;font-size:14px;padding:10px 24px;cursor:pointer;
+  letter-spacing:2px;text-transform:uppercase;transition:all 0.18s;border-radius:4px;font-weight:600}
+.btn:hover{background:var(--accent);color:var(--bg)}
+.btn.gold{border-color:var(--gold);color:var(--gold)}.btn.gold:hover{background:var(--gold);color:var(--bg)}
+.btn.pur{border-color:var(--accent3);color:var(--accent3)}.btn.pur:hover{background:var(--accent3);color:#fff}
+.btn.red{border-color:var(--red);color:var(--red)}.btn.red:hover{background:var(--red);color:#fff}
+.btn.grn{border-color:var(--grn);color:var(--grn)}.btn.grn:hover{background:var(--grn);color:var(--bg)}
+.menu-btns{display:flex;flex-direction:column;gap:10px;width:210px}
+.sec-title{font-family:'Orbitron',monospace;font-size:12px;color:var(--accent);letter-spacing:3px;text-transform:uppercase;margin-bottom:16px;text-align:center}
+.level-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;width:100%;max-width:820px}
+.lvl-card{background:var(--surf);border:1px solid #2a2a4a;border-radius:8px;padding:14px;cursor:pointer;transition:all 0.18s}
+.lvl-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.lvl-card h3{font-family:'Orbitron',monospace;font-size:11px;color:var(--text);margin-bottom:3px}
+.lvl-card .art{font-size:11px;color:var(--muted);margin-bottom:8px}
+.lvl-card .meta{display:flex;justify-content:space-between;align-items:center}
+.stars{color:var(--gold);font-size:10px}
+.dbadge{padding:2px 6px;border-radius:3px;font-size:9px;font-weight:600;letter-spacing:1px}
+.d0{background:#003322;color:var(--grn);border:1px solid var(--grn)}
+.d1{background:#332200;color:var(--gold);border:1px solid var(--gold)}
+.d2{background:#330011;color:var(--red);border:1px solid var(--red)}
+.d3{background:#1a0033;color:#bf5fff;border:1px solid #bf5fff}
+.diff-opts{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:460px;width:100%}
+.dopt{background:var(--surf);border:2px solid #2a2a4a;border-radius:8px;padding:16px;cursor:pointer;transition:all 0.18s;text-align:center}
+.dopt:hover{transform:scale(1.03)}.dopt.sel{border-color:var(--accent)}
+.dopt h3{font-family:'Orbitron',monospace;font-size:12px;margin-bottom:4px}
+.dopt p{font-size:11px;color:var(--muted)}
+
+/* Gameplay HUD */
+.hud{display:flex;justify-content:space-between;align-items:center;width:100%;max-width:760px;margin-bottom:10px}
+.sb{text-align:center}
+.slabel{font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase}
+.sval{font-family:'Orbitron',monospace;font-size:24px;font-weight:700}
+.sval.p{color:var(--accent)}.sval.a{color:var(--accent2)}
+.prog-bar{width:100%;max-width:760px;height:3px;background:#1c1c2e;border-radius:2px;margin-bottom:12px}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--accent3),var(--accent));border-radius:2px;transition:width 0.3s}
+.stage{width:100%;max-width:760px;display:flex;flex-direction:column;align-items:center;gap:12px}
+
+/* Tower Defense Lane */
+.lane-wrap{width:100%;max-width:760px;height:80px;background:var(--surf);border:1px solid #2a2a4a;border-radius:8px;position:relative;overflow:hidden}
+.lane-label{position:absolute;top:4px;left:8px;font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;z-index:2}
+.tower{position:absolute;width:28px;height:52px;border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:14px;z-index:3}
+.tower-p{left:8px;top:14px;background:#003322;border:1px solid var(--grn)}
+.tower-a{right:8px;top:14px;background:#330011;border:1px solid var(--red)}
+.hp-bar-wrap{position:absolute;bottom:4px;height:5px;border-radius:2px;background:#2a2a4a;z-index:4}
+.hp-bar-p{left:44px;width:80px}
+.hp-bar-a{right:44px;width:80px}
+.hp-fill{height:100%;border-radius:2px;transition:width 0.3s}
+.hp-fill-p{background:var(--grn)}
+.hp-fill-a{background:var(--red)}
+.unit{position:absolute;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;top:50%;transform:translateY(-50%);z-index:3;transition:left 0.05s linear}
+.unit-p{background:var(--accent);color:var(--bg)}
+.unit-a{background:var(--accent2);color:#fff}
+.hp-text{position:absolute;font-family:'Orbitron',monospace;font-size:9px;bottom:12px;z-index:5}
+.hp-text-p{left:44px;color:var(--grn)}
+.hp-text-a{right:44px;color:var(--red);text-align:right}
+
+/* Chord display */
+.chord-disp{background:var(--surf);border:2px solid #2a2a4a;border-radius:10px;padding:20px 40px;text-align:center;min-width:260px;transition:border-color 0.12s}
+.chord-disp.perf{border-color:var(--perf)}
+.chord-disp.good{border-color:var(--good)}
+.chord-disp.miss{border-color:var(--miss)}
+.chord-name{font-family:'Orbitron',monospace;font-size:26px;font-weight:900;color:var(--text);margin-bottom:6px}
+.chord-notes{font-size:16px;color:var(--accent);letter-spacing:5px;font-weight:600}
+.timing-wrap{width:100%;max-width:360px}
+.t-bar{height:8px;background:var(--surf2);border-radius:4px;position:relative;overflow:hidden}
+.tz-bg{position:absolute;inset:0;background:#1a0008}
+.tz-gl{position:absolute;top:0;bottom:0;left:20%;width:20%;background:#1a1200}
+.tz-gr{position:absolute;top:0;bottom:0;right:20%;width:20%;background:#1a1200}
+.tz-p{position:absolute;top:0;bottom:0;left:40%;right:40%;background:#001a0a}
+.tcur{position:absolute;top:0;bottom:0;width:4px;background:white;border-radius:2px}
+.fb-text{font-family:'Orbitron',monospace;font-size:20px;font-weight:700;min-height:28px;text-align:center}
+.fb-text.perf{color:var(--perf)}.fb-text.good{color:var(--good)}.fb-text.miss{color:var(--miss)}
+.combo-disp{font-size:11px;color:var(--muted);letter-spacing:2px}
+.combo-disp span{color:var(--gold);font-family:'Orbitron',monospace;font-size:16px;font-weight:700}
+
+/* Piano */
+.piano-wrap{position:relative;width:100%;max-width:700px;height:110px;user-select:none}
+.white-keys{display:flex;width:100%;height:100%}
+.wkey{flex:1;background:#ddd8ff;border:1px solid #3a3060;border-radius:0 0 4px 4px;
+  cursor:pointer;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;
+  padding-bottom:5px;transition:background 0.06s;min-width:0}
+.wkey:hover{background:#ccc4ff}
+.wkey.lit{background:var(--accent);border-color:var(--accent)}
+.wkey.tgt{background:#fffa60;border-color:var(--gold);border-width:2px}
+.wkey.tgt.lit{background:var(--accent)}
+.wk-n{font-family:'Orbitron',monospace;font-size:8px;color:#3a3060;font-weight:700;line-height:1}
+.wk-k{font-size:7px;color:#8078b0;margin-top:1px}
+.wkey.lit .wk-n,.wkey.lit .wk-k{color:var(--bg)}
+.wkey.tgt .wk-n,.wkey.tgt .wk-k{color:#4a3800}
+.wkey.tgt.lit .wk-n,.wkey.tgt.lit .wk-k{color:var(--bg)}
+.black-layer{position:absolute;top:0;left:0;width:100%;height:60%;pointer-events:none}
+.bkey{position:absolute;background:#180d30;border:1px solid #4a40a0;border-radius:0 0 3px 3px;
+  height:100%;cursor:pointer;pointer-events:all;display:flex;flex-direction:column;
+  justify-content:flex-end;align-items:center;padding-bottom:4px;transition:background 0.06s;z-index:2}
+.bkey:hover{background:#2a1850}
+.bkey.lit{background:var(--accent3);border-color:var(--accent3)}
+.bkey.tgt{background:#3a2800;border-color:var(--gold);border-width:2px}
+.bkey.tgt.lit{background:var(--accent3)}
+.bk-n{font-family:'Orbitron',monospace;font-size:7px;color:#a090d0;font-weight:700;line-height:1}
+.bk-k{font-size:6px;color:#6050a0;margin-top:1px}
+.bkey.lit .bk-n,.bkey.lit .bk-k{color:#fff}
+.bkey.tgt .bk-n,.bkey.tgt .bk-k{color:var(--gold)}
+.bkey.tgt.lit .bk-n,.bkey.tgt.lit .bk-k{color:#fff}
+
+/* Results */
+.r-out{font-family:'Orbitron',monospace;font-size:clamp(1.8rem,7vw,3rem);font-weight:900;text-align:center}
+.r-out.win{color:var(--grn)}.r-out.loss{color:var(--red)}
+.rstat{background:var(--surf);border-radius:8px;padding:12px;text-align:center;border:1px solid #2a2a4a}
+.rstat label{font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;display:block;margin-bottom:4px}
+.rv{font-family:'Orbitron',monospace;font-size:20px;font-weight:700}
+.eol-line{font-size:12px;color:var(--gold);letter-spacing:2px;text-align:center}
+
+/* Tutorial */
+.tut-box{background:var(--surf);border:1px solid #2a2a4a;border-radius:10px;padding:24px;max-width:500px;width:100%;text-align:center}
+.tut-step{font-size:12px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
+.tut-title{font-family:'Orbitron',monospace;font-size:18px;color:var(--accent);margin-bottom:12px}
+.tut-body{font-size:13px;color:var(--text);line-height:1.7;margin-bottom:18px}
+.tut-hint{font-size:12px;color:var(--muted);margin-bottom:18px}
+.tut-piano{position:relative;width:100%;max-width:360px;height:80px;margin:0 auto 16px}
+
+/* Keybind settings */
+.kb-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:400px;width:100%}
+.kb-row{display:flex;justify-content:space-between;align-items:center;background:var(--surf);
+  border:1px solid #2a2a4a;border-radius:6px;padding:8px 12px;font-size:12px}
+.kb-note{color:var(--accent);font-family:'Orbitron',monospace;font-weight:700}
+.kb-key{background:var(--surf2);border:1px solid #3a3a5a;border-radius:3px;padding:3px 8px;
+  font-family:'Orbitron',monospace;font-size:11px;color:var(--text);cursor:pointer;min-width:36px;text-align:center}
+.kb-key.listening{border-color:var(--accent);color:var(--accent);animation:blink 0.6s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.4}}
+
+/* Leaderboard */
+.lb-tbl{width:100%;max-width:520px;border-collapse:collapse}
+.lb-tbl th{font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;padding:7px 10px;text-align:left;border-bottom:1px solid #2a2a4a}
+.lb-tbl td{padding:10px;border-bottom:1px solid #13131f;font-size:12px}
+.lb-rank{font-family:'Orbitron',monospace;color:var(--muted)}.lb-rank.top{color:var(--gold)}
+.lb-eol{font-family:'Orbitron',monospace;color:var(--accent);text-align:right}
+.lb-you{color:var(--accent2)}
+.particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:-1}
+.particle{position:absolute;width:2px;height:2px;border-radius:50%;opacity:0.25;animation:pflt linear infinite}
+@keyframes pflt{0%{transform:translateY(100vh)}100%{transform:translateY(-10px)}}
+
+/* Miss & Perfect animations */
+@keyframes missPulse{
+  0%{transform:scale(1)}15%{transform:scale(1.03) translateX(-5px)}35%{transform:scale(1.02) translateX(5px)}55%{transform:scale(1.03) translateX(-3px)}75%{transform:scale(1.01) translateX(2px)}100%{transform:scale(1)}
+}
+@keyframes perfectPulse{
+  0%{transform:scale(1)}30%{transform:scale(1.07)}60%{transform:scale(1.03)}100%{transform:scale(1)}
+}
+.chord-disp.anim-miss{animation:missPulse 0.45s ease}
+.chord-disp.anim-perf{animation:perfectPulse 0.5s ease}
+
+/* Lesson cards */
+.lesson-card{background:var(--surf);border:1px solid #2a2a4a;border-radius:8px;padding:18px;cursor:pointer;transition:all 0.18s;max-width:680px;width:100%;margin-bottom:10px}
+.lesson-card:hover{border-color:var(--accent);transform:translateX(4px)}
+.lesson-card h3{font-family:'Orbitron',monospace;font-size:13px;color:var(--accent);margin-bottom:6px}
+.lesson-card p{font-size:12px;color:var(--muted);line-height:1.6}
+.lesson-detail{background:var(--surf2);border-radius:6px;padding:12px;margin-top:10px;font-size:12px;color:var(--text);line-height:1.8;display:none}
+.lesson-card.open .lesson-detail{display:block}
+.lesson-tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:9px;font-weight:700;letter-spacing:1px;margin-right:6px;margin-bottom:6px}
+
+/* Exit overlay */
+.exit-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.82);z-index:100;align-items:center;justify-content:center;flex-direction:column;gap:16px}
+.exit-overlay.active{display:flex}
+.exit-box{background:var(--surf);border:1px solid var(--red);border-radius:12px;padding:32px 40px;text-align:center;max-width:340px;width:90%}
+.exit-box h2{font-family:'Orbitron',monospace;font-size:18px;color:var(--red);margin-bottom:10px}
+.exit-box p{font-size:12px;color:var(--muted);margin-bottom:22px;line-height:1.6}
+.exit-btns{display:flex;gap:10px;justify-content:center}
+.exit-btn-quit{background:transparent;border:1px solid var(--red);color:var(--red);font-family:'Exo 2',sans-serif;font-size:13px;padding:9px 22px;cursor:pointer;letter-spacing:2px;text-transform:uppercase;border-radius:4px;font-weight:600;transition:all 0.15s}
+.exit-btn-quit:hover{background:var(--red);color:#fff}
+.exit-btn-stay{background:transparent;border:1px solid var(--grn);color:var(--grn);font-family:'Exo 2',sans-serif;font-size:13px;padding:9px 22px;cursor:pointer;letter-spacing:2px;text-transform:uppercase;border-radius:4px;font-weight:600;transition:all 0.15s}
+.exit-btn-stay:hover{background:var(--grn);color:var(--bg)}
+.hud-exit{background:transparent;border:1px solid #3a3a5a;color:var(--muted);font-size:10px;padding:4px 10px;cursor:pointer;border-radius:4px;font-family:'Exo 2',sans-serif;letter-spacing:1px;text-transform:uppercase;transition:all 0.15s;align-self:flex-start}
+.hud-exit:hover{border-color:var(--red);color:var(--red)}
+
+/* Music bar */
+.music-bar{display:none;align-items:center;gap:10px;width:100%;max-width:760px;background:var(--surf);border:1px solid #2a2a4a;border-radius:6px;padding:6px 12px;margin-bottom:6px}
+.music-note{font-size:14px;animation:musicPulse 1.2s ease-in-out infinite;color:var(--accent)}
+@keyframes musicPulse{0%,100%{opacity:0.4;transform:scale(0.9)}50%{opacity:1;transform:scale(1.1)}}
+.music-track{flex:1;font-size:10px;color:var(--muted);letter-spacing:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.music-mute{background:none;border:1px solid #2a2a4a;border-radius:4px;color:var(--muted);font-size:12px;padding:2px 7px;cursor:pointer;transition:all 0.15s}
+.music-mute:hover{border-color:var(--accent);color:var(--accent)}
+.music-vol{-webkit-appearance:none;appearance:none;width:70px;height:4px;border-radius:2px;background:#2a2a4a;outline:none;cursor:pointer}
+.music-vol::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--accent);cursor:pointer}
+
+/* Battle screen */
+.battle-card{background:var(--surf);border:1px solid var(--accent2);border-radius:8px;padding:14px;cursor:pointer;transition:all 0.18s}
+.battle-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 0 14px rgba(255,0,110,0.25)}
+.battle-card .bonus{font-size:10px;color:var(--gold);margin-top:4px}
+.battle-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;width:100%;max-width:820px}
+.opp-banner{background:var(--surf);border:1px solid #2a2a4a;border-radius:8px;padding:14px 20px;margin-bottom:16px;display:flex;align-items:center;gap:14px;max-width:820px;width:100%}
+.opp-icon{font-size:28px}
+.opp-info{flex:1}
+.opp-name{font-family:'Orbitron',monospace;font-size:13px;color:var(--accent2)}
+.opp-pet{font-size:11px;color:var(--muted)}
+</style>
+
+<div class="particles" id="particles"></div>
+
+<!-- TUTORIAL -->
+<div class="screen active" id="tutorial">
+  <div class="tut-box" id="tutBox">
+    <div class="tut-step" id="tutStep">Step 1 of 5</div>
+    <div class="tut-title" id="tutTitle">Welcome to Chord Clash</div>
+    <div class="tut-body" id="tutBody">You'll be shown a chord name and the notes that make it up. Press the matching piano keys to play it!</div>
+    <div class="tut-hint" id="tutHint">Letters on your keyboard = piano keys. C key = C note.</div>
+    <div class="tut-piano" id="tutPiano"></div>
+    <div id="tutFb" style="font-family:'Orbitron',monospace;font-size:16px;min-height:24px;margin-bottom:12px;color:var(--perf)"></div>
+    <button class="btn" id="tutNextBtn" onclick="tutNext()">Next &#8594;</button>
+  </div>
+</div>
+
+<!-- MAIN MENU -->
+<div class="screen" id="mainMenu">
+  <h1 class="logo">CHORD CLASH</h1>
+  <p class="tagline">Press the keys. Beat the AI.</p>
+  <div class="menu-btns">
+    <button class="btn" onclick="showScreen('levelSelect')">Play</button>
+    <button class="btn" style="border-color:#ff6b35;color:#ff6b35" onclick="showScreen('battleMode')">Battle</button>
+    <button class="btn" style="border-color:#00d4ff;color:#00d4ff" onclick="showScreen('lessons')">Learn</button>
+    <button class="btn gold" onclick="showScreen('leaderboard')">Leaderboard</button>
+    <button class="btn pur" onclick="showScreen('keybinds')">Keybinds</button>
+    <button class="btn" style="border-color:var(--muted);color:var(--muted)" onclick="showScreen('tutorial')">Tutorial</button>
+  </div>
+  <p style="margin-top:28px;font-size:11px;color:var(--muted)">EOL: <span id="menuEol" style="font-family:'Orbitron',monospace;color:var(--gold)">0</span></p>
+</div>
+
+<!-- LEVEL SELECT -->
+<div class="screen" id="levelSelect" style="justify-content:flex-start;padding:16px">
+  <button class="btn" onclick="showScreen('mainMenu')" style="margin-bottom:12px;align-self:flex-start">&#8592; Back</button>
+  <p class="sec-title" style="width:100%;max-width:820px">Select Song</p>
+  <div class="level-grid" id="levelGrid"></div>
+</div>
+
+<!-- DIFF SELECT -->
+<div class="screen" id="diffSelect">
+  <button class="btn" onclick="showScreen('levelSelect')" style="margin-bottom:12px;align-self:flex-start">&#8592; Back</button>
+  <p class="sec-title" id="diffTitle">Choose Difficulty</p>
+  <div class="diff-opts">
+    <div class="dopt" onclick="selDiff(0)" id="d0"><h3 style="color:var(--grn)">Easy</h3><p>AI: 60%</p><p style="color:var(--gold);font-size:10px;margin-top:4px">+10 EOL</p></div>
+    <div class="dopt" onclick="selDiff(1)" id="d1"><h3 style="color:var(--gold)">Medium</h3><p>AI: 75%</p><p style="color:var(--gold);font-size:10px;margin-top:4px">+25 EOL</p></div>
+    <div class="dopt" onclick="selDiff(2)" id="d2"><h3 style="color:var(--red)">Hard</h3><p>AI: 90%</p><p style="color:var(--gold);font-size:10px;margin-top:4px">+50 EOL</p></div>
+    <div class="dopt" onclick="selDiff(3)" id="d3"><h3 style="color:#bf5fff">Expert</h3><p>AI: 98%</p><p style="color:var(--gold);font-size:10px;margin-top:4px">+100 EOL</p></div>
+  </div>
+  <button class="btn" style="margin-top:20px" onclick="startGame()">&#9654; Start</button>
+</div>
+
+<!-- GAMEPLAY -->
+<div class="screen" id="gameplay" style="justify-content:flex-start">
+  <div style="display:flex;justify-content:flex-end;width:100%;max-width:760px;margin-bottom:4px">
+    <button class="hud-exit" onclick="showExitConfirm()">&#10005; Exit</button>
+  </div>
+  <div class="hud">
+    <div class="sb"><div class="slabel">You</div><div class="sval p" id="pScore">0</div></div>
+    <div style="text-align:center"><div style="font-family:'Orbitron',monospace;font-size:11px;color:var(--muted)">VS</div><div id="hudTitle" style="font-size:10px;color:var(--muted);margin-top:1px"></div></div>
+    <div class="sb"><div class="slabel">AI</div><div class="sval a" id="aScore">0</div></div>
+  </div>
+  <div class="music-bar" id="musicBar">
+    <span class="music-note">&#9835;</span>
+    <span class="music-track" id="musicTrackName">—</span>
+    <input type="range" class="music-vol" id="musicVol" min="0" max="1" step="0.05" value="0.4" oninput="setBgVol(this.value)">
+    <button class="music-mute" id="musicMuteBtn" onclick="toggleMute()">&#128266;</button>
+  </div>
+  <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+  <div class="stage">
+    <!-- Tower Defense Lane -->
+    <div class="lane-wrap" id="lane">
+      <div class="lane-label">Battle Lane</div>
+      <div class="tower tower-p" title="Your tower">&#9632;</div>
+      <div class="tower tower-a" title="AI tower">&#9632;</div>
+      <div class="hp-bar-wrap hp-bar-p"><div class="hp-fill hp-fill-p" id="phpFill" style="width:100%"></div></div>
+      <div class="hp-bar-wrap hp-bar-a" style="right:44px;width:80px;"><div class="hp-fill hp-fill-a" id="ahpFill" style="width:100%"></div></div>
+      <div class="hp-text hp-text-p" id="phpTxt">100</div>
+      <div class="hp-text hp-text-a" id="ahpTxt">100</div>
+    </div>
+    <div class="combo-disp">Combo: <span id="comboVal">0</span></div>
+    <div class="chord-disp" id="chordDisp">
+      <div class="chord-name" id="chordName">Ready...</div>
+      <div class="chord-notes" id="chordNotes">&#8212; &#8212; &#8212;</div>
+    </div>
+    <div class="fb-text" id="fbText">&nbsp;</div>
+    <div class="timing-wrap">
+      <div class="t-bar"><div class="tz-bg"></div><div class="tz-gl"></div><div class="tz-gr"></div><div class="tz-p"></div><div class="tcur" id="tCur" style="left:50%"></div></div>
+      <div style="display:flex;justify-content:space-between;margin-top:3px;font-size:9px;color:var(--muted)">
+        <span>Miss</span><span style="color:var(--good)">Good</span><span style="color:var(--perf)">Perfect</span><span style="color:var(--good)">Good</span><span>Miss</span>
+      </div>
+    </div>
+    <div class="piano-wrap" id="pianoWrap">
+      <div class="white-keys" id="whiteKeys"></div>
+      <div class="black-layer" id="blackLayer"></div>
+    </div>
+    <p style="font-size:10px;color:var(--muted);text-align:center">C D E F G A B = white keys &nbsp;|&nbsp; <span style="color:var(--accent)">Shift+key = sharp/flat</span></p>
+    <p id="keyHintLine" style="font-size:10px;color:var(--gold);text-align:center;min-height:14px;letter-spacing:1px"></p>
+    <p style="font-size:9px;color:#404070;text-align:center">Bb=Shift+A &nbsp; Eb=Shift+D &nbsp; Ab=Shift+G &nbsp; Db=Shift+C &nbsp; Gb=Shift+F</p>
+  </div>
+</div>
+
+<!-- EXIT CONFIRM OVERLAY -->
+<div class="exit-overlay" id="exitOverlay">
+  <div class="exit-box">
+    <h2>Quit Game?</h2>
+    <p>Your current progress and score will be lost. The AI wins by default.</p>
+    <div class="exit-btns">
+      <button class="exit-btn-stay" onclick="cancelQuit()">Keep Playing</button>
+      <button class="exit-btn-quit" onclick="confirmQuit()">Quit</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div class="screen" id="results">
+  <div class="r-out" id="rOut">VICTORY!</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;max-width:440px;margin:16px 0">
+    <div class="rstat"><label>Your Score</label><div class="rv" id="rPS" style="color:var(--accent)">0</div></div>
+    <div class="rstat"><label>AI Score</label><div class="rv" id="rAS" style="color:var(--accent2)">0</div></div>
+    <div class="rstat"><label>Accuracy</label><div class="rv" id="rAcc" style="color:var(--text)">0%</div></div>
+    <div class="rstat"><label>Chords Hit</label><div class="rv" id="rHit" style="color:var(--text)">0</div></div>
+  </div>
+  <div class="eol-line" id="eolLine" style="margin-bottom:16px"></div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+    <button class="btn" onclick="startGame()">&#8634; Retry</button>
+    <button class="btn gold" onclick="showScreen('levelSelect')">Songs</button>
+    <button class="btn pur" onclick="showScreen('mainMenu')">Menu</button>
+  </div>
+</div>
+
+<!-- LEADERBOARD -->
+<div class="screen" id="leaderboard" style="justify-content:flex-start;padding:16px">
+  <button class="btn" onclick="showScreen('mainMenu')" style="margin-bottom:12px;align-self:flex-start">&#8592; Back</button>
+  <p class="sec-title" style="width:100%;max-width:520px">Global Leaderboard</p>
+  <table class="lb-tbl"><thead><tr><th>#</th><th>Player</th><th style="text-align:right">EOL</th></tr></thead><tbody id="lbBody"></tbody></table>
+</div>
+
+<!-- KEYBINDS -->
+<div class="screen" id="keybinds">
+  <button class="btn" onclick="showScreen('mainMenu')" style="margin-bottom:12px;align-self:flex-start">&#8592; Back</button>
+  <p class="sec-title">Keybind Settings</p>
+  <p style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:14px">Click a key binding, then press a new key to rebind</p>
+  <div class="kb-grid" id="kbGrid"></div>
+  <div style="display:flex;gap:10px;margin-top:16px">
+    <button class="btn grn" onclick="saveKeybinds()">&#10003; Save</button>
+    <button class="btn red" onclick="resetKeybinds()">&#8635; Reset</button>
+  </div>
+  <p id="kbMsg" style="font-size:11px;color:var(--grn);margin-top:10px;min-height:16px;text-align:center"></p>
+</div>
+
+<!-- LESSONS -->
+<div class="screen" id="lessons" style="justify-content:flex-start;padding:16px">
+  <button class="btn" onclick="showScreen('mainMenu')" style="margin-bottom:12px;align-self:flex-start">Back</button>
+  <p class="sec-title" style="width:100%;max-width:680px">Music Theory Lessons</p>
+  <div class="lesson-card" onclick="toggleLesson(this)">
+    <h3>1. Major Chords</h3>
+    <p>The foundation of music — bright, happy sounds built from three notes.</p>
+    <div class="lesson-detail">
+      <strong style="color:var(--accent)">Formula:</strong> Root + Major 3rd (4 semitones) + Perfect 5th (7 semitones)<br><br>
+      <span class="lesson-tag" style="background:#003322;color:var(--grn);border:1px solid var(--grn)">C Major</span> C + E + G<br>
+      <span class="lesson-tag" style="background:#003322;color:var(--grn);border:1px solid var(--grn)">G Major</span> G + B + D<br>
+      <span class="lesson-tag" style="background:#003322;color:var(--grn);border:1px solid var(--grn)">D Major</span> D + F# + A<br><br>
+      <strong style="color:var(--accent)">Sound:</strong> Bright, confident, happy. Used in pop, rock, and classical.<br>
+      <strong style="color:var(--accent)">Tip:</strong> The gap between Root and 3rd is always 4 keys on a piano (counting black keys).
+    </div>
+  </div>
+  <div class="lesson-card" onclick="toggleLesson(this)">
+    <h3>2. Minor Chords</h3>
+    <p>Darker, more emotional versions of major chords — one note lowered by a semitone.</p>
+    <div class="lesson-detail">
+      <strong style="color:var(--accent)">Formula:</strong> Root + Minor 3rd (3 semitones) + Perfect 5th (7 semitones)<br><br>
+      <span class="lesson-tag" style="background:#330011;color:var(--red);border:1px solid var(--red)">A Minor</span> A + C + E<br>
+      <span class="lesson-tag" style="background:#330011;color:var(--red);border:1px solid var(--red)">E Minor</span> E + G + B<br>
+      <span class="lesson-tag" style="background:#330011;color:var(--red);border:1px solid var(--red)">D Minor</span> D + F + A<br><br>
+      <strong style="color:var(--accent)">Sound:</strong> Sad, mysterious, emotional. Common in ballads and metal.<br>
+      <strong style="color:var(--accent)">Tip:</strong> Minor = Major with the middle note lowered by one semitone (one black key).
+    </div>
+  </div>
+  <div class="lesson-card" onclick="toggleLesson(this)">
+    <h3>3. Power Chords</h3>
+    <p>Two-note chords (root + 5th) beloved by rock and metal guitarists for their raw sound.</p>
+    <div class="lesson-detail">
+      <strong style="color:var(--accent)">Formula:</strong> Root + Perfect 5th (7 semitones) — no 3rd!<br><br>
+      <span class="lesson-tag" style="background:#1a0033;color:#bf5fff;border:1px solid #bf5fff">E5</span> E + B<br>
+      <span class="lesson-tag" style="background:#1a0033;color:#bf5fff;border:1px solid #bf5fff">A5</span> A + E<br>
+      <span class="lesson-tag" style="background:#1a0033;color:#bf5fff;border:1px solid #bf5fff">G5</span> G + D<br><br>
+      <strong style="color:var(--accent)">Sound:</strong> Heavy, neutral (neither major nor minor). Great for distorted guitar tones.<br>
+      <strong style="color:var(--accent)">Tip:</strong> Because there's no 3rd, power chords work equally well as major or minor substitutes.
+    </div>
+  </div>
+  <div class="lesson-card" onclick="toggleLesson(this)">
+    <h3>4. Chord Progressions</h3>
+    <p>How chords move together to create musical phrases, tension, and resolution.</p>
+    <div class="lesson-detail">
+      <strong style="color:var(--accent)">Common Progressions:</strong><br><br>
+      <span class="lesson-tag" style="background:#003322;color:var(--grn);border:1px solid var(--grn)">I–V–vi–IV</span> C–G–Am–F (Pop standard — used in hundreds of hits)<br>
+      <span class="lesson-tag" style="background:#332200;color:var(--gold);border:1px solid var(--gold)">I–IV–V</span> G–C–D (Classic blues/rock foundation)<br>
+      <span class="lesson-tag" style="background:#330011;color:var(--red);border:1px solid var(--red)">vi–IV–I–V</span> Am–F–C–G (Emotional pop/ballad feel)<br><br>
+      <strong style="color:var(--accent)">Why it matters:</strong> Progressions create the emotional arc of a song. Learning them helps you predict — and play — new songs faster.<br>
+      <strong style="color:var(--accent)">Tip:</strong> Roman numerals (I, IV, V) refer to scale degrees, so the same progression works in any key.
+    </div>
+  </div>
+  <div class="lesson-card" onclick="toggleLesson(this)">
+    <h3>5. 7th Chords &amp; Extensions</h3>
+    <p>Add a fourth note to triads for richer, more complex harmonic color.</p>
+    <div class="lesson-detail">
+      <strong style="color:var(--accent)">Types:</strong><br><br>
+      <span class="lesson-tag" style="background:#003322;color:var(--grn);border:1px solid var(--grn)">Major 7th</span> Major triad + Major 7th — e.g. Cmaj7: C E G B (dreamy, jazz)<br>
+      <span class="lesson-tag" style="background:#332200;color:var(--gold);border:1px solid var(--gold)">Dominant 7th</span> Major triad + Minor 7th — e.g. G7: G B D F (bluesy tension)<br>
+      <span class="lesson-tag" style="background:#330011;color:var(--red);border:1px solid var(--red)">Minor 7th</span> Minor triad + Minor 7th — e.g. Am7: A C E G (smooth, soulful)<br>
+      <span class="lesson-tag" style="background:#1a0033;color:#bf5fff;border:1px solid #bf5fff">Diminished 7th</span> 3 minor 3rds stacked — e.g. Cdim7: C Eb Gb A (eerie, dramatic)<br><br>
+      <strong style="color:var(--accent)">Tip:</strong> 7th chords are the gateway to jazz. Once comfortable with triads, start adding the 7th to your progressions.
+    </div>
+  </div>
+</div>
+
+<!-- BATTLE MODE -->
+<div class="screen" id="battleMode" style="justify-content:flex-start;padding:16px">
+  <button class="btn" onclick="showScreen('mainMenu')" style="margin-bottom:12px;align-self:flex-start">Back</button>
+  <p class="sec-title" style="width:100%;max-width:820px">Battle Mode</p>
+  <div class="opp-banner" id="oppBanner" style="display:none">
+    <div class="opp-icon" id="oppIcon"></div>
+    <div class="opp-info">
+      <div class="opp-name" id="oppName"></div>
+      <div class="opp-pet" id="oppPet"></div>
+    </div>
+    <div style="font-size:11px;color:var(--gold);font-family:'Orbitron',monospace">+50 EOL BONUS</div>
+  </div>
+  <p style="font-size:11px;color:var(--muted);margin-bottom:14px;text-align:center;max-width:820px">Pick a song to battle. A random opponent will challenge you — win to earn bonus EOL!</p>
+  <div class="battle-grid" id="battleGrid"></div>
+</div>
+
+<script>
+const SONGS=[
+  {title:"Neon Boulevard",artist:"Chromavex",diff:2,chords:[
+    {name:"C Major",notes:["C","E","G"]},{name:"G Major",notes:["G","B","D"]},{name:"A Minor",notes:["A","C","E"]},{name:"F Major",notes:["F","A","C"]},
+    {name:"C Major",notes:["C","E","G"]},{name:"G Major",notes:["G","B","D"]},{name:"A Minor",notes:["A","C","E"]},{name:"F Major",notes:["F","A","C"]},
+    {name:"C Major",notes:["C","E","G"]},{name:"G Major",notes:["G","B","D"]},{name:"A Minor",notes:["A","C","E"]},{name:"F Major",notes:["F","A","C"]}
+  ]},
+  {title:"Static Rain",artist:"Echo Engine",diff:3,chords:[
+    {name:"E Minor",notes:["E","G","B"]},{name:"C Major",notes:["C","E","G"]},{name:"G Major",notes:["G","B","D"]},{name:"D Major",notes:["D","F#","A"]},
+    {name:"E Minor",notes:["E","G","B"]},{name:"C Major",notes:["C","E","G"]},{name:"G Major",notes:["G","B","D"]},{name:"D Major",notes:["D","F#","A"]},
+    {name:"E Minor",notes:["E","G","B"]},{name:"C Major",notes:["C","E","G"]},{name:"G Major",notes:["G","B","D"]},{name:"D Major",notes:["D","F#","A"]}
+  ]},
+  {title:"Crystal Grid",artist:"Data Pulse",diff:3,chords:[
+    {name:"A Minor",notes:["A","C","E"]},{name:"F Major",notes:["F","A","C"]},{name:"C Major",notes:["C","E","G"]},{name:"G Major",notes:["G","B","D"]},
+    {name:"A Minor",notes:["A","C","E"]},{name:"F Major",notes:["F","A","C"]},{name:"C Major",notes:["C","E","G"]},{name:"G Major",notes:["G","B","D"]},
+    {name:"A Minor",notes:["A","C","E"]},{name:"F Major",notes:["F","A","C"]},{name:"C Major",notes:["C","E","G"]},{name:"G Major",notes:["G","B","D"]}
+  ]},
+  {title:"Midnight Signal",artist:"Velvet Circuit",diff:4,chords:[
+    {name:"D Minor",notes:["D","F","A"]},{name:"Bb Major",notes:["Bb","D","F"]},{name:"F Major",notes:["F","A","C"]},{name:"C Major",notes:["C","E","G"]},
+    {name:"D Minor",notes:["D","F","A"]},{name:"Bb Major",notes:["Bb","D","F"]},{name:"F Major",notes:["F","A","C"]},{name:"C Major",notes:["C","E","G"]},
+    {name:"D Minor",notes:["D","F","A"]},{name:"Bb Major",notes:["Bb","D","F"]},{name:"F Major",notes:["F","A","C"]},{name:"C Major",notes:["C","E","G"]}
+  ]},
+  {title:"Solar Wind",artist:"Orbit",diff:4,chords:[
+    {name:"G Major",notes:["G","B","D"]},{name:"E Minor",notes:["E","G","B"]},{name:"C Major",notes:["C","E","G"]},{name:"D Major",notes:["D","F#","A"]},
+    {name:"G Major",notes:["G","B","D"]},{name:"E Minor",notes:["E","G","B"]},{name:"C Major",notes:["C","E","G"]},{name:"D Major",notes:["D","F#","A"]},
+    {name:"G Major",notes:["G","B","D"]},{name:"E Minor",notes:["E","G","B"]},{name:"C Major",notes:["C","E","G"]},{name:"D Major",notes:["D","F#","A"]}
+  ]},
+  {title:"Phantom Drive",artist:"Ghost Protocol",diff:5,chords:[
+    {name:"E Minor",notes:["E","G","B"]},{name:"G Major",notes:["G","B","D"]},{name:"D Major",notes:["D","F#","A"]},{name:"A Major",notes:["A","C#","E"]},
+    {name:"E Minor",notes:["E","G","B"]},{name:"C Major",notes:["C","E","G"]},{name:"D Major",notes:["D","F#","A"]},{name:"B Minor",notes:["B","D","F#"]},
+    {name:"E Minor",notes:["E","G","B"]},{name:"G Major",notes:["G","B","D"]},{name:"D Major",notes:["D","F#","A"]},{name:"A Major",notes:["A","C#","E"]}
+  ]},
+  {title:"Aurora Chase",artist:"Prism",diff:5,chords:[
+    {name:"B Minor",notes:["B","D","F#"]},{name:"G Major",notes:["G","B","D"]},{name:"D Major",notes:["D","F#","A"]},{name:"A Major",notes:["A","C#","E"]},
+    {name:"B Minor",notes:["B","D","F#"]},{name:"G Major",notes:["G","B","D"]},{name:"D Major",notes:["D","F#","A"]},{name:"A Major",notes:["A","C#","E"]},
+    {name:"B Minor",notes:["B","D","F#"]},{name:"G Major",notes:["G","B","D"]},{name:"D Major",notes:["D","F#","A"]},{name:"A Major",notes:["A","C#","E"]}
+  ]},
+  {title:"Deep Frequency",artist:"Bass Divide",diff:5,chords:[
+    {name:"A Minor",notes:["A","C","E"]},{name:"E Minor",notes:["E","G","B"]},{name:"F Major",notes:["F","A","C"]},{name:"G Major",notes:["G","B","D"]},
+    {name:"A Minor",notes:["A","C","E"]},{name:"E Minor",notes:["E","G","B"]},{name:"F Major",notes:["F","A","C"]},{name:"G Major",notes:["G","B","D"]},
+    {name:"A Minor",notes:["A","C","E"]},{name:"E Minor",notes:["E","G","B"]},{name:"F Major",notes:["F","A","C"]},{name:"G Major",notes:["G","B","D"]}
+  ]},
+  {title:"Warp Gate",artist:"Zero Shift",diff:6,chords:[
+    {name:"E5",notes:["E","B"]},{name:"A5",notes:["A","E"]},{name:"D5",notes:["D","A"]},{name:"B5",notes:["B","F#"]},
+    {name:"E5",notes:["E","B"]},{name:"A5",notes:["A","E"]},{name:"G5",notes:["G","D"]},{name:"F5",notes:["F","C"]},
+    {name:"E5",notes:["E","B"]},{name:"A5",notes:["A","E"]},{name:"D5",notes:["D","A"]},{name:"B5",notes:["B","F#"]}
+  ]},
+  {title:"Cascade Override",artist:"Signal Break",diff:6,chords:[
+    {name:"D Minor",notes:["D","F","A"]},{name:"A Minor",notes:["A","C","E"]},{name:"Bb Major",notes:["Bb","D","F"]},{name:"C Major",notes:["C","E","G"]},
+    {name:"D Minor",notes:["D","F","A"]},{name:"A Minor",notes:["A","C","E"]},{name:"Bb Major",notes:["Bb","D","F"]},{name:"C Major",notes:["C","E","G"]},
+    {name:"D Minor",notes:["D","F","A"]},{name:"A Minor",notes:["A","C","E"]},{name:"Bb Major",notes:["Bb","D","F"]},{name:"C Major",notes:["C","E","G"]}
+  ]},
+  {title:"Neural Drift",artist:"Void Walker",diff:7,chords:[
+    {name:"A Minor",notes:["A","C","E"]},{name:"G Major",notes:["G","B","D"]},{name:"F Major",notes:["F","A","C"]},{name:"E Major",notes:["E","G#","B"]},
+    {name:"A Minor",notes:["A","C","E"]},{name:"G Major",notes:["G","B","D"]},{name:"F Major",notes:["F","A","C"]},{name:"E Major",notes:["E","G#","B"]},
+    {name:"A Minor",notes:["A","C","E"]},{name:"G Major",notes:["G","B","D"]},{name:"F Major",notes:["F","A","C"]},{name:"E Major",notes:["E","G#","B"]}
+  ]},
+  {title:"Parallel Lines",artist:"Mirror State",diff:7,chords:[
+    {name:"Cmaj7",notes:["C","E","G","B"]},{name:"Am7",notes:["A","C","E","G"]},{name:"Dm7",notes:["D","F","A","C"]},{name:"G7",notes:["G","B","D","F"]},
+    {name:"Cmaj7",notes:["C","E","G","B"]},{name:"Am7",notes:["A","C","E","G"]},{name:"Dm7",notes:["D","F","A","C"]},{name:"G7",notes:["G","B","D","F"]},
+    {name:"Cmaj7",notes:["C","E","G","B"]},{name:"Am7",notes:["A","C","E","G"]},{name:"Dm7",notes:["D","F","A","C"]},{name:"G7",notes:["G","B","D","F"]}
+  ]},
+  {title:"Hologram Sky",artist:"Neon Arc",diff:8,chords:[
+    {name:"F# Minor",notes:["F#","A","C#"]},{name:"D Major",notes:["D","F#","A"]},{name:"A Major",notes:["A","C#","E"]},{name:"E Major",notes:["E","G#","B"]},
+    {name:"F# Minor",notes:["F#","A","C#"]},{name:"D Major",notes:["D","F#","A"]},{name:"A Major",notes:["A","C#","E"]},{name:"E Major",notes:["E","G#","B"]},
+    {name:"F# Minor",notes:["F#","A","C#"]},{name:"D Major",notes:["D","F#","A"]},{name:"A Major",notes:["A","C#","E"]},{name:"E Major",notes:["E","G#","B"]}
+  ]},
+  {title:"Quantum Rush",artist:"Particle",diff:8,chords:[
+    {name:"A Minor",notes:["A","C","E"]},{name:"Dm7",notes:["D","F","A","C"]},{name:"G7",notes:["G","B","D","F"]},{name:"Cmaj7",notes:["C","E","G","B"]},
+    {name:"F Major",notes:["F","A","C"]},{name:"E7",notes:["E","G#","B","D"]},{name:"A Minor",notes:["A","C","E"]},{name:"Dm7",notes:["D","F","A","C"]},
+    {name:"G7",notes:["G","B","D","F"]},{name:"Cmaj7",notes:["C","E","G","B"]},{name:"E7",notes:["E","G#","B","D"]},{name:"A Minor",notes:["A","C","E"]}
+  ]},
+  {title:"Fracture Zone",artist:"Dark Pixel",diff:9,chords:[
+    {name:"E5",notes:["E","B"]},{name:"A5",notes:["A","E"]},{name:"G5",notes:["G","D"]},{name:"F5",notes:["F","C"]},
+    {name:"D5",notes:["D","A"]},{name:"E5",notes:["E","B"]},{name:"A5",notes:["A","E"]},{name:"G5",notes:["G","D"]},
+    {name:"F5",notes:["F","C"]},{name:"D5",notes:["D","A"]},{name:"E5",notes:["E","B"]},{name:"A5",notes:["A","E"]}
+  ]},
+  {title:"Hyperion",artist:"Stellar Crash",diff:9,chords:[
+    {name:"E7",notes:["E","G#","B","D"]},{name:"A7",notes:["A","C#","E","G"]},{name:"B7",notes:["B","D#","F#","A"]},{name:"E7",notes:["E","G#","B","D"]},
+    {name:"A7",notes:["A","C#","E","G"]},{name:"D7",notes:["D","F#","A","C"]},{name:"G7",notes:["G","B","D","F"]},{name:"E7",notes:["E","G#","B","D"]},
+    {name:"A7",notes:["A","C#","E","G"]},{name:"B7",notes:["B","D#","F#","A"]},{name:"E7",notes:["E","G#","B","D"]},{name:"A7",notes:["A","C#","E","G"]}
+  ]},
+  {title:"Void Matrix",artist:"DARKNET",diff:10,chords:[
+    {name:"Cdim7",notes:["C","Eb","Gb","A"]},{name:"B7",notes:["B","D#","F#","A"]},{name:"Bbm7",notes:["Bb","Db","F","Ab"]},{name:"Eb7",notes:["Eb","G","Bb","Db"]},
+    {name:"Abmaj7",notes:["Ab","C","Eb","G"]},{name:"Dm7b5",notes:["D","F","Ab","C"]},{name:"G7",notes:["G","B","D","F"]},{name:"Cmaj7",notes:["C","E","G","B"]},
+    {name:"Cdim7",notes:["C","Eb","Gb","A"]},{name:"B7",notes:["B","D#","F#","A"]},{name:"Bbm7",notes:["Bb","Db","F","Ab"]},{name:"Eb7",notes:["Eb","G","Bb","Db"]}
+  ]}
+];
+
+const DIFFS=[
+  {name:"Easy",accuracy:0.6,eol:10,unitPow:0.5},
+  {name:"Medium",accuracy:0.75,eol:25,unitPow:0.7},
+  {name:"Hard",accuracy:0.9,eol:50,unitPow:0.85},
+  {name:"Expert",accuracy:0.98,eol:100,unitPow:0.95}
+];
+
+// Battle mode state
+const OPPONENTS=[
+  {name:"Alex",pet:"Evil Bot",icon:"&#129302;",color:"#ff3366"},
+  {name:"Jordan",pet:"Dark Wizard",icon:"&#129497;",color:"#7b2fff"},
+  {name:"Casey",pet:"Cyber Dragon",icon:"&#129409;",color:"#00f5ff"}
+];
+let isBattle=false;
+let currentOpponent=null;
+
+function startBattle(songIdx){
+  isBattle=true;
+  const oppIdx=Math.floor(Math.random()*OPPONENTS.length);
+  currentOpponent=OPPONENTS[oppIdx];
+  G.song=songIdx;
+  // Show opponent banner in battle mode screen briefly
+  document.getElementById('diffTitle').textContent=SONGS[songIdx].title;
+  showScreen('diffSelect');
+}
+
+function renderBattleGrid(){
+  const dc=['d0','d1','d2','d2','d3'];
+  const dn=['Beginner','Easy','Medium','Hard','Expert'];
+  // Pick random opponent to show
+  const opp=OPPONENTS[Math.floor(Math.random()*OPPONENTS.length)];
+  const banner=document.getElementById('oppBanner');
+  banner.style.display='flex';
+  document.getElementById('oppIcon').innerHTML=opp.icon;
+  document.getElementById('oppName').textContent=opp.name;
+  document.getElementById('oppPet').textContent='Companion: '+opp.pet;
+  document.getElementById('battleGrid').innerHTML=SONGS.map((s,i)=>`
+    <div class="battle-card" onclick="startBattle(${i})">
+      <h3 style="font-family:'Orbitron',monospace;font-size:11px;color:var(--text);margin-bottom:3px">${s.title}</h3>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px">${s.artist}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span class="${dc[Math.floor((s.diff-1)/2)]} dbadge">${dn[Math.floor((s.diff-1)/2)]}</span>
+        <span class="bonus">+50 EOL</span>
+      </div>
+    </div>`).join('');
+}
+
+// Audio context
+function getAudioContext(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
+
+function playSuccessSound(){
+  try{
+    const ctx=getAudioContext();
+    const freqs=[523.25,659.25,783.99]; // C5 E5 G5
+    freqs.forEach((freq,i)=>{
+      const osc=ctx.createOscillator();const gain=ctx.createGain();
+      osc.connect(gain);gain.connect(ctx.destination);
+      osc.type='sine';osc.frequency.value=freq;
+      const t=ctx.currentTime+i*0.07;
+      gain.gain.setValueAtTime(0,t);gain.gain.linearRampToValueAtTime(0.13,t+0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001,t+0.38);
+      osc.start(t);osc.stop(t+0.4);
+    });
+  }catch(e){}
+}
+
+function playMissSound(){
+  try{
+    const ctx=getAudioContext();
+    const osc=ctx.createOscillator();const gain=ctx.createGain();
+    osc.connect(gain);gain.connect(ctx.destination);
+    osc.type='sawtooth';
+    osc.frequency.setValueAtTime(280,ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(70,ctx.currentTime+0.3);
+    gain.gain.setValueAtTime(0.1,ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.3);
+    osc.start(ctx.currentTime);osc.stop(ctx.currentTime+0.3);
+  }catch(e){}
+}
+
+// MP3 background music system
+const MP3_TRACKS=[
+  {file:"2021-08-17_-_8_Bit_Nostalgia_-_www.FesliyanStudios.com.mp3",      name:"8 Bit Nostalgia"},
+  {file:"2020-03-22_-_8_Bit_Surf_-_FesliyanStudios.com_-_David_Renda.mp3", name:"8 Bit Surf"},
+  {file:"2019-08-25_-_8bit-Smooth_Presentation_-_David_Fesliyan.mp3",      name:"8bit Smooth"},
+  {file:"2019-01-10_-_Land_of_8_Bits_-_Stephen_Bennett_-_FesliyanStudios.com.mp3", name:"Land of 8 Bits"},
+  {file:"2019-01-02_-_8_Bit_Menu_-_David_Renda_-_FesliyanStudios.com.mp3", name:"8 Bit Menu"}
+];
+let bgAudioEl=null;
+
+function initBgAudio(){
+  if(bgAudioEl)return;
+  bgAudioEl=document.createElement('audio');
+  bgAudioEl.loop=true;
+  bgAudioEl.volume=0.4;
+  document.body.appendChild(bgAudioEl);
+}
+
+function startBackgroundMusic(songIdx){
+  initBgAudio();
+  const track=MP3_TRACKS[songIdx%MP3_TRACKS.length];
+  bgAudioEl.src=track.file;
+  bgAudioEl.currentTime=0;
+  bgAudioEl.play().catch(()=>{});
+  const tn=document.getElementById('musicTrackName');
+  if(tn)tn.textContent=track.name;
+  const bar=document.getElementById('musicBar');
+  if(bar)bar.style.display='flex';
+  const vol=document.getElementById('musicVol');
+  if(vol)bgAudioEl.volume=parseFloat(vol.value);
+}
+
+function stopBackgroundMusic(){
+  if(bgAudioEl){bgAudioEl.pause();bgAudioEl.currentTime=0;}
+  const bar=document.getElementById('musicBar');
+  if(bar)bar.style.display='none';
+}
+
+function toggleMute(){
+  if(!bgAudioEl)return;
+  bgAudioEl.muted=!bgAudioEl.muted;
+  document.getElementById('musicMuteBtn').innerHTML=bgAudioEl.muted?'&#128264;':'&#128266;';
+}
+
+function setBgVol(v){
+  if(bgAudioEl){bgAudioEl.volume=parseFloat(v);if(bgAudioEl.muted&&v>0){bgAudioEl.muted=false;document.getElementById('musicMuteBtn').innerHTML='&#128266;';}}
+}
+
+function playBackgroundLoop(){} // no-op, kept for compatibility
+
+// Miss & Perfect animations
+function animateMiss(){
+  const d=document.getElementById('chordDisp');
+  d.classList.remove('anim-miss','anim-perf');
+  void d.offsetWidth;
+  d.classList.add('anim-miss');
+  setTimeout(()=>d.classList.remove('anim-miss'),500);
+}
+
+function animatePerfect(){
+  const d=document.getElementById('chordDisp');
+  d.classList.remove('anim-miss','anim-perf');
+  void d.offsetWidth;
+  d.classList.add('anim-perf');
+  setTimeout(()=>d.classList.remove('anim-perf'),600);
+}
+
+// Lesson toggle
+function toggleLesson(card){card.classList.toggle('open');}
+
+function showExitConfirm(){
+  if(!G.active)return;
+  // Pause the timing so the chord doesn't auto-miss while dialog is open
+  clearTimeout(G.cTimeout);
+  clearInterval(G.tInterval);
+  document.getElementById('exitOverlay').classList.add('active');
+}
+
+function cancelQuit(){
+  document.getElementById('exitOverlay').classList.remove('active');
+  // Resume the current chord timer from scratch (give them a fresh window)
+  if(G.active)nextChord();
+}
+
+function confirmQuit(){
+  document.getElementById('exitOverlay').classList.remove('active');
+  G.active=false;
+  cancelAnimationFrame(laneAnimFrame);
+  clearTimeout(G.cTimeout);
+  clearInterval(G.tInterval);
+  stopBackgroundMusic();
+  showScreen(isBattle?'battleMode':'levelSelect');
+}
+
+// Map a note name to its keyboard shortcut label
+function noteToKey(note){
+  // Flats: map to enharmonic sharp for BINDS lookup
+  let lookup=note;
+  if(note.includes('b')&&ENH[note])lookup=ENH[note];
+  const key=BINDS[lookup];
+  if(!key)return note;
+  const needsShift=lookup.includes('#');
+  return needsShift?'Shift+'+key.toUpperCase():key.toUpperCase();
+}
+
+const ENH={'C#':'Db','Db':'C#','D#':'Eb','Eb':'D#','F#':'Gb','Gb':'F#','G#':'Ab','Ab':'G#','A#':'Bb','Bb':'A#'};
+function noteEq(a,b){return a===b||(ENH[a]&&ENH[a]===b)||(ENH[b]&&ENH[b]===a)}
+
+// Default keybinds: note -> keyboard key (lowercase)
+const DEFAULT_BINDS={'C':'c','D':'d','E':'e','F':'f','G':'g','A':'a','B':'b',
+  'C#':'C','D#':'D','F#':'F','G#':'G','A#':'A'};
+let BINDS={...DEFAULT_BINDS};
+function loadBinds(){try{const s=localStorage.getItem('cc4_binds');if(s)BINDS=JSON.parse(s);}catch{}}
+function saveBind(){try{localStorage.setItem('cc4_binds',JSON.stringify(BINDS));}catch{}}
+loadBinds();
+
+// Key -> note lookup (built from BINDS)
+function keyToNote(key,shift){
+  for(const [note,k] of Object.entries(BINDS)){
+    const isSharp=note.includes('#');
+    if(isSharp&&shift&&k.toLowerCase()===key.toLowerCase())return note;
+    if(!isSharp&&!shift&&k.toLowerCase()===key.toLowerCase())return note;
+  }
+  return null;
+}
+
+// Audio via Web Audio API
+let audioCtx=null;
+function getAudio(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
+
+const NOTE_FREQS={'C':261.63,'C#':277.18,'Db':277.18,'D':293.66,'D#':311.13,'Eb':311.13,
+  'E':329.63,'F':349.23,'F#':369.99,'Gb':369.99,'G':392.00,'G#':415.30,'Ab':415.30,
+  'A':440.00,'A#':466.16,'Bb':466.16,'B':493.88};
+
+function playNote(note,dur=0.5,vol=0.15){
+  try{
+    const ctx=getAudio();
+    const osc=ctx.createOscillator();
+    const gain=ctx.createGain();
+    osc.connect(gain);gain.connect(ctx.destination);
+    osc.type='triangle';
+    osc.frequency.value=NOTE_FREQS[note]||261.63;
+    gain.gain.setValueAtTime(vol,ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+dur);
+    osc.start(ctx.currentTime);osc.stop(ctx.currentTime+dur);
+  }catch(e){}
+}
+
+function playChord(notes){
+  notes.forEach((n,i)=>setTimeout(()=>playNote(n,0.6,0.12),i*8));
+}
+
+// Tower defense state
+let towers={php:100,ahp:100,units:[]};
+let unitIdCounter=0;
+let laneAnimFrame=null;
+
+function spawnUnit(fromPlayer,power){
+  const lane=document.getElementById('lane');
+  const u=document.createElement('div');
+  const uid='u'+(unitIdCounter++);
+  u.id=uid;
+  u.className='unit '+(fromPlayer?'unit-p':'unit-a');
+  u.textContent=fromPlayer?'&#9654;':'&#9664;';
+  u.innerHTML=fromPlayer?'&#9654;':'&#9664;';
+  const startPct=fromPlayer?6:92;
+  u.style.left=startPct+'%';
+  lane.appendChild(u);
+  towers.units.push({id:uid,fromPlayer,pct:startPct,power,el:u});
+}
+
+function updateLane(){
+  if(!G.active)return;
+  const dead=[];
+  for(const unit of towers.units){
+    unit.pct+=unit.fromPlayer?0.4:-0.4;
+    unit.el.style.left=unit.pct+'%';
+    if(unit.fromPlayer&&unit.pct>=90){
+      towers.ahp=Math.max(0,towers.ahp-unit.power);
+      unit.el.remove();dead.push(unit.id);
+    } else if(!unit.fromPlayer&&unit.pct<=10){
+      towers.php=Math.max(0,towers.php-unit.power);
+      unit.el.remove();dead.push(unit.id);
+    }
+  }
+  towers.units=towers.units.filter(u=>!dead.includes(u.id));
+  document.getElementById('phpFill').style.width=towers.php+'%';
+  document.getElementById('ahpFill').style.width=towers.ahp+'%';
+  document.getElementById('phpTxt').textContent=Math.round(towers.php);
+  document.getElementById('ahpTxt').textContent=Math.round(towers.ahp);
+  laneAnimFrame=requestAnimationFrame(updateLane);
+}
+
+// Piano layout
+const WHITE_K=[
+  {n:'C',k:'C'},{n:'D',k:'D'},{n:'E',k:'E'},{n:'F',k:'F'},
+  {n:'G',k:'G'},{n:'A',k:'A'},{n:'B',k:'B'},
+  {n:'C',k:'C'},{n:'D',k:'D'},{n:'E',k:'E'},{n:'F',k:'F'},
+  {n:'G',k:'G'},{n:'A',k:'A'},{n:'B',k:'B'}
+];
+const BLACK_K=[
+  {after:0,n:'C#',k:'⇧C'},{after:1,n:'D#',k:'⇧D'},
+  {after:3,n:'F#',k:'⇧F'},{after:4,n:'G#',k:'⇧G'},{after:5,n:'A#',k:'⇧A'},
+  {after:7,n:'C#',k:'⇧C'},{after:8,n:'D#',k:'⇧D'},
+  {after:10,n:'F#',k:'⇧F'},{after:11,n:'G#',k:'⇧G'},{after:12,n:'A#',k:'⇧A'}
+];
+
+function buildPiano(tgt,container='whiteKeys',bContainer='blackLayer',small=false){
+  const wk=document.getElementById(container);
+  const bl=document.getElementById(bContainer);
+  const total=WHITE_K.length;
+  const ht=small?70:110;
+  wk.innerHTML=WHITE_K.map((w,i)=>{
+    const isTgt=tgt.some(n=>noteEq(n,w.n));
+    return `<div class="wkey${isTgt?' tgt':''}" id="${container}_w${i}" onmousedown="clickNote('${w.n}')">
+      <div class="wk-n">${w.n}</div><div class="wk-k">${w.k}</div></div>`;
+  }).join('');
+  if(!bl)return;
+  bl.innerHTML='';
+  const wPct=100/total;
+  BLACK_K.forEach((b,j)=>{
+    const isTgt=tgt.some(n=>noteEq(n,b.n));
+    const el=document.createElement('div');
+    el.className='bkey'+(isTgt?' tgt':'');
+    el.id=`${container}_b${j}`;
+    el.style.cssText=`left:${(b.after+1)*wPct-wPct*0.33}%;width:${wPct*0.58}%`;
+    el.innerHTML=`<div class="bk-n">${b.n}</div><div class="bk-k">${b.k}</div>`;
+    el.addEventListener('mousedown',e=>{e.preventDefault();clickNote(b.n)});
+    bl.appendChild(el);
+  });
+}
+
+function lightKey(note,on,prefix='whiteKeys'){
+  WHITE_K.forEach((w,i)=>{if(noteEq(w.n,note)){const el=document.getElementById(prefix+'_w'+i);if(el)el.classList.toggle('lit',on);}});
+  BLACK_K.forEach((b,j)=>{if(noteEq(b.n,note)){const el=document.getElementById(prefix+'_b'+j);if(el)el.classList.toggle('lit',on);}});
+}
+
+// Game state
+let G={song:null,diff:0,pScore:0,aScore:0,chordIdx:0,combo:0,hits:0,total:0,startTime:0,buf:[],cTimeout:null,tInterval:null,active:false};
+
+function getEol(){try{return parseInt(localStorage.getItem('cc4_eol')||0)}catch{return 0}}
+function saveEol(v){try{localStorage.setItem('cc4_eol',v)}catch{}}
+function getLb(){try{return JSON.parse(localStorage.getItem('cc4_lb')||'[]')}catch{return[]}}
+function saveLb(v){try{localStorage.setItem('cc4_lb',JSON.stringify(v))}catch{}}
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(id==='mainMenu'){document.getElementById('menuEol').textContent=getEol();isBattle=false;currentOpponent=null;}
+  if(id==='leaderboard')renderLb();
+  if(id==='levelSelect'){renderLevels();isBattle=false;}
+  if(id==='keybinds')renderKeybinds();
+  if(id==='battleMode')renderBattleGrid();
+}
+
+function renderLevels(){
+  const dc=['d0','d1','d2','d2','d3'];
+  const dn=['Beginner','Easy','Medium','Hard','Expert'];
+  document.getElementById('levelGrid').innerHTML=SONGS.map((s,i)=>`
+    <div class="lvl-card" onclick="pickSong(${i})">
+      <h3>${s.title}</h3><div class="art">${s.artist}</div>
+      <div class="meta">
+        <span class="stars">${'&#9733;'.repeat(Math.min(Math.ceil(s.diff/2),5))}</span>
+        <span class="${dc[Math.floor((s.diff-1)/2)]} dbadge">${dn[Math.floor((s.diff-1)/2)]}</span>
+      </div>
+      <div style="margin-top:6px;font-size:10px;color:var(--muted)">${s.chords.length} chords</div>
+    </div>`).join('');
+}
+
+function pickSong(i){G.song=i;document.getElementById('diffTitle').textContent=SONGS[i].title;showScreen('diffSelect');}
+function selDiff(d){G.diff=d;document.querySelectorAll('.dopt').forEach((el,i)=>el.classList.toggle('sel',i===d));}
+
+function startGame(){
+  if(G.song===null)return;
+  const song=SONGS[G.song];
+  G.pScore=0;G.aScore=0;G.chordIdx=0;G.combo=0;G.hits=0;G.total=song.chords.length;G.buf=[];G.active=true;
+  towers={php:100,ahp:100,units:[]};
+  document.querySelectorAll('.unit').forEach(u=>u.remove());
+  ['pScore','aScore','comboVal'].forEach(id=>document.getElementById(id).textContent='0');
+  const hudLabel=isBattle&&currentOpponent?'vs '+currentOpponent.name:song.title;
+  document.getElementById('hudTitle').textContent=hudLabel;
+  document.getElementById('progFill').style.width='0%';
+  document.getElementById('phpFill').style.width='100%';
+  document.getElementById('ahpFill').style.width='100%';
+  document.getElementById('phpTxt').textContent='100';
+  document.getElementById('ahpTxt').textContent='100';
+  buildPiano([]);
+  showScreen('gameplay');
+  stopBackgroundMusic();
+  startBackgroundMusic(G.song);
+  if(laneAnimFrame)cancelAnimationFrame(laneAnimFrame);
+  updateLane();
+  setTimeout(nextChord,600);
+}
+
+const PERFECT_MS=900;
+const GOOD_MS=2000;
+
+function nextChord(){
+  if(!G.active)return;
+  const song=SONGS[G.song];
+  if(G.chordIdx>=song.chords.length){endGame();return;}
+  const chord=song.chords[G.chordIdx];
+  G.buf=[];G.startTime=Date.now();
+  document.getElementById('chordName').textContent=chord.name;
+  document.getElementById('chordNotes').textContent=chord.notes.join(' + ');
+  document.getElementById('keyHintLine').textContent='Keys: '+chord.notes.map(noteToKey).join(' + ');
+  document.getElementById('fbText').textContent='\u00a0';
+  document.getElementById('chordDisp').className='chord-disp';
+  document.getElementById('progFill').style.width=Math.round((G.chordIdx/song.chords.length)*100)+'%';
+  buildPiano(chord.notes);
+  clearInterval(G.tInterval);
+  const dur=GOOD_MS+500,start=Date.now();
+  G.tInterval=setInterval(()=>{
+    const t=Math.min((Date.now()-start)/dur,1);
+    document.getElementById('tCur').style.left=(Math.sin(t*Math.PI*2)*0.4+0.5)*100+'%';
+    if(t>=1)clearInterval(G.tInterval);
+  },16);
+  clearTimeout(G.cTimeout);
+  G.cTimeout=setTimeout(()=>{if(G.active)doResult('miss');},dur);
+}
+
+function clickNote(note){
+  if(!G.active)return;
+  playNote(note,0.35,0.1);
+  lightKey(note,true);
+  setTimeout(()=>lightKey(note,false),160);
+  handleNote(note);
+}
+
+function handleNote(note){
+  if(!G.active)return;
+  const chord=SONGS[G.song].chords[G.chordIdx];
+  if(!chord)return;
+  // Only register notes that belong to the current chord — wrong keys play sound but don't fill the buffer
+  if(!chord.notes.some(cn=>noteEq(cn,note)))return;
+  if(!G.buf.some(n=>noteEq(n,note)))G.buf.push(note);
+  if(G.buf.length>=chord.notes.length){
+    clearTimeout(G.cTimeout);clearInterval(G.tInterval);
+    const ms=Date.now()-G.startTime;
+    const ok=chord.notes.every(cn=>G.buf.some(inp=>noteEq(inp,cn)));
+    if(!ok){doResult('miss');return;}
+    // Fixed: check perfect first, then good
+    if(ms<=PERFECT_MS)doResult('perfect');
+    else if(ms<=GOOD_MS)doResult('good');
+    else doResult('miss');
+  }
+}
+
+function doResult(result){
+  G.chordIdx++;
+  const chord=SONGS[G.song]?SONGS[G.song].chords[G.chordIdx-1]:null;
+  const disp=document.getElementById('chordDisp');
+  const fb=document.getElementById('fbText');
+  if(result==='perfect'){
+    const pts=100+Math.floor(G.combo/5)*10;
+    G.pScore+=pts;G.combo++;G.hits++;
+    disp.className='chord-disp perf';fb.className='fb-text perf';fb.textContent='PERFECT!';
+    if(chord)playChord(chord.notes);
+    playSuccessSound();animatePerfect();
+    spawnUnit(true,20);
+  }else if(result==='good'){
+    G.pScore+=50;G.combo++;G.hits++;
+    disp.className='chord-disp good';fb.className='fb-text good';fb.textContent='GOOD';
+    if(chord)playChord(chord.notes);
+    playSuccessSound();
+    spawnUnit(true,10);
+  }else{
+    G.combo=0;
+    disp.className='chord-disp miss';fb.className='fb-text miss';fb.textContent='MISS';
+    playMissSound();animateMiss();
+  }
+  document.getElementById('pScore').textContent=G.pScore;
+  document.getElementById('comboVal').textContent=G.combo;
+  // AI turn
+  const acc=DIFFS[G.diff].accuracy;
+  const r=Math.random();
+  if(r<acc*0.55){G.aScore+=100;spawnUnit(false,20);}
+  else if(r<acc){G.aScore+=50;spawnUnit(false,10);}
+  document.getElementById('aScore').textContent=G.aScore;
+  setTimeout(nextChord,400);
+}
+
+function endGame(){
+  G.active=false;
+  cancelAnimationFrame(laneAnimFrame);
+  clearInterval(G.tInterval);
+  stopBackgroundMusic();
+  const won=towers.php>towers.ahp||(G.pScore>G.aScore&&towers.php>0);
+  const acc=Math.round((G.hits/G.total)*100);
+  const baseEol=won?DIFFS[G.diff].eol:0;
+  const battleBonus=won&&isBattle?50:0;
+  const eolGain=baseEol+battleBonus;
+  if(eolGain>0){const ne=getEol()+eolGain;saveEol(ne);updateLb(ne);}
+  document.getElementById('progFill').style.width='100%';
+  // Update results back-button routing
+  const retryBtn=document.querySelector('#results button[onclick="startGame()"]');
+  const songsBtn=document.querySelector('#results .btn.gold');
+  if(songsBtn)songsBtn.onclick=()=>showScreen(isBattle?'battleMode':'levelSelect');
+  setTimeout(()=>{
+    document.getElementById('rOut').textContent=won?'VICTORY!':'DEFEAT';
+    document.getElementById('rOut').className='r-out '+(won?'win':'loss');
+    document.getElementById('rPS').textContent=G.pScore;
+    document.getElementById('rAS').textContent=G.aScore;
+    document.getElementById('rAcc').textContent=acc+'%';
+    document.getElementById('rHit').textContent=G.hits+'/'+G.total;
+    let eolMsg=eolGain>0?'+'+eolGain+' EOL Earned':'No EOL \u2014 must win the battle!';
+    if(won&&battleBonus>0)eolMsg='+'+baseEol+' EOL + '+battleBonus+' Battle Bonus!';
+    document.getElementById('eolLine').textContent=eolMsg;
+    showScreen('results');
+  },500);
+}
+
+function updateLb(eol){
+  let lb=getLb();
+  const i=lb.findIndex(e=>e.name==='You');
+  if(i>=0){if(eol>lb[i].eol)lb[i].eol=eol;}else lb.push({name:'You',eol});
+  lb.sort((a,b)=>b.eol-a.eol);saveLb(lb);
+}
+
+function renderLb(){
+  const sample=[{name:'NeonKeys',eol:4800},{name:'ChordMaster',eol:3950},{name:'VoidPlay',eol:3100},{name:'RhythmX',eol:2400},{name:'PixelNote',eol:1800},{name:'StormKeys',eol:900}];
+  const you=getLb().find(e=>e.name==='You');
+  let merged=[...sample];if(you)merged.push(you);
+  merged=merged.filter((v,i,a)=>a.findIndex(x=>x.name===v.name)===i).sort((a,b)=>b.eol-a.eol);
+  document.getElementById('lbBody').innerHTML=merged.map((e,i)=>`
+    <tr><td class="lb-rank ${i<3?'top':''}">#${i+1}</td>
+    <td class="${e.name==='You'?'lb-you':''} lb-name">${e.name}${e.name==='You'?' &laquo;':''}</td>
+    <td class="lb-eol">${e.eol.toLocaleString()}</td></tr>`).join('');
+}
+
+// Keybinds UI
+let listeningFor=null;
+function renderKeybinds(){
+  const notes=['C','D','E','F','G','A','B','C#','D#','F#','G#','A#'];
+  document.getElementById('kbGrid').innerHTML=notes.map(n=>`
+    <div class="kb-row">
+      <span class="kb-note">${n}</span>
+      <span class="kb-key" id="kb_${n.replace('#','s')}" onclick="startListen('${n}')">${BINDS[n]||'?'}</span>
+    </div>`).join('');
+}
+function startListen(note){
+  if(listeningFor){
+    const prev=listeningFor.replace('#','s');
+    const el=document.getElementById('kb_'+prev);
+    if(el)el.classList.remove('listening');
+  }
+  listeningFor=note;
+  const el=document.getElementById('kb_'+note.replace('#','s'));
+  if(el){el.classList.add('listening');el.textContent='...';}
+}
+function saveKeybinds(){saveBind();document.getElementById('kbMsg').textContent='Saved!';setTimeout(()=>document.getElementById('kbMsg').textContent='',2000);}
+function resetKeybinds(){BINDS={...DEFAULT_BINDS};saveBind();renderKeybinds();document.getElementById('kbMsg').textContent='Reset to defaults';}
+
+// Tutorial state
+const TUT_STEPS=[
+  {title:'Welcome to Chord Clash',body:'Match chords by pressing piano keys before time runs out. Beat the AI to win!',hint:'C D E F G A B keys = white piano keys',action:null,needKey:null},
+  {title:'Try pressing C',body:'Press the C key on your keyboard to play the C note.',hint:'Watch the piano light up!',action:'pressC',needKey:'C'},
+  {title:'Play a chord',body:'A chord uses multiple notes together. Press C, E, and G to play C Major!',hint:'Press all three in any order.',action:'chordCEG',needKey:null,chordNeed:['C','E','G']},
+  {title:'Timing matters',body:'Faster = Perfect (+100 pts). Slower = Good (+50 pts). Too slow = Miss.',hint:'The cursor shows your timing window.',action:null,needKey:null},
+  {title:'Tower Defense',body:"Each chord you nail sends a unit toward the AI's tower. Destroy it to win!",hint:'Perfect = strong unit. Good = weak unit.',action:null,needKey:null}
+];
+let tutStep=0,tutBuf=[],tutPianoPfx='tutWK';
+
+function initTutPiano(){
+  const pw=document.getElementById('tutPiano');
+  pw.innerHTML=`<div class="white-keys" id="tutWK" style="height:100%"></div><div class="black-layer" id="tutBL" style="height:60%"></div>`;
+  buildPiano([],tutPianoPfx,'tutBL');
+}
+
+function renderTutStep(){
+  const s=TUT_STEPS[tutStep];
+  document.getElementById('tutStep').textContent=`Step ${tutStep+1} of ${TUT_STEPS.length}`;
+  document.getElementById('tutTitle').textContent=s.title;
+  document.getElementById('tutBody').textContent=s.body;
+  document.getElementById('tutHint').textContent=s.hint;
+  document.getElementById('tutFb').textContent='';
+  const btn=document.getElementById('tutNextBtn');
+  if(tutStep===TUT_STEPS.length-1){btn.textContent='Play! \u25b6';btn.onclick=()=>showScreen('mainMenu');}
+  else{btn.textContent='Next \u2192';btn.onclick=tutNext;}
+  if(s.action==='chordCEG'){buildPiano(['C','E','G'],tutPianoPfx,'tutBL');tutBuf=[];}
+  else{buildPiano([],tutPianoPfx,'tutBL');}
+}
+
+function tutNext(){tutStep=Math.min(tutStep+1,TUT_STEPS.length-1);renderTutStep();}
+
+function handleTutKey(note){
+  const s=TUT_STEPS[tutStep];
+  if(s.needKey&&note===s.needKey){
+    playNote(note);lightKey(note,true,tutPianoPfx);setTimeout(()=>lightKey(note,false,tutPianoPfx),200);
+    document.getElementById('tutFb').textContent='Great!';
+    setTimeout(tutNext,700);return;
+  }
+  if(s.chordNeed){
+    playNote(note);lightKey(note,true,tutPianoPfx);setTimeout(()=>lightKey(note,false,tutPianoPfx),200);
+    if(!tutBuf.includes(note))tutBuf.push(note);
+    if(s.chordNeed.every(n=>tutBuf.some(b=>noteEq(b,n)))){
+      playChord(s.chordNeed);
+      document.getElementById('tutFb').textContent='C Major! Nice!';
+      setTimeout(tutNext,900);
+    }
+  }
+}
+
+// Global keyboard listener
+document.addEventListener('keydown',e=>{
+  if(e.repeat)return;
+  // Keybind listening mode
+  if(listeningFor!==null){
+    const k=e.key;
+    BINDS[listeningFor]=k;
+    const el=document.getElementById('kb_'+listeningFor.replace('#','s'));
+    if(el){el.classList.remove('listening');el.textContent=k;}
+    listeningFor=null;
+    e.preventDefault();return;
+  }
+  const lk=e.key.toLowerCase();
+  const note=keyToNote(lk,e.shiftKey);
+  if(!note)return;
+  // Tutorial
+  if(document.getElementById('tutorial').classList.contains('active')){
+    handleTutKey(note);return;
+  }
+  // Gameplay
+  if(G.active){
+    playNote(note,0.35,0.1);
+    lightKey(note,true);setTimeout(()=>lightKey(note,false),160);
+    handleNote(note);
+  }
+});
+
+// Particles
+(()=>{const p=document.getElementById('particles');for(let i=0;i<16;i++){const d=document.createElement('div');d.className='particle';d.style.cssText=`left:${Math.random()*100}%;animation-duration:${8+Math.random()*12}s;animation-delay:${Math.random()*-15}s;background:${['#00f5ff','#7b2fff','#ff006e'][i%3]}`;p.appendChild(d);}})();
+
+// Init
+initTutPiano();
+renderTutStep();
+</script>
