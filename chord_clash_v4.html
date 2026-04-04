@@ -226,6 +226,27 @@ h1.logo{font-family:'Orbitron',monospace;font-size:clamp(1.8rem,5vw,3.5rem);font
 .music-vol{-webkit-appearance:none;appearance:none;width:70px;height:4px;border-radius:2px;background:#2a2a4a;outline:none;cursor:pointer}
 .music-vol::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--accent);cursor:pointer}
 
+/* ── Practice / Regular mode toggle ─────────────────────────────────── */
+.mode-toggle{display:flex;border:1px solid #2a2a4a;border-radius:6px;overflow:hidden;max-width:280px;margin:0 auto}
+.mode-btn{flex:1;background:transparent;border:none;color:var(--muted);font-family:'Exo 2',sans-serif;font-size:11px;padding:9px 8px;cursor:pointer;letter-spacing:1px;text-transform:uppercase;transition:all 0.15s;font-weight:600}
+.mode-btn:not(:last-child){border-right:1px solid #2a2a4a}
+.mode-btn.active{background:var(--accent3);color:#fff}
+.mode-desc{font-size:10px;color:var(--muted);margin-top:6px;min-height:14px;text-align:center}
+/* ── Instrument selector ─────────────────────────────────────────────── */
+.instr-row{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.instr-btn{background:var(--surf);border:1px solid #2a2a4a;border-radius:20px;color:var(--muted);font-family:'Exo 2',sans-serif;font-size:10px;padding:5px 14px;cursor:pointer;letter-spacing:1px;transition:all 0.15s;font-weight:600;white-space:nowrap}
+.instr-btn:hover{background:rgba(0,245,255,0.08);border-color:var(--accent);color:var(--accent)}
+.instr-btn.active{background:rgba(0,245,255,0.12);border-color:var(--accent);color:var(--accent)}
+/* ── In-game compact controls ────────────────────────────────────────── */
+.gp-ctrl-row{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:760px;gap:8px;background:var(--surf);border:1px solid #2a2a4a;border-radius:6px;padding:5px 12px;margin-bottom:2px}
+.gp-mode-toggle{display:flex;border:1px solid #2a2a4a;border-radius:4px;overflow:hidden}
+.gp-mode-btn{background:transparent;border:none;color:var(--muted);font-family:'Exo 2',sans-serif;font-size:9px;padding:4px 9px;cursor:pointer;letter-spacing:1px;text-transform:uppercase;transition:all 0.12s;font-weight:600}
+.gp-mode-btn:not(:last-child){border-right:1px solid #2a2a4a}
+.gp-mode-btn.active{background:var(--accent3);color:#fff}
+.gp-instr-row{display:flex;gap:3px}
+.gp-instr-btn{background:transparent;border:1px solid #2a2a4a;border-radius:4px;color:var(--muted);font-size:14px;width:27px;height:23px;cursor:pointer;transition:all 0.12s;display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
+.gp-instr-btn:hover,.gp-instr-btn.active{border-color:var(--accent);background:rgba(0,245,255,0.08)}
+
 /* ── Chord Notation ──────────────────────────────────────────────────── */
 .notation-row{display:flex;align-items:center;justify-content:center;gap:16px;padding:0 0 10px}
 #chordSym{font-family:'Georgia',serif;font-size:36px;font-weight:700;color:var(--accent3);min-width:58px;text-align:center;line-height:1;letter-spacing:-1px;transition:color 0.2s}
@@ -328,7 +349,31 @@ h1.logo{font-family:'Orbitron',monospace;font-size:clamp(1.8rem,5vw,3.5rem);font
     <div class="dopt" onclick="selDiff(2)" id="d2"><h3 style="color:var(--red)">Hard</h3><p>AI: 90%</p><p style="color:var(--gold);font-size:10px;margin-top:4px">+50 EOL</p></div>
     <div class="dopt" onclick="selDiff(3)" id="d3"><h3 style="color:#bf5fff">Expert</h3><p>AI: 98%</p><p style="color:var(--gold);font-size:10px;margin-top:4px">+100 EOL</p></div>
   </div>
-  <button class="btn" style="margin-top:20px" onclick="startGame()">&#9654; Start</button>
+  <!-- Game Settings -->
+  <div style="width:100%;max-width:460px;margin-top:20px;background:var(--surf);border:1px solid #2a2a4a;border-radius:10px;padding:16px 18px">
+    <p class="sec-title" style="margin-bottom:14px;text-align:left">&#9881; Game Settings</p>
+    <!-- Mode -->
+    <div style="margin-bottom:16px">
+      <div style="font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:7px;text-align:center">Game Mode</div>
+      <div class="mode-toggle">
+        <button class="mode-btn" id="modeBtn_practice" data-mode="practice" onclick="setGameMode('practice')">&#127891; Practice</button>
+        <button class="mode-btn" id="modeBtn_regular"  data-mode="regular"  onclick="setGameMode('regular')">&#127942; Regular</button>
+      </div>
+      <p class="mode-desc" id="modeDesc"></p>
+    </div>
+    <!-- Instrument -->
+    <div>
+      <div style="font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;text-align:center">Instrument</div>
+      <div class="instr-row">
+        <button class="instr-btn" data-instr="piano"   onclick="setInstrument('piano')">&#127929; Piano</button>
+        <button class="instr-btn" data-instr="strings" onclick="setInstrument('strings')">&#127931; Strings</button>
+        <button class="instr-btn" data-instr="synth"   onclick="setInstrument('synth')">&#9889; Synth</button>
+        <button class="instr-btn" data-instr="guitar"  onclick="setInstrument('guitar')">&#127928; Guitar</button>
+        <button class="instr-btn" data-instr="bell"    onclick="setInstrument('bell')">&#128276; Bell</button>
+      </div>
+    </div>
+  </div>
+  <button class="btn" style="margin-top:16px" onclick="startGame()">&#9654; Start</button>
 </div>
 
 <!-- GAMEPLAY -->
@@ -355,6 +400,20 @@ h1.logo{font-family:'Orbitron',monospace;font-size:clamp(1.8rem,5vw,3.5rem);font
     <input type="range" class="music-vol" id="musicVol" min="0" max="1" step="0.05" value="0.4" oninput="setBgVol(this.value)">
     <button class="music-mute" id="musicMuteBtn" onclick="toggleMute()">&#128266;</button>
   </div>
+  <!-- Compact mode + instrument controls -->
+  <div class="gp-ctrl-row">
+    <div class="gp-mode-toggle">
+      <button class="gp-mode-btn" data-mode="practice" onclick="setGameMode('practice')">&#127891; Practice</button>
+      <button class="gp-mode-btn" data-mode="regular"  onclick="setGameMode('regular')">&#127942; Regular</button>
+    </div>
+    <div class="gp-instr-row">
+      <button class="gp-instr-btn" data-instr="piano"   onclick="setInstrument('piano')"   title="Piano">&#127929;</button>
+      <button class="gp-instr-btn" data-instr="strings" onclick="setInstrument('strings')" title="Strings">&#127931;</button>
+      <button class="gp-instr-btn" data-instr="synth"   onclick="setInstrument('synth')"   title="Synth">&#9889;</button>
+      <button class="gp-instr-btn" data-instr="guitar"  onclick="setInstrument('guitar')"  title="Guitar">&#127928;</button>
+      <button class="gp-instr-btn" data-instr="bell"    onclick="setInstrument('bell')"    title="Bell">&#128276;</button>
+    </div>
+  </div>
   <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
   <div class="stage">
     <!-- Tower Defense Lane -->
@@ -374,7 +433,7 @@ h1.logo{font-family:'Orbitron',monospace;font-size:clamp(1.8rem,5vw,3.5rem);font
         <svg id="staffSvg" class="staff-svg" width="106" height="58" viewBox="0 0 106 58" aria-hidden="true"></svg>
       </div>
       <div class="chord-name" id="chordName">Ready...</div>
-      <div class="chord-notes" id="chordNotes">&#8212; &#8212; &#8212;</div>
+      <div class="chord-notes practice-only" id="chordNotes">&#8212; &#8212; &#8212;</div>
     </div>
     <div class="beat-vis" id="beatVis"></div>
     <div class="fb-text" id="fbText">&nbsp;</div>
@@ -389,8 +448,8 @@ h1.logo{font-family:'Orbitron',monospace;font-size:clamp(1.8rem,5vw,3.5rem);font
       <div class="black-layer" id="blackLayer"></div>
     </div>
     <p style="font-size:10px;color:var(--muted);text-align:center">C D E F G A B = white keys &nbsp;|&nbsp; <span style="color:var(--accent)">Shift+key = sharp/flat</span></p>
-    <p id="keyHintLine" style="font-size:10px;color:var(--gold);text-align:center;min-height:14px;letter-spacing:1px"></p>
-    <p style="font-size:9px;color:#404070;text-align:center">Bb=Shift+A &nbsp; Eb=Shift+D &nbsp; Ab=Shift+G &nbsp; Db=Shift+C &nbsp; Gb=Shift+F</p>
+    <p id="keyHintLine" class="practice-only" style="font-size:10px;color:var(--gold);text-align:center;min-height:14px;letter-spacing:1px"></p>
+    <p class="practice-only" style="font-size:9px;color:#404070;text-align:center">Bb=Shift+A &nbsp; Eb=Shift+D &nbsp; Ab=Shift+G &nbsp; Db=Shift+C &nbsp; Gb=Shift+F</p>
   </div>
 </div>
 
@@ -971,22 +1030,173 @@ const NOTE_FREQS={'C':261.63,'C#':277.18,'Db':277.18,'D':293.66,'D#':311.13,'Eb'
   'E':329.63,'F':349.23,'F#':369.99,'Gb':369.99,'G':392.00,'G#':415.30,'Ab':415.30,
   'A':440.00,'A#':466.16,'Bb':466.16,'B':493.88};
 
+// ════════════════════════════════════════════════════════════════════════
+// REALISTIC INSTRUMENT SYNTHESIS
+// ════════════════════════════════════════════════════════════════════════
 function playNote(note,dur=0.5,vol=0.15){
   try{
     const ctx=getAudio();
-    const osc=ctx.createOscillator();
-    const gain=ctx.createGain();
-    osc.connect(gain);gain.connect(ctx.destination);
-    osc.type='triangle';
-    osc.frequency.value=NOTE_FREQS[note]||261.63;
-    gain.gain.setValueAtTime(vol,ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+dur);
-    osc.start(ctx.currentTime);osc.stop(ctx.currentTime+dur);
+    const freq=NOTE_FREQS[note]||261.63;
+    const now=ctx.currentTime;
+    switch(currentInstrument){
+      case 'strings': _playStrings(ctx,freq,dur,vol,now); break;
+      case 'synth':   _playSynth(ctx,freq,dur,vol,now);   break;
+      case 'guitar':  _playGuitar(ctx,freq,dur,vol,now);  break;
+      case 'bell':    _playBell(ctx,freq,dur,vol,now);    break;
+      default:        _playPiano(ctx,freq,dur,vol,now);   break;
+    }
   }catch(e){}
 }
 
 function playChord(notes){
-  notes.forEach((n,i)=>setTimeout(()=>playNote(n,0.6,0.12),i*8));
+  notes.forEach((n,i)=>setTimeout(()=>playNote(n,0.65,0.12),i*10));
+}
+
+// ── Piano: triangle partials + low-pass + inharmonic series + stereo pan ──
+function _playPiano(ctx,freq,dur,vol,now){
+  const master=ctx.createGain();
+  const panner=ctx.createStereoPanner?ctx.createStereoPanner():null;
+  if(panner){panner.pan.value=Math.max(-0.28,Math.min(0.28,(freq-440)/2600));panner.connect(ctx.destination);master.connect(panner);}
+  else master.connect(ctx.destination);
+  const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=Math.min(freq*6.5,8500);lp.Q.value=0.7;lp.connect(master);
+  // Inharmonicity increases with frequency (like real piano strings)
+  const inh=0.00018*freq;
+  [[1,'triangle',1.0,1.0],[2+inh,'sine',0.38,0.60],[3+inh*3,'sine',0.13,0.38],[4+inh*6,'sine',0.05,0.22]].forEach(([m,t,gm,dm])=>{
+    const o=ctx.createOscillator(),g=ctx.createGain();
+    o.type=t;o.frequency.value=freq*m;o.connect(g);g.connect(lp);
+    const pk=vol*gm,dc=dur*dm;
+    g.gain.setValueAtTime(0,now);
+    g.gain.linearRampToValueAtTime(pk,now+0.004);        // sharp hammer attack
+    g.gain.exponentialRampToValueAtTime(pk*0.30,now+0.045); // quick high-harmonic decay
+    g.gain.exponentialRampToValueAtTime(0.0001,now+dc);  // long fundamental tail
+    o.start(now);o.stop(now+dc+0.06);
+  });
+  // Subtle room echo (single reflection, no feedback)
+  const delay=ctx.createDelay(0.15);delay.delayTime.value=0.065;
+  const dg=ctx.createGain();dg.gain.value=0.10;
+  lp.connect(delay);delay.connect(dg);dg.connect(ctx.destination);
+}
+
+// ── Strings: 3 detuned sawtooths + slow attack/release + warm low-pass ──
+function _playStrings(ctx,freq,dur,vol,now){
+  const master=ctx.createGain();master.connect(ctx.destination);
+  const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=freq*3.5;lp.Q.value=1.8;lp.connect(master);
+  [-4,0,4].forEach((det,i)=>{
+    const o=ctx.createOscillator(),g=ctx.createGain();
+    o.type='sawtooth';o.frequency.value=freq;o.detune.value=det;o.connect(g);g.connect(lp);
+    const att=0.22+i*0.04,pk=vol*0.36;
+    g.gain.setValueAtTime(0,now);
+    g.gain.linearRampToValueAtTime(pk,now+att);         // slow string bow-on attack
+    g.gain.setValueAtTime(pk,now+Math.max(att+0.01,dur-0.30));
+    g.gain.linearRampToValueAtTime(0,now+dur);
+    o.start(now);o.stop(now+dur+0.06);
+  });
+}
+
+// ── Synth: square wave + pitch-drop attack + sub-octave sine + band-pass ──
+function _playSynth(ctx,freq,dur,vol,now){
+  const master=ctx.createGain();master.connect(ctx.destination);
+  const bp=ctx.createBiquadFilter();bp.type='bandpass';bp.frequency.value=freq*1.8;bp.Q.value=1.0;bp.connect(master);
+  // Main square with slight pitch-envelope (analog "plop")
+  const o=ctx.createOscillator(),g=ctx.createGain();
+  o.type='square';o.frequency.setValueAtTime(freq*1.015,now);o.frequency.exponentialRampToValueAtTime(freq,now+0.025);
+  o.connect(g);g.connect(bp);
+  g.gain.setValueAtTime(0,now);
+  g.gain.linearRampToValueAtTime(vol*0.72,now+0.007);
+  g.gain.setValueAtTime(vol*0.72,now+Math.max(0.01,dur-0.10));
+  g.gain.linearRampToValueAtTime(0,now+dur);
+  o.start(now);o.stop(now+dur+0.05);
+  // Sub-octave weight
+  const o2=ctx.createOscillator(),g2=ctx.createGain();
+  o2.type='sine';o2.frequency.value=freq*0.5;o2.connect(g2);g2.connect(master);
+  g2.gain.setValueAtTime(0,now);
+  g2.gain.linearRampToValueAtTime(vol*0.18,now+0.01);
+  g2.gain.exponentialRampToValueAtTime(0.001,now+dur*0.65);
+  o2.start(now);o2.stop(now+dur*0.7);
+}
+
+// ── Guitar: sawtooth pluck + resonant filter + quick exponential decay ──
+function _playGuitar(ctx,freq,dur,vol,now){
+  const master=ctx.createGain();master.connect(ctx.destination);
+  const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=freq*4.5;lp.Q.value=5;lp.connect(master);
+  const pd=Math.min(dur,0.6); // pluck only lasts ~0.6s
+  const o=ctx.createOscillator(),g=ctx.createGain();
+  o.type='sawtooth';o.frequency.value=freq;o.connect(g);g.connect(lp);
+  g.gain.setValueAtTime(0,now);
+  g.gain.linearRampToValueAtTime(vol,now+0.001);         // instant pluck attack
+  g.gain.exponentialRampToValueAtTime(vol*0.55,now+0.04);
+  g.gain.exponentialRampToValueAtTime(0.001,now+pd);
+  o.start(now);o.stop(now+pd+0.04);
+  // Body resonance: triangle at slight detune
+  const o2=ctx.createOscillator(),g2=ctx.createGain();
+  o2.type='triangle';o2.frequency.value=freq*0.997;o2.connect(g2);g2.connect(master);
+  g2.gain.setValueAtTime(0,now);
+  g2.gain.linearRampToValueAtTime(vol*0.20,now+0.003);
+  g2.gain.exponentialRampToValueAtTime(0.001,now+pd*0.75);
+  o2.start(now);o2.stop(now+pd*0.8);
+}
+
+// ── Bell: inharmonic sine partials + very long exponential decay ──
+function _playBell(ctx,freq,dur,vol,now){
+  const master=ctx.createGain();master.connect(ctx.destination);
+  // Bell partial series (physically-derived ratios)
+  [[1,1.0,4.2],[2.756,0.52,2.9],[5.40,0.25,2.0],[8.93,0.11,1.3],[13.34,0.04,0.9]].forEach(([m,gm,dm])=>{
+    const o=ctx.createOscillator(),g=ctx.createGain();
+    o.type='sine';o.frequency.value=freq*m;o.connect(g);g.connect(master);
+    const pk=vol*gm*0.55,dc=dur*dm;
+    g.gain.setValueAtTime(0,now);
+    g.gain.linearRampToValueAtTime(pk,now+0.001);        // instant strike
+    g.gain.exponentialRampToValueAtTime(0.0001,now+dc);
+    o.start(now);o.stop(now+dc+0.05);
+  });
+}
+
+// ════════════════════════════════════════════════════════════════════════
+// GAME MODE (Practice / Regular) + INSTRUMENT STATE
+// ════════════════════════════════════════════════════════════════════════
+let gameMode='practice';
+let currentInstrument='piano';
+
+function loadPrefs(){
+  try{const m=localStorage.getItem('cc4_mode');if(m)gameMode=m;}catch{}
+  try{const i=localStorage.getItem('cc4_instr');if(i)currentInstrument=i;}catch{}
+  updateModeUI();updateInstrUI();
+}
+
+function setGameMode(mode){
+  gameMode=mode;
+  try{localStorage.setItem('cc4_mode',mode);}catch{}
+  updateModeUI();
+  updateChordHints();
+}
+
+function setInstrument(name){
+  currentInstrument=name;
+  try{localStorage.setItem('cc4_instr',name);}catch{}
+  updateInstrUI();
+}
+
+function updateModeUI(){
+  document.querySelectorAll('[data-mode]').forEach(el=>{
+    el.classList.toggle('active',el.dataset.mode===gameMode);
+  });
+  const desc=document.getElementById('modeDesc');
+  if(desc)desc.textContent=gameMode==='practice'
+    ?'Shows note letters & key hints during play'
+    :'Chord symbols only \u2014 no note hints';
+}
+
+function updateInstrUI(){
+  document.querySelectorAll('[data-instr]').forEach(el=>{
+    el.classList.toggle('active',el.dataset.instr===currentInstrument);
+  });
+}
+
+function updateChordHints(){
+  const show=gameMode==='practice';
+  document.querySelectorAll('.practice-only').forEach(el=>{
+    el.style.display=show?'':'none';
+  });
 }
 
 // Tower defense state
@@ -1091,6 +1301,7 @@ function showScreen(id){
   if(id==='keybinds')renderKeybinds();
   if(id==='battleMode')renderBattleGrid();
   if(id==='createSong'){renderSavedSongs();updateCbPreview();}
+  if(id==='diffSelect'){updateModeUI();updateInstrUI();}
 }
 
 function renderLevels(){
@@ -1130,6 +1341,7 @@ function startGame(){
   buildPiano([]);
   showScreen('gameplay');
   initBeatVis();
+  updateModeUI();updateInstrUI();updateChordHints();
   // Live EOL display — current balance + potential win bonus
   document.getElementById('hudEolVal').textContent=getEol();
   const bonusAmt=DIFFS[G.diff].eol+(isBattle?50:0);
@@ -1154,6 +1366,7 @@ function nextChord(){
   document.getElementById('chordNotes').textContent=chord.notes.join(' + ');
   document.getElementById('keyHintLine').textContent='Keys: '+chord.notes.map(noteToKey).join(' + ');
   renderChordNotation(chord);
+  updateChordHints();
   document.getElementById('fbText').textContent='\u00a0';
   document.getElementById('chordDisp').className='chord-disp';
   document.getElementById('progFill').style.width=Math.round((G.chordIdx/song.chords.length)*100)+'%';
@@ -1683,6 +1896,7 @@ function toggleA11yPanel(){
 }
 
 // Init
+loadPrefs();
 initTutPiano();
 renderTutStep();
 loadCustomSongs();
