@@ -1,1 +1,8 @@
-# ChordClash
+# ChordClash - HogHacks Best Implementation Award Winner
+Let’s face it: Music Theory is unintuitive and painful to learn. But it doesn’t have to be! Chord Clash helps make it fun and exciting. Chord Clash is a game that trains people on recognizing and producing chords and chord progressions. 
+
+The game involves competing with advanced AI enemies powered by Anthropic’s Claude, whose difficulty levels are customized to suit your experience with music theory. Send your own troops into battle by selecting notes to develop chords. When you tap and swipe to produce chord progressions, certain special abilities and buffs will be added to your troops to encourage players to make real music, not a jumble of random notes. The more enemies you defeat, the more points you get. 
+
+Furthermore, you are able to export your masterful selection of chords made through high-stakes decisions in the heat of battle through sheet music, complete with a description of what each chord and chord progression can be used for in music.
+
+Challenge yourself by checking how well you are performing against other competitors in a global or friends leaderboard. Chord Clash is perfect for introducing aspiring musicians to the complexities of Music Theory in an engaging and captivating format, gamifying what would have been an incredibly rote and dull learning process.
